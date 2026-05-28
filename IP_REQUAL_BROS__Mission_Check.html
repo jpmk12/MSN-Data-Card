@@ -152,6 +152,23 @@
   }
   .sub-item::before { content: '·'; position: absolute; left: 16px; }
 
+  /* Boxed R / C badges for Three Rs / Three Cs items */
+  .r-box, .c-box {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    text-align: center;
+    border-radius: 3px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 10px;
+    margin-right: 8px;
+    vertical-align: 1px;
+  }
+  .r-box { background: #c73030; }
+  .c-box { background: #185FA5; }
+
   .sep { border-top: 0.5px solid #d3d1c7; margin: 8px 0; }
 
   /* ── Safety sup items ── */
@@ -1656,19 +1673,19 @@
     <div class="section-title pink" style="margin-top:10px">Cruise Check</div>
 
     <div class="section-title teal" style="margin-top:10px">Three Rs (30 prior)</div>
-    <div class="item">RZ Checklists</div>
+    <div class="item"><span class="r-box">R</span>RZ Checklists</div>
     <div class="sub-item">30min prior to CT ‖ NLT IP</div>
-    <div class="item">Radios</div>
+    <div class="item"><span class="r-box">R</span>Radios</div>
     <div class="sub-item">AR Prim 30 prior ‖ TACAN ‖ Call NLT 15 prior</div>
     <div class="sub-item">CATTS: Call Sign, Alt, Timing, TACAN, M3</div>
-    <div class="item">Radar</div>
+    <div class="item"><span class="r-box">R</span>Radar</div>
     <div class="sub-item">WX Title: 10 / 20 DME = .5 Tilt</div>
 
     <div class="section-title teal" style="margin-top:10px">Three Cs (15 prior)</div>
-    <div class="item">Cleared Refueling Block</div>
-    <div class="item">Cleared to Conduct AR</div>
+    <div class="item"><span class="c-box">C</span>Cleared Refueling Block</div>
+    <div class="item"><span class="c-box">C</span>Cleared to Conduct AR</div>
     <div class="sub-item">MARSA declared</div>
-    <div class="item">Cleared to AAR Freq</div>
+    <div class="item"><span class="c-box">C</span>Cleared to AAR Freq</div>
 
     <div class="section-title blue" style="margin-top:10px">Precontact Check</div>
     <div class="item">Visually Maneuvering</div>
