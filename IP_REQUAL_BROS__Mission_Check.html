@@ -1672,7 +1672,7 @@
     <div class="section-title pink" style="margin-top:0">After Takeoff/Climb Check</div>
     <div class="section-title pink" style="margin-top:10px">Cruise Check</div>
 
-    <div class="section-title teal" style="margin-top:10px">Three Rs (30 prior)</div>
+    <div class="section-title teal" style="margin-top:10px">Three Rs (30 prior<span id="three-rs-suffix"></span>)</div>
     <div class="item"><span class="r-box">R</span>RZ Checklists</div>
     <div class="sub-item">30min prior to CT ‖ NLT IP</div>
     <div class="item"><span class="r-box">R</span>Radios</div>
@@ -1681,7 +1681,7 @@
     <div class="item"><span class="r-box">R</span>Radar</div>
     <div class="sub-item">WX Title: 10 / 20 DME = .5 Tilt</div>
 
-    <div class="section-title teal" style="margin-top:10px">Three Cs (15 prior)</div>
+    <div class="section-title teal" style="margin-top:10px">Three Cs (15 prior<span id="three-cs-suffix"></span>)</div>
     <div class="item"><span class="c-box">C</span>Cleared Refueling Block</div>
     <div class="item"><span class="c-box">C</span>Cleared to Conduct AR</div>
     <div class="sub-item">MARSA declared</div>
@@ -2560,6 +2560,27 @@ function syncARCT() {
   var cell = document.getElementById('artrack-arct');
   if (v) { cell.textContent = v; }
   else { cell.innerHTML = '<span style="border-bottom:1.5px solid #b4b2a9;padding:0 26px;">&nbsp;</span>'; }
+  // ARCT-30 / ARCT-15 suffix on Three Rs / Three Cs headings
+  var rs = document.getElementById('three-rs-suffix');
+  var cs = document.getElementById('three-cs-suffix');
+  if (!rs || !cs) return;
+  var rsTxt = '', csTxt = '';
+  if (/^\d{3,4}$/.test(v)) {
+    var p4 = v.padStart(4, '0');
+    var hh = parseInt(p4.slice(0, 2), 10), mm = parseInt(p4.slice(2, 4), 10);
+    if (hh < 24 && mm < 60) {
+      var tot = hh * 60 + mm;
+      var fmt = function(t) {
+        t = ((t % 1440) + 1440) % 1440;
+        var H = Math.floor(t / 60), M = t % 60;
+        return (H < 10 ? '0' : '') + H + (M < 10 ? '0' : '') + M;
+      };
+      rsTxt = ': ' + fmt(tot - 30);
+      csTxt = ': ' + fmt(tot - 15);
+    }
+  }
+  rs.textContent = rsTxt;
+  cs.textContent = csTxt;
 }
 function syncLowLevel() {
   // Copy Low Level Entry value into the Low Level Info section
