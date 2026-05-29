@@ -29,6 +29,7 @@
     .no-print { display: none !important; }
     .board { page-break-inside: avoid; }
     .card { page-break-inside: avoid; break-inside: avoid; }
+    .tab-panel { display: block !important; }
   }
 
   /* ── Print button ── */
@@ -3211,8 +3212,9 @@ function switchTab(id, btn) {
 }
 function downloadHTML() {
   const clone = document.documentElement.cloneNode(true);
-  clone.querySelectorAll('.no-print').forEach(el => el.remove());
-  clone.querySelectorAll('.tab-panel').forEach(p => p.classList.add('active'));
+  // Strip the Print/Download toolbar from the saved copy, but keep the
+  // tab bar so navigation still works in the downloaded file.
+  clone.querySelectorAll('.toolbar').forEach(el => el.remove());
   const blob = new Blob(['<!DOCTYPE html>' + clone.outerHTML], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
