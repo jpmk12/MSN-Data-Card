@@ -180,6 +180,24 @@
     text-decoration-color: rgba(0,0,0,0.45);
   }
 
+  /* Checklist toggles for badged R / C items */
+  .chk-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .chk-item > .chk-text { flex: 1; min-width: 0; }
+  .chk-r .chk-input:checked { background: #c73030; border-color: #c73030; }
+  .chk-c .chk-input:checked { background: #185FA5; border-color: #185FA5; }
+  .chk-item:has(.chk-input:checked) .chk-text {
+    color: #888780;
+    text-decoration: line-through;
+    text-decoration-color: rgba(0,0,0,0.45);
+  }
+
   .item {
     font-size: 12.5px;
     color: #5f5e5a;
@@ -1728,22 +1746,22 @@
     <label class="section-title pink chk-title" style="margin-top:10px"><span class="chk-text">Cruise Check</span><input type="checkbox" class="chk-input"></label>
 
     <label class="section-title teal chk-title" style="margin-top:10px"><span class="chk-text">Three Rs (30 prior<span id="three-rs-suffix"></span>)</span><input type="checkbox" class="chk-input"></label>
-    <div class="item"><span class="r-box">R</span>RZ Checklists</div>
+    <label class="item chk-item chk-r"><span class="r-box">R</span><span class="chk-text">RZ Checklists</span><input type="checkbox" class="chk-input"></label>
     <div class="sub-item">30min prior to CT ‖ NLT IP</div>
-    <div class="item"><span class="r-box">R</span>Radios</div>
+    <label class="item chk-item chk-r"><span class="r-box">R</span><span class="chk-text">Radios</span><input type="checkbox" class="chk-input"></label>
     <div class="sub-item">AR Prim 30 prior: <span id="radios-arprim">—</span></div>
     <div class="sub-item">TACAN: <span id="radios-tacan">—</span></div>
     <div class="sub-item">Call NLT 15 prior</div>
     <div class="sub-item">CATTS: Call Sign, Alt, Timing, TACAN, M3</div>
-    <div class="item"><span class="r-box">R</span>Radar</div>
+    <label class="item chk-item chk-r"><span class="r-box">R</span><span class="chk-text">Radar</span><input type="checkbox" class="chk-input"></label>
     <div class="sub-item">WX Title: 10 / 20 DME = .5 Tilt</div>
 
     <label class="section-title teal chk-title" style="margin-top:10px"><span class="chk-text">Three Cs (15 prior<span id="three-cs-suffix"></span>)</span><input type="checkbox" class="chk-input"></label>
-    <div class="item"><span class="c-box">C</span>Cruise Check</div>
-    <div class="item"><span class="c-box">C</span>Cleared Refueling Block</div>
-    <div class="item"><span class="c-box">C</span>Cleared to Conduct AR</div>
+    <label class="item chk-item chk-c"><span class="c-box">C</span><span class="chk-text">Cruise Check</span><input type="checkbox" class="chk-input"></label>
+    <label class="item chk-item chk-c"><span class="c-box">C</span><span class="chk-text">Cleared Refueling Block</span><input type="checkbox" class="chk-input"></label>
+    <label class="item chk-item chk-c"><span class="c-box">C</span><span class="chk-text">Cleared to Conduct AR</span><input type="checkbox" class="chk-input"></label>
     <div class="sub-item" style="margin-left:12px;">MARSA declared</div>
-    <div class="item"><span class="c-box">C</span>Cleared to AAR Freq</div>
+    <label class="item chk-item chk-c"><span class="c-box">C</span><span class="chk-text">Cleared to AAR Freq</span><input type="checkbox" class="chk-input"></label>
 
     <label class="section-title blue chk-title" style="margin-top:10px"><span class="chk-text">Precontact Check</span><input type="checkbox" class="chk-input"></label>
     <div class="item">Visually Maneuvering</div>
