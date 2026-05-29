@@ -1685,7 +1685,9 @@
     <div class="item"><span class="r-box">R</span>RZ Checklists</div>
     <div class="sub-item">30min prior to CT ‖ NLT IP</div>
     <div class="item"><span class="r-box">R</span>Radios</div>
-    <div class="sub-item">AR Prim 30 prior ‖ TACAN ‖ Call NLT 15 prior</div>
+    <div class="sub-item">AR Prim 30 prior: <span id="radios-arprim">—</span></div>
+    <div class="sub-item">TACAN: <span id="radios-tacan">—</span></div>
+    <div class="sub-item">Call NLT 15 prior</div>
     <div class="sub-item">CATTS: Call Sign, Alt, Timing, TACAN, M3</div>
     <div class="item"><span class="r-box">R</span>Radar</div>
     <div class="sub-item">WX Title: 10 / 20 DME = .5 Tilt</div>
@@ -2695,9 +2697,13 @@ function setARTrack() {
   var fEl = document.getElementById('ar-freqs');
   var tEl = document.getElementById('ar-tacan');
   var bEl = document.getElementById('ar-block');
+  var rfEl = document.getElementById('radios-arprim');
+  var rtEl = document.getElementById('radios-tacan');
   if (fEl) fEl.textContent = data ? data.freqs : '—';
   if (tEl) tEl.textContent = data ? data.tacan : '—';
   if (bEl) bEl.textContent = data ? data.block : '—';
+  if (rfEl) rfEl.textContent = data ? data.freqs : '—';
+  if (rtEl) rtEl.textContent = data ? data.tacan : '—';
 }
 
 // ── Route Data sets ──
