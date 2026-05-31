@@ -2767,7 +2767,7 @@ function syncLowLevel() {
       var total = hh*3600 + mm*60 - 100; // minus 1:40 = 100 seconds
       total = ((total % 86400) + 86400) % 86400;
       var p = function(n){ return (n<10?'0':'')+n; };
-      slowEl.textContent = p(Math.floor(total/3600)) + p(Math.floor((total%3600)/60)) + p(total%60);
+      slowEl.textContent = p(Math.floor(total/3600)) + ':' + p(Math.floor((total%3600)/60)) + ':' + p(total%60);
     } else { slowEl.textContent = '—'; }
   } else { slowEl.textContent = '—'; }
 }
