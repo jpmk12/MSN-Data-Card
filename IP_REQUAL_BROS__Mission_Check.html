@@ -676,7 +676,19 @@
     </table>
 
     <div class="section-title teal banded" style="margin-top:12px">Ground Ops</div>
-    <div class="item">Placeholder</div>
+    <div id="ground-ops-list"></div>
+    <div style="display:flex;gap:6px;align-items:center;margin-top:6px;">
+      <select id="ground-ops-select" aria-label="Add ground op type"
+        style="font-family:inherit;font-size:12px;color:#1a1a19;background:#fff;border:1px solid #b4b2a9;border-radius:4px;padding:4px 8px;outline:none;flex:1;min-width:0;">
+        <option value="">&mdash; Select &mdash;</option>
+        <option value="Combat Offload">Combat Offload</option>
+        <option value="Backing">Backing</option>
+        <option value="Star Turn">Star Turn</option>
+        <option value="NVG Backing">NVG Backing</option>
+      </select>
+      <button type="button" onclick="addGroundOp()" aria-label="Add ground op"
+        style="font-family:inherit;font-size:16px;font-weight:700;line-height:1;color:#fff;background:#1D9E75;border:none;border-radius:4px;padding:5px 12px;cursor:pointer;outline:none;">+</button>
+    </div>
 
 
   </div>
@@ -2680,6 +2692,26 @@ function syncARCT() {
   }
   rs.textContent = rsTxt;
   cs.textContent = csTxt;
+}
+function addGroundOp() {
+  var sel = document.getElementById('ground-ops-select');
+  if (!sel || !sel.value) return;
+  var list = document.getElementById('ground-ops-list');
+  var row = document.createElement('div');
+  row.className = 'item';
+  row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:8px;';
+  var label = document.createElement('span');
+  label.textContent = sel.value;
+  var rm = document.createElement('button');
+  rm.type = 'button';
+  rm.textContent = '×';
+  rm.setAttribute('aria-label', 'Remove ' + sel.value);
+  rm.style.cssText = 'font-family:inherit;font-size:14px;font-weight:700;color:#888780;background:transparent;border:none;cursor:pointer;outline:none;padding:0 4px;line-height:1;';
+  rm.onclick = function() { row.remove(); };
+  row.appendChild(label);
+  row.appendChild(rm);
+  list.appendChild(row);
+  sel.value = '';
 }
 function syncLowLevel() {
   // Copy Low Level Entry value into the Low Level Info section
