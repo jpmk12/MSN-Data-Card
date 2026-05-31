@@ -608,37 +608,27 @@
       Profile
     </div>
 
-    <div class="section-title green banded">Pattern Work</div>
-    <div class="item">3/4 T&amp;G</div>
-    <div class="item">FF T&amp;G</div>
-    <div class="item">DUKE TAC 6500</div>
-    <div class="item">BEAM
-      <span style="display:inline-flex;align-items:center;gap:6px;margin-left:6px;font-variant-numeric:tabular-nums;">
-        <span style="font-weight:600;color:#1a1a19;">7500</span>
-        <svg viewBox="0 0 14 18" style="width:11px;height:14px;vertical-align:middle;" aria-hidden="true">
-          <g transform="rotate(-45 7 9)">
-            <line x1="7" y1="1" x2="7" y2="14" stroke="#E24B4A" stroke-width="2" stroke-linecap="round"/>
-            <polyline points="2.5,9.5 7,16 11.5,9.5" fill="none" stroke="#E24B4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </g>
-        </svg>
-        <span style="font-weight:600;color:#1a1a19;">3900</span>
+    <div class="section-title green banded" style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+      <span>Pattern Work</span>
+      <span style="display:inline-flex;align-items:center;gap:6px;">
+        <span style="position:relative;display:inline-flex;align-items:center;">
+          <select id="pattern-select" aria-label="Select pattern work item"
+            style="font-family:inherit;font-size:11px;font-weight:700;color:#fff;background:#639922;border:none;border-radius:999px;padding:3px 24px 3px 11px;letter-spacing:0.04em;cursor:pointer;outline:none;-webkit-appearance:none;-moz-appearance:none;appearance:none;">
+            <option value="">Select&hellip;</option>
+            <option value="3/4 T&amp;G">3/4 T&amp;G</option>
+            <option value="FF T&amp;G">FF T&amp;G</option>
+            <option value="DUKE TAC 6500">DUKE TAC 6500</option>
+            <option value="DUKE ACCEL 6500">DUKE ACCEL 6500</option>
+            <option value="DUKE BEAM">DUKE BEAM</option>
+            <option value="STR IN">STR IN</option>
+          </select>
+          <svg style="position:absolute;right:8px;width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </span>
+        <button type="button" onclick="addPatternItem()" aria-label="Add pattern work item"
+          style="font-family:inherit;font-size:13px;font-weight:700;line-height:1;color:#fff;background:#639922;border:none;border-radius:999px;padding:4px 10px;cursor:pointer;outline:none;">+</button>
       </span>
     </div>
-    <div class="sub-item">Config: 2NM (Panel) or 1.6NM (I-SB) frm D</div>
-    <div class="item">STR IN
-      <span style="display:inline-flex;align-items:center;gap:6px;margin-left:6px;font-variant-numeric:tabular-nums;">
-        <span style="font-weight:600;color:#1a1a19;">8500</span>
-        <svg viewBox="0 0 14 18" style="width:11px;height:14px;vertical-align:middle;" aria-hidden="true">
-          <g transform="rotate(-45 7 9)">
-            <line x1="7" y1="1" x2="7" y2="14" stroke="#E24B4A" stroke-width="2" stroke-linecap="round"/>
-            <polyline points="2.5,9.5 7,16 11.5,9.5" fill="none" stroke="#E24B4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </g>
-        </svg>
-        <span style="font-weight:600;color:#1a1a19;">2400</span>
-      </span>
-    </div>
-    <div class="sub-item">Config 2NM (Panel) or 1.6 NM (I-SB) frm MCA</div>
-    <div class="sub-item">4M &rarr; 2M SLW + 2M FAF</div>
+    <div id="pattern-list"></div>
 
     <div class="section-title blue banded">Low Level Info</div>
     <table style="width:100%;border-collapse:collapse;font-size:11.5px;margin-top:4px;">
@@ -2716,6 +2706,50 @@ function addGroundOp() {
   row.appendChild(label);
   row.appendChild(rm);
   list.appendChild(row);
+  sel.value = '';
+}
+function _patternArrow(top, bottom) {
+  return '<span style="display:inline-flex;align-items:center;gap:6px;margin-left:6px;font-variant-numeric:tabular-nums;"><span style="font-weight:600;color:#1a1a19;">' + top + '</span><svg viewBox="0 0 14 18" style="width:11px;height:14px;vertical-align:middle;" aria-hidden="true"><g transform="rotate(-45 7 9)"><line x1="7" y1="1" x2="7" y2="14" stroke="#E24B4A" stroke-width="2" stroke-linecap="round"/><polyline points="2.5,9.5 7,16 11.5,9.5" fill="none" stroke="#E24B4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g></svg><span style="font-weight:600;color:#1a1a19;">' + bottom + '</span></span>';
+}
+var PATTERN_PRESETS = {
+  '3/4 T&G':         { main: '3/4 T&amp;G',       subs: [] },
+  'FF T&G':          { main: 'FF T&amp;G',        subs: [] },
+  'DUKE TAC 6500':   { main: 'DUKE TAC 6500',     subs: [] },
+  'DUKE ACCEL 6500': { main: 'DUKE ACCEL 6500',   subs: [] },
+  'DUKE BEAM':       { main: 'DUKE BEAM ' + _patternArrow('7500', '3900'),
+                       subs: ['Config: 2NM (Panel) or 1.6NM (I-SB) frm D'] },
+  'STR IN':          { main: 'STR IN ' + _patternArrow('8500', '2400'),
+                       subs: ['Config 2NM (Panel) or 1.6 NM (I-SB) frm MCA',
+                              '4M &rarr; 2M SLW + 2M FAF'] }
+};
+function addPatternItem() {
+  var sel = document.getElementById('pattern-select');
+  if (!sel || !sel.value) return;
+  var preset = PATTERN_PRESETS[sel.value];
+  if (!preset) return;
+  var list = document.getElementById('pattern-list');
+  var group = document.createElement('div');
+  var mainRow = document.createElement('div');
+  mainRow.className = 'item';
+  mainRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:8px;';
+  var mainContent = document.createElement('span');
+  mainContent.innerHTML = preset.main;
+  var rm = document.createElement('button');
+  rm.type = 'button';
+  rm.textContent = '×';
+  rm.setAttribute('aria-label', 'Remove ' + sel.value);
+  rm.style.cssText = 'font-family:inherit;font-size:14px;font-weight:700;color:#888780;background:transparent;border:none;cursor:pointer;outline:none;padding:0 4px;line-height:1;';
+  rm.onclick = function() { group.remove(); };
+  mainRow.appendChild(mainContent);
+  mainRow.appendChild(rm);
+  group.appendChild(mainRow);
+  for (var i = 0; i < preset.subs.length; i++) {
+    var sub = document.createElement('div');
+    sub.className = 'sub-item';
+    sub.innerHTML = preset.subs[i];
+    group.appendChild(sub);
+  }
+  list.appendChild(group);
   sel.value = '';
 }
 function syncLowLevel() {
