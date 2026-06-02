@@ -480,9 +480,25 @@
 
   <!-- Route of Flight — full row, editable waypoint input renders pills -->
   <div class="card full-row" style="border:1.5px solid #185FA5;background:#185FA50A;">
-    <div class="card-header" style="color:#185FA5;font-size:12px;">
-      <svg class="icon" viewBox="0 0 24 24" style="stroke:#185FA5;"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"/></svg>
-      Route of Flight
+    <div class="card-header" style="color:#185FA5;font-size:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;">
+      <span style="display:inline-flex;align-items:center;gap:6px;">
+        <svg class="icon" viewBox="0 0 24 24" style="stroke:#185FA5;"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 6.9 8 11.7z"/></svg>
+        Route of Flight
+      </span>
+      <span style="position:relative;display:inline-flex;align-items:center;">
+        <select id="rof-preset" onchange="loadRoutePreset()" aria-label="Load preloaded route"
+          style="font-family:inherit;font-size:11px;font-weight:700;color:#fff;background:#185FA5;border:none;border-radius:999px;padding:3px 24px 3px 11px;letter-spacing:0.04em;cursor:pointer;outline:none;-webkit-appearance:none;-moz-appearance:none;appearance:none;">
+          <option value="">MOTA&hellip;</option>
+          <option value="MOTA1">MOTA1</option>
+          <option value="MOTA2">MOTA2</option>
+          <option value="MOTA3">MOTA3</option>
+          <option value="MOTA4">MOTA4</option>
+          <option value="MOTA5">MOTA5</option>
+          <option value="MOTA6">MOTA6</option>
+          <option value="MOTA7">MOTA7</option>
+        </select>
+        <svg style="position:absolute;right:8px;width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </span>
     </div>
 
     <!-- EDIT THE DEFAULT ROUTE HERE: change the value="..." below (comma-separated waypoints) -->
@@ -2820,6 +2836,27 @@ function syncLowLevel() {
       slowEl.textContent = p(Math.floor(total/3600)) + ':' + p(Math.floor((total%3600)/60)) + ':' + p(total%60);
     } else { slowEl.textContent = '—'; }
   } else { slowEl.textContent = '—'; }
+}
+var ROUTE_PRESETS = {
+  'MOTA1': 'MRTHA',
+  'MOTA2': 'OKKIE',
+  'MOTA3': 'ROCKN_.BFV',
+  'MOTA4': 'OKKIE_.CDS LBB360030 AR197 LBB322047 CDS',
+  'MOTA5': 'ROCKN_.BFV MMB213050 AR312 PUB183022 AR312 MMB213050',
+  'MOTA6': 'ROCKN_.BFV MMB213050 AR312 PUB183022 AR312 MMB213050 AR312 PUB183022 AR312 MMB213050',
+  'MOTA7': 'ROCKN_.BFV MMB181014 AR400 HCT339101 AR400 MMB181014'
+};
+function loadRoutePreset() {
+  var sel = document.getElementById('rof-preset');
+  if (!sel || !sel.value) return;
+  var route = ROUTE_PRESETS[sel.value];
+  var input = document.getElementById('rof-input');
+  if (input && route) {
+    input.value = route;
+    renderRoute();
+    if (typeof mdcPersist === 'function') mdcPersist();
+  }
+  sel.value = '';
 }
 function renderRoute() {
   var input = document.getElementById('rof-input');
