@@ -2944,12 +2944,11 @@ function saveCurrentRoute() {
   var input = document.getElementById('rof-input');
   if (!input) return;
   var route = input.value.trim();
-  if (!route) { alert('Nothing to save — the Route of Flight is empty.'); return; }
-  var defaultName = 'Custom ' + (Object.keys(CUSTOM_ROUTES).length + 1);
-  var name = prompt('Save this route as:', defaultName);
-  if (name === null) return; // cancelled
-  name = name.trim();
-  if (!name) return;
+  if (!route) return;
+  // Auto-name "Custom N" — find the smallest N not already taken.
+  var n = 1;
+  while (CUSTOM_ROUTES['Custom ' + n]) n++;
+  var name = 'Custom ' + n;
   CUSTOM_ROUTES[name] = route;
   ROUTE_PRESETS[name] = route;
   renderCustomOptgroup();
