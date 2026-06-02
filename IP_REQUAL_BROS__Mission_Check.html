@@ -518,6 +518,8 @@
           style="font-family:inherit;font-size:11px;font-weight:700;color:#fff;background:#185FA5;border:none;border-radius:999px;padding:3px 10px;cursor:pointer;outline:none;letter-spacing:0.04em;">Insert</button>
         <button type="button" onclick="applyRoutePreset('append')" aria-label="Append preset to current route"
           style="font-family:inherit;font-size:11px;font-weight:700;color:#185FA5;background:#fff;border:1px solid #185FA5;border-radius:999px;padding:2px 10px;cursor:pointer;outline:none;letter-spacing:0.04em;">Append</button>
+        <button type="button" onclick="saveCurrentRoute()" aria-label="Save current route as a custom preset"
+          style="font-family:inherit;font-size:11px;font-weight:700;color:#185FA5;background:#fff;border:1px solid #185FA5;border-radius:999px;padding:2px 10px;cursor:pointer;outline:none;letter-spacing:0.04em;">Save</button>
       </span>
     </div>
 
@@ -2920,6 +2922,39 @@ function applyRoutePreset(mode) {
   }
   sel.value = '';
 }
+var CUSTOM_ROUTES = {};
+function renderCustomOptgroup() {
+  var sel = document.getElementById('rof-preset');
+  if (!sel) return;
+  var existing = sel.querySelector('optgroup[label="Custom"]');
+  if (existing) existing.remove();
+  var names = Object.keys(CUSTOM_ROUTES);
+  if (!names.length) return;
+  var og = document.createElement('optgroup');
+  og.label = 'Custom';
+  names.forEach(function(n) {
+    var opt = document.createElement('option');
+    opt.value = n;
+    opt.textContent = n;
+    og.appendChild(opt);
+  });
+  sel.appendChild(og);
+}
+function saveCurrentRoute() {
+  var input = document.getElementById('rof-input');
+  if (!input) return;
+  var route = input.value.trim();
+  if (!route) { alert('Nothing to save — the Route of Flight is empty.'); return; }
+  var defaultName = 'Custom ' + (Object.keys(CUSTOM_ROUTES).length + 1);
+  var name = prompt('Save this route as:', defaultName);
+  if (name === null) return; // cancelled
+  name = name.trim();
+  if (!name) return;
+  CUSTOM_ROUTES[name] = route;
+  ROUTE_PRESETS[name] = route;
+  renderCustomOptgroup();
+  if (typeof mdcPersist === 'function') mdcPersist();
+}
 function renderRoute() {
   var input = document.getElementById('rof-input');
   var display = document.getElementById('rof-display');
@@ -3797,6 +3832,7 @@ function mdcGatherState() {
     state.pattern = Array.prototype.slice.call(plist.querySelectorAll('[data-preset]'))
       .map(function(g) { return g.getAttribute('data-preset'); });
   }
+  state.customRoutes = CUSTOM_ROUTES;
   return state;
 }
 function mdcPersist() {
@@ -3836,6 +3872,11 @@ function mdcRestore() {
     var psel = document.getElementById('pattern-select');
     if (plist) plist.innerHTML = '';
     if (psel) state.pattern.forEach(function(v) { psel.value = v; addPatternItem(); });
+  }
+  if (state.customRoutes && typeof state.customRoutes === 'object') {
+    CUSTOM_ROUTES = state.customRoutes;
+    Object.keys(CUSTOM_ROUTES).forEach(function(n) { ROUTE_PRESETS[n] = CUSTOM_ROUTES[n]; });
+    renderCustomOptgroup();
   }
   // Re-run downstream calculators / displays with the restored input values.
   if (typeof soeCalc === 'function') soeCalc();
