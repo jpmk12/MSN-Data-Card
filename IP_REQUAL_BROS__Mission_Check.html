@@ -951,6 +951,7 @@
       <thead id="route-data-head"></thead>
       <tbody id="route-data-body"></tbody>
     </table>
+    <div id="route-svg" style="margin-top:14px;"></div>
   </div>
 
     </div>
@@ -2965,11 +2966,47 @@ function setRouteView(view) {
   }
   renderRouteData();
 }
+var IR154_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 1600" font-family="Arial, Helvetica, sans-serif" style="width:100%;height:auto;display:block;">
+  <defs>
+    <g id="tp"><path d="M0,-12 L3.2,-3.2 L12,0 L3.2,3.2 L0,12 L-3.2,3.2 L-12,0 L-3.2,-3.2 Z" fill="#1a2a52"/></g>
+    <g id="fix"><path d="M0,-15 L4,-4 L15,0 L4,4 L0,15 L-4,4 L-15,0 L-4,-4 Z" fill="#185FA5"/></g>
+  </defs>
+  <rect x="0" y="0" width="1160" height="1600" fill="#ffffff"/>
+  <rect x="8" y="8" width="1144" height="1584" fill="none" stroke="#d3d1c7" stroke-width="2"/>
+  <text x="580" y="62" text-anchor="middle" font-size="46" font-weight="700" letter-spacing="3" fill="#0C447C">IR-154</text>
+  <line x1="470" y1="80" x2="690" y2="80" stroke="#185FA5" stroke-width="3"/>
+  <polyline points="430,140 600,322 820,748 820,802 756,996 750,1036 876,1408 864,1486 816,1456 566,1256 406,1182" fill="none" stroke="#1a1a19" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>
+  <line x1="406" y1="1182" x2="410" y2="786" stroke="#1a1a19" stroke-width="3.4" stroke-linecap="round"/>
+  <g transform="translate(672,548)"><rect x="-34" y="-22" width="68" height="48" rx="4" fill="#ffffff" opacity="0.92"/><line x1="-26" y1="-9" x2="26" y2="-9" stroke="#1a1a19" stroke-width="1.6"/><text x="0" y="2" text-anchor="middle" font-size="20" font-weight="600" fill="#1a1a19">5000</text><text x="0" y="22" text-anchor="middle" font-size="18" fill="#1a1a19">SFC</text></g>
+  <g transform="translate(726,902)"><rect x="-34" y="-22" width="68" height="48" rx="4" fill="#ffffff" opacity="0.92"/><line x1="-26" y1="-9" x2="26" y2="-9" stroke="#1a1a19" stroke-width="1.6"/><text x="0" y="2" text-anchor="middle" font-size="20" font-weight="600" fill="#1a1a19">5000</text><text x="0" y="22" text-anchor="middle" font-size="18" fill="#1a1a19">SFC</text></g>
+  <g transform="translate(892,1238)"><rect x="-34" y="-22" width="68" height="48" rx="4" fill="#ffffff" opacity="0.92"/><line x1="-26" y1="-9" x2="26" y2="-9" stroke="#1a1a19" stroke-width="1.6"/><text x="0" y="2" text-anchor="middle" font-size="20" font-weight="600" fill="#1a1a19">5000</text><text x="0" y="22" text-anchor="middle" font-size="18" fill="#1a1a19">SFC</text></g>
+  <g transform="translate(652,1404)"><rect x="-34" y="-22" width="68" height="48" rx="4" fill="#ffffff" opacity="0.92"/><line x1="-26" y1="-9" x2="26" y2="-9" stroke="#1a1a19" stroke-width="1.6"/><text x="0" y="2" text-anchor="middle" font-size="20" font-weight="600" fill="#1a1a19">5000</text><text x="0" y="22" text-anchor="middle" font-size="18" fill="#1a1a19">SFC</text></g>
+  <g transform="translate(520,1186)"><rect x="-40" y="-22" width="80" height="48" rx="4" fill="#ffffff" opacity="0.92"/><line x1="-32" y1="-9" x2="32" y2="-9" stroke="#1a1a19" stroke-width="1.6"/><text x="0" y="2" text-anchor="middle" font-size="20" font-weight="600" fill="#1a1a19">10000</text><text x="0" y="22" text-anchor="middle" font-size="18" fill="#1a1a19">SFC</text></g>
+  <g transform="translate(486,986)"><rect x="-66" y="-16" width="132" height="32" rx="4" fill="#ffffff" opacity="0.92"/><text x="0" y="6" text-anchor="middle" font-size="20" font-style="italic" fill="#1a1a19">As Assigned</text></g>
+  <use href="#fix" x="430" y="140"/><text x="460" y="148" font-size="22" font-weight="700" fill="#0C447C">DOGIN</text>
+  <use href="#fix" x="410" y="786"/><text x="440" y="794" font-size="22" font-weight="700" fill="#0C447C">FLOYD</text>
+  <use href="#tp" x="600" y="322"/><text x="628" y="318" font-size="20" font-weight="700" fill="#1a1a19">Pt J</text><text x="628" y="340" font-size="18" fill="#1a1a19">PNH 123/51</text>
+  <use href="#tp" x="820" y="748"/><text x="848" y="744" font-size="20" font-weight="700" fill="#1a1a19">Pt I</text><text x="848" y="766" font-size="18" fill="#1a1a19">CDS 199/23</text>
+  <use href="#tp" x="820" y="802"/><text x="848" y="804" font-size="20" font-weight="700" fill="#1a1a19">Pt H</text><text x="848" y="826" font-size="18" fill="#1a1a19">CDS 197/24</text>
+  <use href="#tp" x="756" y="996"/><text x="784" y="992" font-size="20" font-weight="700" fill="#1a1a19">Pt G</text><text x="784" y="1014" font-size="18" fill="#1a1a19">CDS 192/46</text>
+  <use href="#tp" x="750" y="1036"/><text x="784" y="1054" font-size="20" font-weight="700" fill="#1a1a19">Pt F</text><text x="784" y="1076" font-size="18" fill="#1a1a19">DYS 326/82</text>
+  <use href="#tp" x="876" y="1408"/><text x="904" y="1404" font-size="20" font-weight="700" fill="#1a1a19">Pt E</text><text x="904" y="1426" font-size="18" fill="#1a1a19">DYS 316/44</text>
+  <use href="#tp" x="864" y="1486"/><text x="892" y="1500" font-size="20" font-weight="700" fill="#1a1a19">Pt D</text><text x="892" y="1522" font-size="18" fill="#1a1a19">DYS 312/42</text>
+  <use href="#tp" x="816" y="1456"/><text x="690" y="1498" font-size="20" font-weight="700" fill="#1a1a19">Pt C</text><text x="690" y="1520" font-size="18" fill="#1a1a19">DYS 309/44</text>
+  <use href="#tp" x="566" y="1256"/><text x="466" y="1290" font-size="20" font-weight="700" fill="#1a1a19">Pt B</text><text x="466" y="1312" font-size="18" fill="#1a1a19">LBB 109/54</text>
+  <use href="#tp" x="406" y="1182"/><text x="300" y="1206" font-size="20" font-weight="700" fill="#1a1a19">Pt A</text><text x="300" y="1228" font-size="18" fill="#1a1a19">LBB 106/39</text>
+  <g><rect x="70" y="170" width="250" height="200" rx="8" fill="#ffffff" stroke="#888780" stroke-width="1.5"/><path d="M70,178 a8,8 0 0 1 8,-8 h234 a8,8 0 0 1 8,8 v34 h-250 Z" fill="#185FA5"/><text x="195" y="201" text-anchor="middle" font-size="20" font-weight="700" fill="#ffffff" letter-spacing="1">STANDARD TIMES</text><text x="195" y="248" text-anchor="middle" font-size="19" fill="#1a1a19">Entry to SCLZ: 14m</text><text x="195" y="278" text-anchor="middle" font-size="19" fill="#1a1a19">Entry to STLZ: 31m</text><text x="195" y="308" text-anchor="middle" font-size="19" fill="#1a1a19">Entry to F: 19m</text><text x="195" y="338" text-anchor="middle" font-size="19" fill="#1a1a19">Entry to J: 34m</text></g>
+  <g><rect x="70" y="680" width="250" height="190" rx="8" fill="#ffffff" stroke="#888780" stroke-width="1.5"/><path d="M70,688 a8,8 0 0 1 8,-8 h234 a8,8 0 0 1 8,8 v34 h-250 Z" fill="#185FA5"/><text x="195" y="711" text-anchor="middle" font-size="20" font-weight="700" fill="#ffffff" letter-spacing="1">ENTRY</text><text x="195" y="756" text-anchor="middle" font-size="19" font-weight="600" fill="#1a1a19">Lubbock Apch: 119.2</text><text x="195" y="794" text-anchor="middle" font-size="19" fill="#1a1a19">Enter +/- 2 min</text><text x="195" y="832" text-anchor="middle" font-size="18" fill="#1a1a19">Expect LBB to ask</text><text x="195" y="855" text-anchor="middle" font-size="18" fill="#1a1a19">for A, F, &amp; J times</text></g>
+  <g><rect x="778" y="150" width="312" height="252" rx="8" fill="#ffffff" stroke="#888780" stroke-width="1.5"/><path d="M778,158 a8,8 0 0 1 8,-8 h296 a8,8 0 0 1 8,8 v34 h-312 Z" fill="#185FA5"/><text x="934" y="181" text-anchor="middle" font-size="20" font-weight="700" fill="#ffffff" letter-spacing="1">ALT EXIT (J)</text><text x="934" y="223" text-anchor="middle" font-size="19" font-weight="600" fill="#1a1a19">ZAB 127.85 / 285.475</text><text x="934" y="261" text-anchor="middle" font-size="19" fill="#1a1a19">Exit +/- 2 min</text><text x="934" y="302" text-anchor="middle" font-size="17" fill="#1a1a19">If unable to reach ZAB, maintain</text><text x="934" y="325" text-anchor="middle" font-size="17" fill="#1a1a19">5000' MSL and contact Amarillo</text><text x="934" y="348" text-anchor="middle" font-size="17" fill="#1a1a19">Apch 119.5 / 307.0</text></g>
+  <g><rect x="812" y="432" width="278" height="216" rx="8" fill="#ffffff" stroke="#888780" stroke-width="1.5"/><path d="M812,440 a8,8 0 0 1 8,-8 h262 a8,8 0 0 1 8,8 v34 h-278 Z" fill="#185FA5"/><text x="951" y="463" text-anchor="middle" font-size="20" font-weight="700" fill="#ffffff" letter-spacing="1">ALT EXIT (F)</text><text x="951" y="505" text-anchor="middle" font-size="17" fill="#1a1a19">Contact Fort Worth ARTCC</text><text x="951" y="528" text-anchor="middle" font-size="17" fill="#1a1a19">prior to reaching exit point</text><text x="951" y="572" text-anchor="middle" font-size="19" font-weight="600" fill="#1a1a19">ZFW 126.45 / 316.10</text><text x="951" y="614" text-anchor="middle" font-size="19" fill="#1a1a19">Exit +/- 2 min</text></g>
+</svg>`;
 function renderRouteData() {
   var sel = document.getElementById('route-select');
   var head = document.getElementById('route-data-head');
   var body = document.getElementById('route-data-body');
   if (!sel || !head || !body) return;
+  var svgEl = document.getElementById('route-svg');
+  if (svgEl) svgEl.innerHTML = (sel.value === 'IR-154') ? IR154_SVG : '';
   var rows = ROUTE_DATA[sel.value] || [];
   var thBase = 'padding:6px 10px;font-size:10px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1.5px solid #d3d1c7;background:#f1efe8;';
 
