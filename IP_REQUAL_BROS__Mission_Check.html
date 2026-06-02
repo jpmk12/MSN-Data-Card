@@ -3129,7 +3129,7 @@ var IR193_VR106_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1210
 var ROUTE_SVGS = {
   'IR-154': function() { return IR154_SVG; },
   'IR-193': function() { return IR193_VR106_SVG; },
-  'VR-106': function() { return IR193_VR106_SVG; }
+  'VR-106': function() { return IR193_VR106_SVG.replace('IR-193 and VR-106', 'VR-106'); }
 };
 function renderRouteData() {
   var sel = document.getElementById('route-select');
