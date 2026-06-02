@@ -489,14 +489,28 @@
         <span style="position:relative;display:inline-flex;align-items:center;">
           <select id="rof-preset" aria-label="Pick a preloaded route"
             style="font-family:inherit;font-size:11px;font-weight:700;color:#fff;background:#185FA5;border:none;border-radius:999px;padding:3px 24px 3px 11px;letter-spacing:0.04em;cursor:pointer;outline:none;-webkit-appearance:none;-moz-appearance:none;appearance:none;">
-            <option value="">MOTA&hellip;</option>
-            <option value="MOTA1">MOTA1</option>
-            <option value="MOTA2">MOTA2</option>
-            <option value="MOTA3">MOTA3</option>
-            <option value="MOTA4">MOTA4</option>
-            <option value="MOTA5">MOTA5</option>
-            <option value="MOTA6">MOTA6</option>
-            <option value="MOTA7">MOTA7</option>
+            <option value="">Route&hellip;</option>
+            <optgroup label="MOTA">
+              <option value="MOTA1">MOTA1</option>
+              <option value="MOTA2">MOTA2</option>
+              <option value="MOTA3">MOTA3</option>
+              <option value="MOTA4">MOTA4</option>
+              <option value="MOTA5">MOTA5</option>
+              <option value="MOTA6">MOTA6</option>
+              <option value="MOTA7">MOTA7</option>
+              <option value="MOTA154">MOTA154</option>
+              <option value="MOTA155">MOTA155</option>
+              <option value="MOTA193A">MOTA193A</option>
+              <option value="MOTA193B">MOTA193B</option>
+            </optgroup>
+            <optgroup label="Procedures">
+              <option value="TORNADO1">TORNADO1</option>
+              <option value="SOONER">SOONER</option>
+              <option value="RACETRAK">RACETRAK</option>
+              <option value="RAREAIR">RAREAIR</option>
+              <option value="JPADS">JPADS</option>
+              <option value="JPADSREC">JPADSREC</option>
+            </optgroup>
           </select>
           <svg style="position:absolute;right:8px;width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
         </span>
@@ -2844,13 +2858,23 @@ function syncLowLevel() {
   } else { slowEl.textContent = '—'; }
 }
 var ROUTE_PRESETS = {
-  'MOTA1': 'MRTHA',
-  'MOTA2': 'OKKIE',
-  'MOTA3': 'ROCKN_.BFV',
-  'MOTA4': 'OKKIE_.CDS LBB360030 AR197 LBB322047 CDS',
-  'MOTA5': 'ROCKN_.BFV MMB213050 AR312 PUB183022 AR312 MMB213050',
-  'MOTA6': 'ROCKN_.BFV MMB213050 AR312 PUB183022 AR312 MMB213050 AR312 PUB183022 AR312 MMB213050',
-  'MOTA7': 'ROCKN_.BFV MMB181014 AR400 HCT339101 AR400 MMB181014'
+  'MOTA1':    'MRTHA',
+  'MOTA2':    'OKKIE',
+  'MOTA3':    'ROCKN_.BFV',
+  'MOTA4':    'OKKIE_.CDS LBB360030 AR197 LBB322047 CDS',
+  'MOTA5':    'ROCKN_.BFV MMB213050 AR312 PUB183022 AR312 MMB213050',
+  'MOTA6':    'ROCKN_.BFV MMB213050 AR312 PUB183022 AR312 MMB213050 AR312 PUB183022 AR312 MMB213050',
+  'MOTA7':    'ROCKN_.BFV MMB181014 AR400 HCT339101 AR400 MMB181014',
+  'MOTA154':  'ZOCKS FLOYD LBB106039 IR154 PNH123051 DOGIN',
+  'MOTA155':  'ZOCKS JUNVA LBB098038 IR155 LBB043027 CINAV CDS',
+  'MOTA193A': 'ZOCKS LTS250022 IR193 LTS250022',
+  'MOTA193B': 'ZOCKS HEATR CDS022017 IR193 BFV242026 ZOCKS',
+  'TORNADO1': 'CDS048008 CDS346021 LTS298045 LTS312034 LTS300026 LTS250022 LTS237024',
+  'SOONER':   'LTS237024 CDS048008 CDS346021 LTS298045 LTS312034 LTS300026 LTS250022 LTS237024',
+  'RACETRAK': 'LTS250026 LTS283028 LTS287023 LTS250022 LTS237024',
+  'RAREAIR':  'LTS229039 LTS237037 LTS250022 LTS315012 LTS324015 LTS297025 LTS250022 LTS237024',
+  'JPADS':    'LTS102022 LAW108011 LAW060033 LAW036032 LAW033022 LAW024011 ®D3+00 LAW024011',
+  'JPADSREC': 'LAW008006 LAW268006 LTS128012'
 };
 function applyRoutePreset(mode) {
   var sel = document.getElementById('rof-preset');
