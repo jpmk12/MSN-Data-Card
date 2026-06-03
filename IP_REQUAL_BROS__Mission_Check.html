@@ -3971,6 +3971,18 @@ document.addEventListener('DOMContentLoaded', function() {
   ].forEach(function(v) { addSafetyItem('incorporated', v); });
   // Restore any previously persisted state (overrides defaults where set).
   mdcRestore();
+  // Defensive cleanup: drop any safety supplement rows that ended up empty,
+  // no matter how they got there.
+  ['ss-active-list', 'ss-incorporated-list'].forEach(function(id) {
+    var list = document.getElementById(id);
+    if (!list) return;
+    Array.prototype.slice.call(list.querySelectorAll('input.ss-input')).forEach(function(input) {
+      if (!input.value.trim()) {
+        var row = input.closest('[data-ss-section]');
+        if (row) row.remove();
+      }
+    });
+  });
   // Now allow further writes and persist on any change. Capture phase so
   // we also catch elements added dynamically later.
   _mdcReady = true;
