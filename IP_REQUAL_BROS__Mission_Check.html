@@ -4201,6 +4201,31 @@ document.addEventListener('DOMContentLoaded', function() {
   // Now allow further writes and persist on any change. Capture phase so
   // we also catch elements added dynamically later.
   _mdcReady = true;
+  // Defensive event delegation — if a per-button onclick somehow doesn't
+  // fire (browser quirks), the × on any Pattern Work row still works.
+  var _pList = document.getElementById('pattern-list');
+  if (_pList) {
+    _pList.addEventListener('click', function(e) {
+      var btn = e.target.closest('button');
+      if (!btn || btn.textContent.trim() !== '×') return;
+      var group = btn.closest('[data-preset]');
+      if (group && group.parentNode) {
+        group.remove();
+        if (typeof mdcPersist === 'function') mdcPersist();
+      }
+    });
+  }
+  // Warn once if localStorage isn't writable — without it, removals,
+  // edits, and Reset all reload to defaults on the next page load.
+  try {
+    localStorage.setItem('mdc-storage-probe', '1');
+    localStorage.removeItem('mdc-storage-probe');
+  } catch (_e) {
+    var banner = document.createElement('div');
+    banner.textContent = 'Storage unavailable — changes won\'t persist between reloads.';
+    banner.style.cssText = 'position:sticky;top:54px;z-index:49;background:#fff2c6;color:#7a5a00;border:1px solid #d9b86b;border-radius:6px;padding:6px 12px;font-size:12px;margin-bottom:12px;text-align:center;';
+    document.body.insertBefore(banner, document.body.firstChild.nextSibling);
+  }
   document.addEventListener('input',  mdcPersist, true);
   document.addEventListener('change', mdcPersist, true);
 });
