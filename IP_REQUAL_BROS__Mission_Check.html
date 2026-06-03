@@ -752,6 +752,17 @@
 
   </div>
 
+  <!-- Briefings / Notes — full row, free-form catch-all -->
+  <div class="card full-row">
+    <div class="card-header">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+      Briefings / Notes
+    </div>
+    <div id="notes-list"></div>
+    <button type="button" onclick="addNote()" aria-label="Add note"
+      style="font-family:inherit;font-size:11px;font-weight:600;color:#185FA5;background:transparent;border:1px solid #185FA5;border-radius:999px;padding:2px 10px;cursor:pointer;outline:none;margin-top:8px;">+ Add Note</button>
+  </div>
+
   <!-- Emergency & IFR — removed from here, now inside Approach Briefs card above -->
   <!-- Box Setup — full row -->
   <div class="card full-row">
@@ -2837,6 +2848,38 @@ function addSafetyItem(section, value) {
   list.appendChild(row);
   if (typeof mdcPersist === 'function') mdcPersist();
 }
+function addNote(value) {
+  var list = document.getElementById('notes-list');
+  if (!list) return null;
+  var row = document.createElement('div');
+  row.setAttribute('data-note-row', '');
+  row.style.cssText = 'display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:0.5px solid #eeedea;';
+  var input = document.createElement('textarea');
+  input.className = 'note-input';
+  input.value = value || '';
+  input.placeholder = 'New note';
+  input.rows = 1;
+  input.setAttribute('aria-label', 'Briefing note');
+  input.style.cssText = 'flex:1;min-width:0;font-family:inherit;font-size:12.5px;color:#1a1a19;background:transparent;border:none;outline:none;padding:2px 4px;resize:vertical;line-height:1.5;overflow:hidden;';
+  var autoGrow = function() {
+    input.style.height = 'auto';
+    input.style.height = input.scrollHeight + 'px';
+  };
+  input.addEventListener('input', autoGrow);
+  setTimeout(autoGrow, 0);
+  var rm = document.createElement('button');
+  rm.type = 'button';
+  rm.textContent = '×';
+  rm.setAttribute('aria-label', 'Remove note');
+  rm.style.cssText = 'font-family:inherit;font-size:14px;font-weight:700;color:#888780;background:transparent;border:none;cursor:pointer;outline:none;padding:0 4px;line-height:1;flex-shrink:0;margin-top:4px;';
+  rm.onclick = function() { row.remove(); if (typeof mdcPersist === 'function') mdcPersist(); };
+  row.appendChild(input);
+  row.appendChild(rm);
+  list.appendChild(row);
+  if (typeof mdcPersist === 'function') mdcPersist();
+  if (!value) input.focus();
+  return input;
+}
 function addBoxStep(listId, value) {
   var list = document.getElementById(listId);
   if (!list) return;
@@ -3967,6 +4010,10 @@ function mdcGatherState() {
       .map(function(i) { return i.value; })
       .filter(function(v) { return v.trim(); });
   });
+  var nList = document.getElementById('notes-list');
+  if (nList) state.notes = Array.prototype.slice.call(nList.querySelectorAll('.note-input'))
+    .map(function(i) { return i.value; })
+    .filter(function(v) { return v.trim(); });
   return state;
 }
 function mdcPersist() {
@@ -4054,6 +4101,12 @@ function mdcRestore() {
       }
     });
   }
+  if (Array.isArray(state.notes)) {
+    var nList = document.getElementById('notes-list');
+    if (nList) nList.innerHTML = '';
+    state.notes.filter(function(v) { return v && v.trim(); })
+      .forEach(function(v) { addNote(v); });
+  }
   // Re-run downstream calculators / displays with the restored input values.
   if (typeof soeCalc === 'function') soeCalc();
   if (typeof syncARCT === 'function') syncARCT();
@@ -4121,6 +4174,17 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   });
+  // Defensive cleanup: drop any note rows that ended up empty.
+  (function() {
+    var list = document.getElementById('notes-list');
+    if (!list) return;
+    Array.prototype.slice.call(list.querySelectorAll('.note-input')).forEach(function(input) {
+      if (!input.value.trim()) {
+        var row = input.closest('[data-note-row]');
+        if (row) row.remove();
+      }
+    });
+  })();
   // Defensive cleanup: dedupe Pattern Work — keep only the first occurrence
   // of any preset and drop unknown / stale entries.
   (function() {
