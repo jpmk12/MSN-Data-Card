@@ -759,10 +759,30 @@
       Box setup sequence
     </div>
     <div class="steps-grid">
-      <div class="step-item"><div class="step-label">Step 1</div><ul class="bullet-list"><li>TAC Pts in SEC</li><li>Build FLT plan</li><li>Fix times</li></ul></div>
-      <div class="step-item"><div class="step-label">Step 2</div><ul class="bullet-list"><li>LZ Ldg/TO Told</li><li>Add BULL</li></ul></div>
-      <div class="step-item"><div class="step-label">Step 3</div><ul class="bullet-list"></ul></div>
-      <div class="step-item" style="grid-column: span 2;"><div class="step-label">Key Points</div><ul class="bullet-list"><li>TOC or BOD is prior to a waypoint</li><li>1 min per 10,000' or 6 sec per 1,000'</li><li>Be 1 min late every 10K of climb</li><li>Be 1 min early every 10K of descent</li></ul></div>
+      <div class="step-item">
+        <div class="step-label">Step 1</div>
+        <ul id="box-step1-list" class="bullet-list"></ul>
+        <button type="button" onclick="addBoxStep('box-step1-list')" aria-label="Add Step 1 item"
+          style="font-family:inherit;font-size:10.5px;font-weight:600;color:#185FA5;background:transparent;border:1px solid #185FA5;border-radius:999px;padding:1px 8px;cursor:pointer;outline:none;margin-top:6px;">+ Add</button>
+      </div>
+      <div class="step-item">
+        <div class="step-label">Step 2</div>
+        <ul id="box-step2-list" class="bullet-list"></ul>
+        <button type="button" onclick="addBoxStep('box-step2-list')" aria-label="Add Step 2 item"
+          style="font-family:inherit;font-size:10.5px;font-weight:600;color:#185FA5;background:transparent;border:1px solid #185FA5;border-radius:999px;padding:1px 8px;cursor:pointer;outline:none;margin-top:6px;">+ Add</button>
+      </div>
+      <div class="step-item">
+        <div class="step-label">Step 3</div>
+        <ul id="box-step3-list" class="bullet-list"></ul>
+        <button type="button" onclick="addBoxStep('box-step3-list')" aria-label="Add Step 3 item"
+          style="font-family:inherit;font-size:10.5px;font-weight:600;color:#185FA5;background:transparent;border:1px solid #185FA5;border-radius:999px;padding:1px 8px;cursor:pointer;outline:none;margin-top:6px;">+ Add</button>
+      </div>
+      <div class="step-item" style="grid-column: span 2;">
+        <div class="step-label">Key Points</div>
+        <ul id="box-keypoints-list" class="bullet-list"></ul>
+        <button type="button" onclick="addBoxStep('box-keypoints-list')" aria-label="Add Key Point"
+          style="font-family:inherit;font-size:10.5px;font-weight:600;color:#185FA5;background:transparent;border:1px solid #185FA5;border-radius:999px;padding:1px 8px;cursor:pointer;outline:none;margin-top:6px;">+ Add</button>
+      </div>
     </div>
   </div>
 
@@ -2816,6 +2836,30 @@ function addSafetyItem(section, value) {
   list.appendChild(row);
   if (typeof mdcPersist === 'function') mdcPersist();
 }
+function addBoxStep(listId, value) {
+  var list = document.getElementById(listId);
+  if (!list) return;
+  var li = document.createElement('li');
+  li.setAttribute('data-box-step', listId);
+  li.style.cssText = 'display:flex;align-items:center;gap:6px;';
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'box-input';
+  input.value = value || '';
+  input.placeholder = 'New entry';
+  input.setAttribute('aria-label', 'Box setup entry');
+  input.style.cssText = 'flex:1;min-width:0;font-family:inherit;font-size:inherit;color:#1a1a19;background:transparent;border:none;border-bottom:1px dotted #b4b2a9;outline:none;padding:0 2px;';
+  var rm = document.createElement('button');
+  rm.type = 'button';
+  rm.textContent = '×';
+  rm.setAttribute('aria-label', 'Remove entry');
+  rm.style.cssText = 'font-family:inherit;font-size:13px;font-weight:700;color:#888780;background:transparent;border:none;cursor:pointer;outline:none;padding:0 4px;line-height:1;';
+  rm.onclick = function() { li.remove(); if (typeof mdcPersist === 'function') mdcPersist(); };
+  li.appendChild(input);
+  li.appendChild(rm);
+  list.appendChild(li);
+  if (typeof mdcPersist === 'function') mdcPersist();
+}
 function addGroundOp() {
   var sel = document.getElementById('ground-ops-select');
   if (!sel || !sel.value) return;
@@ -3873,6 +3917,14 @@ function mdcGatherState() {
   if (iList) state.ssIncorporated = Array.prototype.slice.call(iList.querySelectorAll('input.ss-input'))
     .map(function(i) { return i.value; })
     .filter(function(v) { return v.trim(); });
+  state.boxSteps = {};
+  ['box-step1-list', 'box-step2-list', 'box-step3-list', 'box-keypoints-list'].forEach(function(id) {
+    var list = document.getElementById(id);
+    if (!list) return;
+    state.boxSteps[id] = Array.prototype.slice.call(list.querySelectorAll('input.box-input'))
+      .map(function(i) { return i.value; })
+      .filter(function(v) { return v.trim(); });
+  });
   return state;
 }
 function mdcPersist() {
@@ -3943,6 +3995,18 @@ function mdcRestore() {
     state.ssIncorporated.filter(function(v) { return v && v.trim(); })
       .forEach(function(v) { addSafetyItem('incorporated', v); });
   }
+  if (state.boxSteps && typeof state.boxSteps === 'object') {
+    Object.keys(state.boxSteps).forEach(function(id) {
+      var list = document.getElementById(id);
+      if (!list) return;
+      list.innerHTML = '';
+      var arr = state.boxSteps[id];
+      if (Array.isArray(arr)) {
+        arr.filter(function(v) { return v && v.trim(); })
+          .forEach(function(v) { addBoxStep(id, v); });
+      }
+    });
+  }
   // Re-run downstream calculators / displays with the restored input values.
   if (typeof soeCalc === 'function') soeCalc();
   if (typeof syncARCT === 'function') syncARCT();
@@ -3978,6 +4042,13 @@ document.addEventListener('DOMContentLoaded', function() {
     'OP SUP 1S-323 (Landing w/ 1–2 engines inop)',
     'SS-322 (Revised gear down/locked)'
   ].forEach(function(v) { addSafetyItem('incorporated', v); });
+  // Pre-load default Box Setup Sequence entries
+  [
+    { id: 'box-step1-list',     items: ['TAC Pts in SEC', 'Build FLT plan', 'Fix times'] },
+    { id: 'box-step2-list',     items: ['LZ Ldg/TO Told', 'Add BULL'] },
+    { id: 'box-step3-list',     items: [] },
+    { id: 'box-keypoints-list', items: ['TOC or BOD is prior to a waypoint', "1 min per 10,000' or 6 sec per 1,000'", 'Be 1 min late every 10K of climb', 'Be 1 min early every 10K of descent'] }
+  ].forEach(function(g) { g.items.forEach(function(v) { addBoxStep(g.id, v); }); });
   // Restore any previously persisted state (overrides defaults where set).
   mdcRestore();
   // Defensive cleanup: drop any safety supplement rows that ended up empty,
@@ -3988,6 +4059,17 @@ document.addEventListener('DOMContentLoaded', function() {
     Array.prototype.slice.call(list.querySelectorAll('input.ss-input')).forEach(function(input) {
       if (!input.value.trim()) {
         var row = input.closest('[data-ss-section]');
+        if (row) row.remove();
+      }
+    });
+  });
+  // Defensive cleanup: drop any Box Setup rows that ended up empty.
+  ['box-step1-list', 'box-step2-list', 'box-step3-list', 'box-keypoints-list'].forEach(function(id) {
+    var list = document.getElementById(id);
+    if (!list) return;
+    Array.prototype.slice.call(list.querySelectorAll('input.box-input')).forEach(function(input) {
+      if (!input.value.trim()) {
+        var row = input.closest('[data-box-step]');
         if (row) row.remove();
       }
     });
