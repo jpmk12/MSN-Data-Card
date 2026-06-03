@@ -4142,7 +4142,7 @@ document.addEventListener('DOMContentLoaded', function() {
     { id: 'box-step1-list',     items: ['TAC Pts in SEC', 'Build FLT plan', 'Fix times'] },
     { id: 'box-step2-list',     items: ['LZ Ldg/TO Told', 'Add BULL'] },
     { id: 'box-step3-list',     items: [] },
-    { id: 'box-keypoints-list', items: ["1 min per 10,000' or 6 sec per 1,000' when TOC or BOD is prior to a waypoint", "1 min per 10,000' or 6 sec per 1,000'", 'Be 1 min late every 10K of climb / Be 1 min early every 10K of descent'] }
+    { id: 'box-keypoints-list', items: ["1 min per 10,000' or 6 sec per 1,000' when TOC or BOD is prior to a waypoint", 'Be 1 min late every 10K of climb / Be 1 min early every 10K of descent'] }
   ].forEach(function(g) { g.items.forEach(function(v) { addBoxStep(g.id, v); }); });
   // Restore any previously persisted state (overrides defaults where set).
   mdcRestore();
