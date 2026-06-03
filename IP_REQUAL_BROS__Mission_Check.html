@@ -672,6 +672,7 @@
             <option value="DUKE ACCEL 6500">DUKE ACCEL 6500</option>
             <option value="DUKE BEAM">DUKE BEAM</option>
             <option value="STR IN">STR IN</option>
+            <option value="Custom">Custom&hellip;</option>
           </select>
           <svg style="position:absolute;right:8px;width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
         </span>
@@ -2898,6 +2899,13 @@ var PATTERN_PRESETS = {
 function addPatternItem() {
   var sel = document.getElementById('pattern-select');
   if (!sel || !sel.value) return;
+  if (sel.value === 'Custom') {
+    var added = addCustomPatternItem('');
+    sel.value = '';
+    if (added) added.focus();
+    if (typeof mdcPersist === 'function') mdcPersist();
+    return;
+  }
   var preset = PATTERN_PRESETS[sel.value];
   if (!preset) return;
   var list = document.getElementById('pattern-list');
@@ -2926,6 +2934,33 @@ function addPatternItem() {
   list.appendChild(group);
   sel.value = '';
   if (typeof mdcPersist === 'function') mdcPersist();
+}
+function addCustomPatternItem(value) {
+  var list = document.getElementById('pattern-list');
+  if (!list) return null;
+  var group = document.createElement('div');
+  group.setAttribute('data-preset', 'Custom');
+  var mainRow = document.createElement('div');
+  mainRow.className = 'item';
+  mainRow.style.cssText = 'display:flex;align-items:center;justify-content:space-between;gap:8px;';
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'pattern-custom-input';
+  input.value = value || '';
+  input.placeholder = 'Custom pattern';
+  input.setAttribute('aria-label', 'Custom pattern entry');
+  input.style.cssText = 'flex:1;min-width:0;font-family:inherit;font-size:inherit;color:inherit;background:transparent;border:none;border-bottom:1px dotted #b4b2a9;outline:none;padding:0 2px;';
+  var rm = document.createElement('button');
+  rm.type = 'button';
+  rm.textContent = '×';
+  rm.setAttribute('aria-label', 'Remove custom pattern');
+  rm.style.cssText = 'font-family:inherit;font-size:14px;font-weight:700;color:#888780;background:transparent;border:none;cursor:pointer;outline:none;padding:0 4px;line-height:1;';
+  rm.onclick = function() { group.remove(); if (typeof mdcPersist === 'function') mdcPersist(); };
+  mainRow.appendChild(input);
+  mainRow.appendChild(rm);
+  group.appendChild(mainRow);
+  list.appendChild(group);
+  return input;
 }
 var LL_PRESETS = {
   'IR-193': { entry: '—', exit: '—' },
@@ -3906,7 +3941,14 @@ function mdcGatherState() {
   var plist = document.getElementById('pattern-list');
   if (plist) {
     state.pattern = Array.prototype.slice.call(plist.querySelectorAll('[data-preset]'))
-      .map(function(g) { return g.getAttribute('data-preset'); });
+      .map(function(g) {
+        var k = g.getAttribute('data-preset');
+        if (k === 'Custom') {
+          var inp = g.querySelector('input.pattern-custom-input');
+          return { preset: 'Custom', text: inp ? inp.value : '' };
+        }
+        return k;
+      });
   }
   state.customRoutes = CUSTOM_ROUTES;
   var aList = document.getElementById('ss-active-list');
@@ -3970,8 +4012,13 @@ function mdcRestore() {
     if (psel) {
       var seenPattern = {};
       state.pattern.forEach(function(v) {
+        // Custom rows: each preserved as-is with its saved text.
+        if (v && typeof v === 'object' && v.preset === 'Custom') {
+          addCustomPatternItem(v.text || '');
+          return;
+        }
         // Skip unknown presets and any duplicate of one we've already added.
-        if (!PATTERN_PRESETS[v] || seenPattern[v]) return;
+        if (typeof v !== 'string' || !PATTERN_PRESETS[v] || seenPattern[v]) return;
         seenPattern[v] = true;
         psel.value = v;
         addPatternItem();
@@ -4082,6 +4129,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var seen = {};
     Array.prototype.slice.call(plist.querySelectorAll('[data-preset]')).forEach(function(g) {
       var k = g.getAttribute('data-preset');
+      if (k === 'Custom') return; // each custom row is unique; never dedupe / drop
       if (!PATTERN_PRESETS[k] || seen[k]) { g.remove(); return; }
       seen[k] = true;
     });
