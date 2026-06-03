@@ -3866,9 +3866,13 @@ function mdcGatherState() {
   }
   state.customRoutes = CUSTOM_ROUTES;
   var aList = document.getElementById('ss-active-list');
-  if (aList) state.ssActive = Array.prototype.slice.call(aList.querySelectorAll('input.ss-input')).map(function(i) { return i.value; });
+  if (aList) state.ssActive = Array.prototype.slice.call(aList.querySelectorAll('input.ss-input'))
+    .map(function(i) { return i.value; })
+    .filter(function(v) { return v.trim(); });
   var iList = document.getElementById('ss-incorporated-list');
-  if (iList) state.ssIncorporated = Array.prototype.slice.call(iList.querySelectorAll('input.ss-input')).map(function(i) { return i.value; });
+  if (iList) state.ssIncorporated = Array.prototype.slice.call(iList.querySelectorAll('input.ss-input'))
+    .map(function(i) { return i.value; })
+    .filter(function(v) { return v.trim(); });
   return state;
 }
 function mdcPersist() {
@@ -3921,12 +3925,14 @@ function mdcRestore() {
   if (Array.isArray(state.ssActive)) {
     var aList = document.getElementById('ss-active-list');
     if (aList) aList.innerHTML = '';
-    state.ssActive.forEach(function(v) { addSafetyItem('active', v); });
+    state.ssActive.filter(function(v) { return v && v.trim(); })
+      .forEach(function(v) { addSafetyItem('active', v); });
   }
   if (Array.isArray(state.ssIncorporated)) {
     var iList = document.getElementById('ss-incorporated-list');
     if (iList) iList.innerHTML = '';
-    state.ssIncorporated.forEach(function(v) { addSafetyItem('incorporated', v); });
+    state.ssIncorporated.filter(function(v) { return v && v.trim(); })
+      .forEach(function(v) { addSafetyItem('incorporated', v); });
   }
   // Re-run downstream calculators / displays with the restored input values.
   if (typeof soeCalc === 'function') soeCalc();
