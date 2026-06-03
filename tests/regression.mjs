@@ -239,23 +239,35 @@ await clickTab('AR');
 const arBadges = await page.$$eval('.chk-r, .chk-c', els => els.length);
 ok('Has R/C badged checklist items', arBadges >= 7);
 
-// ── 20. Sticky toolbar ──────────────────────────────────────────────
+// ── 20. Toolbar scrolls with the page (not pinned) ─────────────────
 await page.evaluate(() => window.scrollTo(0, 2000));
 await page.waitForTimeout(150);
 const tbTop = await page.evaluate(() => document.querySelector('.toolbar').getBoundingClientRect().top);
-ok('Toolbar sticks at top when scrolled', tbTop <= 5);
+ok('Toolbar scrolls out of view when the page is scrolled', tbTop < -100);
 
 // ── 21. No storage warning when localStorage works ──────────────────
 const banner = await page.evaluate(() => document.getElementById('mdc-storage-warning'));
 ok('No storage warning when localStorage works', !banner);
 
-// ── 22. Box Setup × removes one row ─────────────────────────────────
+// ── 22. Box Setup × removes one row + Key Points layout ────────────
 await clickTab('Brief');
 const s1Before = await page.$$eval('#box-step1-list input', els => els.length);
 await page.evaluate(() => document.querySelector('#box-step1-list li button').click());
 await page.waitForTimeout(150);
 const s1After = await page.$$eval('#box-step1-list input', els => els.length);
 ok('Box Step 1 × removes one row', s1After === s1Before - 1);
+// Key Points should sit on its own row spanning the full Box Setup width.
+const layout = await page.evaluate(() => {
+  const s1 = document.getElementById('box-step1-list').closest('.step-item').getBoundingClientRect();
+  const kp = document.getElementById('box-keypoints-list').closest('.step-item').getBoundingClientRect();
+  const grid = document.querySelector('.steps-grid').getBoundingClientRect();
+  return {
+    keyPointsBelowStep1: kp.top > s1.bottom,
+    keyPointsFullWidth: Math.abs(kp.width - grid.width) < 4,
+  };
+});
+ok('Key Points sits below Step 1 row', layout.keyPointsBelowStep1);
+ok('Key Points spans full Box Setup width', layout.keyPointsFullWidth);
 
 // ── 23. Downloaded HTML retains toolbar ─────────────────────────────
 const html = await page.evaluate(() => {
