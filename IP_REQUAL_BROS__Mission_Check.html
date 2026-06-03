@@ -3915,7 +3915,16 @@ function mdcRestore() {
     var plist = document.getElementById('pattern-list');
     var psel = document.getElementById('pattern-select');
     if (plist) plist.innerHTML = '';
-    if (psel) state.pattern.forEach(function(v) { psel.value = v; addPatternItem(); });
+    if (psel) {
+      var seenPattern = {};
+      state.pattern.forEach(function(v) {
+        // Skip unknown presets and any duplicate of one we've already added.
+        if (!PATTERN_PRESETS[v] || seenPattern[v]) return;
+        seenPattern[v] = true;
+        psel.value = v;
+        addPatternItem();
+      });
+    }
   }
   if (state.customRoutes && typeof state.customRoutes === 'object') {
     CUSTOM_ROUTES = state.customRoutes;
@@ -3983,6 +3992,18 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   });
+  // Defensive cleanup: dedupe Pattern Work — keep only the first occurrence
+  // of any preset and drop unknown / stale entries.
+  (function() {
+    var plist = document.getElementById('pattern-list');
+    if (!plist) return;
+    var seen = {};
+    Array.prototype.slice.call(plist.querySelectorAll('[data-preset]')).forEach(function(g) {
+      var k = g.getAttribute('data-preset');
+      if (!PATTERN_PRESETS[k] || seen[k]) { g.remove(); return; }
+      seen[k] = true;
+    });
+  })();
   // Now allow further writes and persist on any change. Capture phase so
   // we also catch elements added dynamically later.
   _mdcReady = true;
