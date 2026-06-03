@@ -3982,9 +3982,8 @@ function switchTab(id, btn) {
 }
 function downloadHTML() {
   const clone = document.documentElement.cloneNode(true);
-  // Strip the Print/Download toolbar from the saved copy, but keep the
-  // tab bar so navigation still works in the downloaded file.
-  clone.querySelectorAll('.toolbar').forEach(el => el.remove());
+  // Keep everything (toolbar included) so Reset / Print / Download all
+  // still work in the saved copy.
   const blob = new Blob(['<!DOCTYPE html>' + clone.outerHTML], { type: 'text/html' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
