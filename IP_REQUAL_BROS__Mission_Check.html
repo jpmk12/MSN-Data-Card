@@ -4222,6 +4222,7 @@ document.addEventListener('DOMContentLoaded', function() {
     localStorage.removeItem('mdc-storage-probe');
   } catch (_e) {
     var banner = document.createElement('div');
+    banner.id = 'mdc-storage-warning';
     banner.textContent = 'Storage unavailable — changes won\'t persist between reloads.';
     banner.style.cssText = 'position:sticky;top:54px;z-index:49;background:#fff2c6;color:#7a5a00;border:1px solid #d9b86b;border-radius:6px;padding:6px 12px;font-size:12px;margin-bottom:12px;text-align:center;';
     document.body.insertBefore(banner, document.body.firstChild.nextSibling);
