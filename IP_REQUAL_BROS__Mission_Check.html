@@ -4000,7 +4000,6 @@ function downloadHTML() {
   setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
 }
 function resetCard() {
-  if (!confirm('Reset all card data to defaults? This will clear every value and checkbox you have entered.')) return;
   try { localStorage.removeItem('iprq-bros-mdc-v1'); } catch (e) { /* ignore */ }
   location.reload();
 }
