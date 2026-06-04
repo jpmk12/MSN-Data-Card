@@ -67,10 +67,15 @@ eq('Student 1 default DEAD',     await page.$eval('#hdr-student1', e => e.value)
 eq('Student 2 default DUFF',     await page.$eval('#hdr-student2', e => e.value), 'DUFF');
 
 // ── 3. SOE defaults / calc ──────────────────────────────────────────
-eq('Takeoff default 1400', await page.$eval('#soe-takeoff', e => e.value), '1400');
+eq('Takeoff default 1415', await page.$eval('#soe-takeoff', e => e.value), '1415');
+eq('Low Level Entry default 1855', await page.$eval('#soe-llentry', e => e.value), '1855');
+eq('LL Exit default 1939',         await page.$eval('#soe-llexit',  e => e.value), '1939');
+eq('ARCT default 1700',            await page.$eval('#soe-arct',    e => e.value), '1700');
 const cells = await page.$$eval('#tab-main table tr', rows =>
   rows.map(r => [...r.querySelectorAll('td')].map(t => t.textContent.trim())));
-ok('SOE back-calcs from 1400', cells.some(r => r.includes('1015') && r.includes('0515')));
+// 1415 takeoff → Alert 1030, Show 1130, Stations 1330, Land +6 = 2015, Takeoff 1415
+ok('SOE Alert back-calcs from 1415',    cells.some(r => r.includes('1030') && r.includes('0530')));
+ok('SOE Land row +6 from 1415 (2015)',  cells.some(r => r.includes('2015') && r.includes('1515')));
 
 // ── 4. Route of Flight defaults + MOTA picker ───────────────────────
 const rofDefault = 'KLTS OKKIE3.CDS LBB/360/030 AR197 LBB/322/047 LBB/106/039 IR154 PNH/123/051 DOGIN DUKE KLTS';
@@ -208,7 +213,10 @@ eq('Dedupe + drop unknown', dedup, ['DUKE TAC 6500', 'STR IN', 'DUKE BEAM']);
 await page.click('button[onclick="resetCard()"]');
 await page.waitForTimeout(700);
 eq('Reset: Callsign default', await page.$eval('#hdr-callsign', e => e.value), 'CADDO 55');
-eq('Reset: ARCT empty',       await page.$eval('#soe-arct', e => e.value), '');
+eq('Reset: ARCT back to default 1700', await page.$eval('#soe-arct', e => e.value), '1700');
+eq('Reset: LL Entry back to 1855',     await page.$eval('#soe-llentry', e => e.value), '1855');
+eq('Reset: LL Exit back to 1939',      await page.$eval('#soe-llexit', e => e.value), '1939');
+eq('Reset: Takeoff back to 1415',      await page.$eval('#soe-takeoff', e => e.value), '1415');
 const patReset = await page.$$eval('#pattern-list [data-preset]', els => els.map(e => e.getAttribute('data-preset')));
 eq('Reset: Pattern 4 defaults', patReset, ['DUKE TAC 6500', 'DUKE BEAM', 'DUKE ACCEL 6500', 'STR IN']);
 eq('Reset: Slow offset default', await page.$eval('#ll-slow-offset', e => e.value), '100');
