@@ -62,7 +62,7 @@ await freshLoad();
 eq('Title is IPRQ-BROS-MDC', await page.title(), 'IPRQ-BROS-MDC');
 
 // ── 2. Header default values ────────────────────────────────────────
-eq('Callsign default CADDO 55',  await page.$eval('#hdr-callsign', e => e.value), 'CADDO 55');
+eq('Callsign default CADDO 96',  await page.$eval('#hdr-callsign', e => e.value), 'CADDO 96');
 eq('Student 1 default DEAD',     await page.$eval('#hdr-student1', e => e.value), 'DEAD');
 eq('Student 2 default DUFF',     await page.$eval('#hdr-student2', e => e.value), 'DUFF');
 
@@ -212,7 +212,7 @@ eq('Dedupe + drop unknown', dedup, ['DUKE TAC 6500', 'STR IN', 'DUKE BEAM']);
 // ── 16. Reset ───────────────────────────────────────────────────────
 await page.click('button[onclick="resetCard()"]');
 await page.waitForTimeout(700);
-eq('Reset: Callsign default', await page.$eval('#hdr-callsign', e => e.value), 'CADDO 55');
+eq('Reset: Callsign default', await page.$eval('#hdr-callsign', e => e.value), 'CADDO 96');
 eq('Reset: ARCT back to default 1700', await page.$eval('#soe-arct', e => e.value), '1700');
 eq('Reset: LL Entry back to 1855',     await page.$eval('#soe-llentry', e => e.value), '1855');
 eq('Reset: LL Exit back to 1939',      await page.$eval('#soe-llexit', e => e.value), '1939');
