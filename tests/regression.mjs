@@ -78,7 +78,7 @@ ok('SOE Alert back-calcs from 1415',    cells.some(r => r.includes('1030') && r.
 ok('SOE Land row +6 from 1415 (2015)',  cells.some(r => r.includes('2015') && r.includes('1515')));
 
 // ── 4. Route of Flight defaults + MOTA picker ───────────────────────
-const rofDefault = 'KLTS OKKIE3.CDS LBB/360/030 AR197 LBB/322/047 LBB/106/039 IR154 PNH/123/051 DOGIN DUKE KLTS';
+const rofDefault = 'KLTS OKKIE3.CDS LBB/360/030 AR197 LBB/322/047 CDS JUNVA LBB/098/038 IR155 LBB/043/027 CINAV CDS KLTS';
 eq('Route of Flight default', await page.$eval('#rof-input', e => e.value), rofDefault);
 await page.selectOption('#rof-preset', 'MOTA4');
 await page.click('button[onclick="applyRoutePreset(\'insert\')"]');
