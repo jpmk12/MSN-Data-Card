@@ -132,8 +132,12 @@ await page.waitForTimeout(120);
 eq('Slow 2 = LZ2 1936 − 2:00', await page.$eval('#ll-slow2', e => e.textContent), '19:34:00');
 
 // ── 8. LL Info route picker ─────────────────────────────────────────
-eq('LL Info default IR-154 Entry A', await page.$eval('#ll-entry-pt', e => e.textContent), 'A');
-eq('LL Info default IR-154 Exit J',  await page.$eval('#ll-exit-pt',  e => e.textContent), 'J');
+eq('LL Info default IR-155 Entry A', await page.$eval('#ll-entry-pt', e => e.textContent), 'A');
+eq('LL Info default IR-155 Exit N',  await page.$eval('#ll-exit-pt',  e => e.textContent), 'N');
+await page.selectOption('#ll-route-select', 'IR-154');
+await page.waitForTimeout(100);
+eq('IR-154 Entry A after switch', await page.$eval('#ll-entry-pt', e => e.textContent), 'A');
+eq('IR-154 Exit J after switch',  await page.$eval('#ll-exit-pt',  e => e.textContent), 'J');
 await page.selectOption('#ll-route-select', 'IR-193');
 await page.waitForTimeout(100);
 eq('IR-193 Entry placeholder —', await page.$eval('#ll-entry-pt', e => e.textContent), '—');
