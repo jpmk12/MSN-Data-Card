@@ -119,11 +119,17 @@ await page.waitForTimeout(150);
 eq('Three Rs ARCT-30 suffix', await page.$eval('#three-rs-suffix', e => e.textContent), ': 1500');
 eq('Three Cs ARCT-15 suffix', await page.$eval('#three-cs-suffix', e => e.textContent), ': 1515');
 
-// ── 7. Slow offset ──────────────────────────────────────────────────
+// ── 7. Slow 1 / Slow 2 offsets ──────────────────────────────────────
 await page.fill('#soe-lztime', '1430');
 await page.selectOption('#ll-slow-offset', '180');
 await page.waitForTimeout(150);
-eq('Slow = LZ 1430 − 3:00', await page.$eval('#ll-slow', e => e.textContent), '14:27:00');
+eq('Slow 1 = LZ1 1430 − 3:00', await page.$eval('#ll-slow', e => e.textContent), '14:27:00');
+// Default LZ 2 TOT is 1936, default Slow 2 offset is −1:40 (100s)
+eq('Slow 2 default = LZ2 1936 − 1:40', await page.$eval('#ll-slow2', e => e.textContent), '19:34:20');
+// Change Slow 2 offset and verify it recomputes against soe-lz2tot.
+await page.selectOption('#ll-slow2-offset', '120');
+await page.waitForTimeout(120);
+eq('Slow 2 = LZ2 1936 − 2:00', await page.$eval('#ll-slow2', e => e.textContent), '19:34:00');
 
 // ── 8. LL Info route picker ─────────────────────────────────────────
 eq('LL Info default IR-154 Entry A', await page.$eval('#ll-entry-pt', e => e.textContent), 'A');
@@ -223,7 +229,8 @@ eq('Reset: LZ 2 TOT back to 1936',     await page.$eval('#soe-lz2tot', e => e.va
 eq('Reset: Takeoff back to 1415',      await page.$eval('#soe-takeoff', e => e.value), '1415');
 const patReset = await page.$$eval('#pattern-list [data-preset]', els => els.map(e => e.getAttribute('data-preset')));
 eq('Reset: Pattern 4 defaults', patReset, ['DUKE TAC 6500', 'DUKE BEAM', 'DUKE ACCEL 6500', 'STR IN']);
-eq('Reset: Slow offset default', await page.$eval('#ll-slow-offset', e => e.value), '100');
+eq('Reset: Slow 1 offset default', await page.$eval('#ll-slow-offset',  e => e.value), '100');
+eq('Reset: Slow 2 offset default', await page.$eval('#ll-slow2-offset', e => e.value), '100');
 
 // ── 17. Route Data SVGs + dynamic titles ────────────────────────────
 await clickTab('Low Level');

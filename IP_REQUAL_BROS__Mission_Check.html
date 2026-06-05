@@ -613,7 +613,8 @@
       <div style="font-size:11px;color:#888780;padding:3px 0;">LZ 2 TOT</div>
       <input id="soe-lz2tot" type="text" maxlength="4" placeholder="——" value="1936"
         aria-label="LZ 2 TOT in HHMM"
-        style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;" />
+        style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;"
+        oninput="syncLowLevel()" />
 
       <div style="font-size:11px;color:#888780;padding:3px 0;">LL Exit</div>
       <input id="soe-llexit" type="text" maxlength="4" placeholder="——" value="1939"
@@ -709,7 +710,8 @@
       <tbody>
         <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;width:42%;border-bottom:0.5px solid #d3d1c7;">LL Entry</td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-entry">—</span></td></tr>
         <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">Entry Pt</td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-entry-pt">A</span></td></tr>
-        <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;"><span style="display:inline-flex;align-items:center;gap:6px;">Slow<select id="ll-slow-offset" onchange="syncLowLevel()" aria-label="LZ Time offset to subtract" style="font-family:inherit;font-size:10.5px;font-weight:600;color:#5f5e5a;background:transparent;border:none;border-bottom:1px solid #b4b2a9;cursor:pointer;outline:none;padding:0 2px;"><option value="30">&minus;0:30</option><option value="60">&minus;1:00</option><option value="80">&minus;1:20</option><option value="100" selected>&minus;1:40</option><option value="120">&minus;2:00</option><option value="150">&minus;2:30</option><option value="180">&minus;3:00</option></select></span></td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-slow">—</span></td></tr>
+        <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;"><span style="display:inline-flex;align-items:center;gap:6px;">Slow 1<select id="ll-slow-offset" onchange="syncLowLevel()" aria-label="LZ 1 TOT offset to subtract" style="font-family:inherit;font-size:10.5px;font-weight:600;color:#5f5e5a;background:transparent;border:none;border-bottom:1px solid #b4b2a9;cursor:pointer;outline:none;padding:0 2px;"><option value="30">&minus;0:30</option><option value="60">&minus;1:00</option><option value="80">&minus;1:20</option><option value="100" selected>&minus;1:40</option><option value="120">&minus;2:00</option><option value="150">&minus;2:30</option><option value="180">&minus;3:00</option></select></span></td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-slow">—</span></td></tr>
+        <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;"><span style="display:inline-flex;align-items:center;gap:6px;">Slow 2<select id="ll-slow2-offset" onchange="syncLowLevel()" aria-label="LZ 2 TOT offset to subtract" style="font-family:inherit;font-size:10.5px;font-weight:600;color:#5f5e5a;background:transparent;border:none;border-bottom:1px solid #b4b2a9;cursor:pointer;outline:none;padding:0 2px;"><option value="30">&minus;0:30</option><option value="60">&minus;1:00</option><option value="80">&minus;1:20</option><option value="100" selected>&minus;1:40</option><option value="120">&minus;2:00</option><option value="150">&minus;2:30</option><option value="180">&minus;3:00</option></select></span></td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-slow2">—</span></td></tr>
         <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;">Exit Pt</td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;"><span id="ll-exit-pt">J</span></td></tr>
       </tbody>
     </table>
@@ -3030,26 +3032,29 @@ function setLLRoute() {
   if (e) e.textContent = preset.entry;
   if (x) x.textContent = preset.exit;
 }
+function _computeSlow(lzInputId, offsetSelectId, outputSpanId) {
+  // Slow = LZ TOT minus the selected offset (seconds). LZ TOT entered as
+  // HHMM (3 or 4 digits); result shown as HH:MM:SS since the offset can
+  // include a seconds component.
+  var outEl = document.getElementById(outputSpanId);
+  if (!outEl) return;
+  var lzRaw = (document.getElementById(lzInputId).value || '').trim();
+  if (!/^\d{3,4}$/.test(lzRaw)) { outEl.textContent = '—'; return; }
+  var lz = lzRaw.padStart(4, '0');
+  var hh = parseInt(lz.slice(0, 2), 10), mm = parseInt(lz.slice(2, 4), 10);
+  if (hh >= 24 || mm >= 60) { outEl.textContent = '—'; return; }
+  var offsetEl = document.getElementById(offsetSelectId);
+  var offsetSec = offsetEl ? parseInt(offsetEl.value, 10) || 100 : 100;
+  var total = ((hh * 3600 + mm * 60 - offsetSec) % 86400 + 86400) % 86400;
+  var p = function(n) { return (n < 10 ? '0' : '') + n; };
+  outEl.textContent = p(Math.floor(total / 3600)) + ':' + p(Math.floor((total % 3600) / 60)) + ':' + p(total % 60);
+}
 function syncLowLevel() {
   // Copy Low Level Entry value into the Low Level Info section
   var llRaw = (document.getElementById('soe-llentry').value || '').trim();
   document.getElementById('ll-entry').textContent = llRaw ? llRaw : '—';
-  // Slow = LZ Time minus 1 min 40 sec. LZ Time entered as HHMM (4 digits);
-  // result shown as HHMMSS since the subtraction produces a seconds component.
-  var lz = (document.getElementById('soe-lztime').value || '').trim();
-  var slowEl = document.getElementById('ll-slow');
-  if (/^\d{3,4}$/.test(lz)) {
-    lz = lz.padStart(4,'0');
-    var hh = parseInt(lz.slice(0,2),10), mm = parseInt(lz.slice(2,4),10);
-    if (hh<24 && mm<60) {
-      var offsetEl = document.getElementById('ll-slow-offset');
-      var offsetSec = offsetEl ? parseInt(offsetEl.value, 10) || 100 : 100;
-      var total = hh*3600 + mm*60 - offsetSec;
-      total = ((total % 86400) + 86400) % 86400;
-      var p = function(n){ return (n<10?'0':'')+n; };
-      slowEl.textContent = p(Math.floor(total/3600)) + ':' + p(Math.floor((total%3600)/60)) + ':' + p(total%60);
-    } else { slowEl.textContent = '—'; }
-  } else { slowEl.textContent = '—'; }
+  _computeSlow('soe-lztime', 'll-slow-offset',  'll-slow');
+  _computeSlow('soe-lz2tot', 'll-slow2-offset', 'll-slow2');
 }
 var ROUTE_PRESETS = {
   'MOTA1':    'MRTHA',
