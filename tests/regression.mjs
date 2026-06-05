@@ -67,9 +67,11 @@ eq('Student 1 default DEAD',     await page.$eval('#hdr-student1', e => e.value)
 eq('Student 2 default DUFF',     await page.$eval('#hdr-student2', e => e.value), 'DUFF');
 
 // ── 3. SOE defaults / calc ──────────────────────────────────────────
-eq('Takeoff default 1415', await page.$eval('#soe-takeoff', e => e.value), '1415');
+eq('Takeoff default 1415',         await page.$eval('#soe-takeoff', e => e.value), '1415');
 eq('Low Level Entry default 1855', await page.$eval('#soe-llentry', e => e.value), '1855');
+eq('LZ 1 TOT default 1919',        await page.$eval('#soe-lztime',  e => e.value), '1919');
 eq('LL Exit default 1939',         await page.$eval('#soe-llexit',  e => e.value), '1939');
+eq('LZ 2 TOT default 1936',        await page.$eval('#soe-lz2tot',  e => e.value), '1936');
 eq('ARCT default 1700',            await page.$eval('#soe-arct',    e => e.value), '1700');
 const cells = await page.$$eval('#tab-main table tr', rows =>
   rows.map(r => [...r.querySelectorAll('td')].map(t => t.textContent.trim())));
@@ -215,7 +217,9 @@ await page.waitForTimeout(700);
 eq('Reset: Callsign default', await page.$eval('#hdr-callsign', e => e.value), 'CADDO 96');
 eq('Reset: ARCT back to default 1700', await page.$eval('#soe-arct', e => e.value), '1700');
 eq('Reset: LL Entry back to 1855',     await page.$eval('#soe-llentry', e => e.value), '1855');
+eq('Reset: LZ 1 TOT back to 1919',     await page.$eval('#soe-lztime', e => e.value), '1919');
 eq('Reset: LL Exit back to 1939',      await page.$eval('#soe-llexit', e => e.value), '1939');
+eq('Reset: LZ 2 TOT back to 1936',     await page.$eval('#soe-lz2tot', e => e.value), '1936');
 eq('Reset: Takeoff back to 1415',      await page.$eval('#soe-takeoff', e => e.value), '1415');
 const patReset = await page.$$eval('#pattern-list [data-preset]', els => els.map(e => e.getAttribute('data-preset')));
 eq('Reset: Pattern 4 defaults', patReset, ['DUKE TAC 6500', 'DUKE BEAM', 'DUKE ACCEL 6500', 'STR IN']);
