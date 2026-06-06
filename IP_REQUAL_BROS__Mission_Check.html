@@ -604,15 +604,15 @@
         style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;"
         oninput="syncLowLevel()" />
 
-      <div style="font-size:11px;color:#888780;padding:3px 0;">LZ 1 TOT</div>
+      <div style="font-size:11px;color:#888780;padding:3px 0;">SCLZ TOT</div>
       <input id="soe-lztime" type="text" maxlength="4" placeholder="——" value="1729"
-        aria-label="LZ 1 TOT in HHMM"
+        aria-label="SCLZ TOT in HHMM"
         style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;"
         oninput="syncLowLevel()" />
 
-      <div style="font-size:11px;color:#888780;padding:3px 0;">LZ 2 TOT</div>
+      <div style="font-size:11px;color:#888780;padding:3px 0;">STLZ TOT</div>
       <input id="soe-lz2tot" type="text" maxlength="4" placeholder="——" value="1746"
-        aria-label="LZ 2 TOT in HHMM"
+        aria-label="STLZ TOT in HHMM"
         style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;"
         oninput="syncLowLevel()" />
 
@@ -715,8 +715,8 @@
       <tbody>
         <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;width:42%;border-bottom:0.5px solid #d3d1c7;">LL Entry</td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-entry">—</span></td></tr>
         <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">Entry Pt</td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-entry-pt">A</span></td></tr>
-        <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;"><span style="display:inline-flex;align-items:center;gap:6px;">Slow 1<select id="ll-slow-offset" onchange="syncLowLevel()" aria-label="LZ 1 TOT offset to subtract" style="font-family:inherit;font-size:10.5px;font-weight:600;color:#5f5e5a;background:transparent;border:none;border-bottom:1px solid #b4b2a9;cursor:pointer;outline:none;padding:0 2px;"><option value="30">&minus;0:30</option><option value="60">&minus;1:00</option><option value="80">&minus;1:20</option><option value="100">&minus;1:40</option><option value="120" selected>&minus;2:00</option><option value="150">&minus;2:30</option><option value="180">&minus;3:00</option></select></span></td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-slow">—</span></td></tr>
-        <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;"><span style="display:inline-flex;align-items:center;gap:6px;">Slow 2<select id="ll-slow2-offset" onchange="syncLowLevel()" aria-label="LZ 2 TOT offset to subtract" style="font-family:inherit;font-size:10.5px;font-weight:600;color:#5f5e5a;background:transparent;border:none;border-bottom:1px solid #b4b2a9;cursor:pointer;outline:none;padding:0 2px;"><option value="30">&minus;0:30</option><option value="60">&minus;1:00</option><option value="80">&minus;1:20</option><option value="100">&minus;1:40</option><option value="120" selected>&minus;2:00</option><option value="150">&minus;2:30</option><option value="180">&minus;3:00</option></select></span></td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-slow2">—</span></td></tr>
+        <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;"><span style="display:inline-flex;align-items:center;gap:6px;">Slow 1<select id="ll-slow-offset" onchange="syncLowLevel()" aria-label="SCLZ TOT offset to subtract" style="font-family:inherit;font-size:10.5px;font-weight:600;color:#5f5e5a;background:transparent;border:none;border-bottom:1px solid #b4b2a9;cursor:pointer;outline:none;padding:0 2px;"><option value="30">&minus;0:30</option><option value="60">&minus;1:00</option><option value="80">&minus;1:20</option><option value="100">&minus;1:40</option><option value="120" selected>&minus;2:00</option><option value="150">&minus;2:30</option><option value="180">&minus;3:00</option></select></span></td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-slow">—</span></td></tr>
+        <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;"><span style="display:inline-flex;align-items:center;gap:6px;">Slow 2<select id="ll-slow2-offset" onchange="syncLowLevel()" aria-label="STLZ TOT offset to subtract" style="font-family:inherit;font-size:10.5px;font-weight:600;color:#5f5e5a;background:transparent;border:none;border-bottom:1px solid #b4b2a9;cursor:pointer;outline:none;padding:0 2px;"><option value="30">&minus;0:30</option><option value="60">&minus;1:00</option><option value="80">&minus;1:20</option><option value="100">&minus;1:40</option><option value="120" selected>&minus;2:00</option><option value="150">&minus;2:30</option><option value="180">&minus;3:00</option></select></span></td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-slow2">—</span></td></tr>
         <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;">Exit Pt</td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;"><span id="ll-exit-pt">J</span></td></tr>
       </tbody>
     </table>
