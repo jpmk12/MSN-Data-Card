@@ -126,12 +126,12 @@ await page.fill('#soe-lztime', '1430');
 await page.selectOption('#ll-slow-offset', '180');
 await page.waitForTimeout(150);
 eq('Slow 1 = LZ1 1430 − 3:00', await page.$eval('#ll-slow', e => e.textContent), '14:27:00');
-// Default LZ 2 TOT is 1746, default Slow 2 offset is −1:40 (100s)
-eq('Slow 2 default = LZ2 1746 − 1:40', await page.$eval('#ll-slow2', e => e.textContent), '17:44:20');
+// Default LZ 2 TOT is 1746, default Slow 2 offset is −2:00 (120s)
+eq('Slow 2 default = LZ2 1746 − 2:00', await page.$eval('#ll-slow2', e => e.textContent), '17:44:00');
 // Change Slow 2 offset and verify it recomputes against soe-lz2tot.
-await page.selectOption('#ll-slow2-offset', '120');
+await page.selectOption('#ll-slow2-offset', '100');
 await page.waitForTimeout(120);
-eq('Slow 2 = LZ2 1746 − 2:00', await page.$eval('#ll-slow2', e => e.textContent), '17:44:00');
+eq('Slow 2 = LZ2 1746 − 1:40', await page.$eval('#ll-slow2', e => e.textContent), '17:44:20');
 
 // ── 8. LL Info route picker ─────────────────────────────────────────
 eq('LL Info default IR-154 Entry A', await page.$eval('#ll-entry-pt', e => e.textContent), 'A');
@@ -236,8 +236,8 @@ eq('Reset: LZ 2 TOT back to 1746',     await page.$eval('#soe-lz2tot',  e => e.v
 eq('Reset: Takeoff back to 1445',      await page.$eval('#soe-takeoff', e => e.value), '1445');
 const patReset = await page.$$eval('#pattern-list [data-preset]', els => els.map(e => e.getAttribute('data-preset')));
 eq('Reset: Pattern 4 defaults', patReset, ['DUKE TAC 6500', 'DUKE BEAM', 'DUKE ACCEL 6500', 'STR IN']);
-eq('Reset: Slow 1 offset default', await page.$eval('#ll-slow-offset',  e => e.value), '100');
-eq('Reset: Slow 2 offset default', await page.$eval('#ll-slow2-offset', e => e.value), '100');
+eq('Reset: Slow 1 offset default', await page.$eval('#ll-slow-offset',  e => e.value), '120');
+eq('Reset: Slow 2 offset default', await page.$eval('#ll-slow2-offset', e => e.value), '120');
 
 // ── 17. Route Data SVGs + dynamic titles ────────────────────────────
 await clickTab('Low Level');
