@@ -82,7 +82,7 @@ ok('SOE Show is takeoff − 3:30 (1115)',  cells.some(r => r.includes('1115') &&
 ok('SOE Land row +6 from 1445 (2045)',   cells.some(r => r.includes('2045') && r.includes('1545')));
 
 // ── 4. Route of Flight defaults + MOTA picker ───────────────────────
-const rofDefault = 'KLTS OKKIE3.CDS LBB/360/030 AR197 LBB/322/047 CDS JUNVA LBB/098/038 IR155 LBB/043/027 CINAV CDS KLTS';
+const rofDefault = 'ROCKN_.BFV MMB213050 AR312 PUB183022 AR312 MMB213050 FLOYD LBB106039 IR154 PNH123051 DOGIN';
 eq('Route of Flight default', await page.$eval('#rof-input', e => e.value), rofDefault);
 await page.selectOption('#rof-preset', 'MOTA4');
 await page.click('button[onclick="applyRoutePreset(\'insert\')"]');
