@@ -76,9 +76,10 @@ eq('ARCT default 1515',            await page.$eval('#soe-arct',    e => e.value
 eq('AREX default 1635',            await page.$eval('#soe-arex',    e => e.value), '1635');
 const cells = await page.$$eval('#tab-main table tr', rows =>
   rows.map(r => [...r.querySelectorAll('td')].map(t => t.textContent.trim())));
-// 1445 takeoff → Alert 1100, Show 1200, Stations 1400, Land +6 = 2045, Takeoff 1445
-ok('SOE Alert back-calcs from 1445',    cells.some(r => r.includes('1100') && r.includes('0600')));
-ok('SOE Land row +6 from 1445 (2045)',  cells.some(r => r.includes('2045') && r.includes('1545')));
+// 1445 takeoff → Alert 1100, Show -3:30 = 1115, Stations 1400, Land +6 = 2045, Takeoff 1445
+ok('SOE Alert back-calcs from 1445',     cells.some(r => r.includes('1100') && r.includes('0600')));
+ok('SOE Show is takeoff − 3:30 (1115)',  cells.some(r => r.includes('1115') && r.includes('0615')));
+ok('SOE Land row +6 from 1445 (2045)',   cells.some(r => r.includes('2045') && r.includes('1545')));
 
 // ── 4. Route of Flight defaults + MOTA picker ───────────────────────
 const rofDefault = 'KLTS OKKIE3.CDS LBB/360/030 AR197 LBB/322/047 CDS JUNVA LBB/098/038 IR155 LBB/043/027 CINAV CDS KLTS';

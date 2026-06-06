@@ -573,7 +573,7 @@
           <td id="soe-alert-l" style="padding:5px 6px;text-align:center;font-weight:600;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;">—</td>
         </tr>
         <tr>
-          <td style="padding:5px 6px;color:#5f5e5a;border-bottom:0.5px solid #d3d1c7;">Show <span style="font-size:9px;color:#b4b2a9;">−2:45</span></td>
+          <td style="padding:5px 6px;color:#5f5e5a;border-bottom:0.5px solid #d3d1c7;">Show <span style="font-size:9px;color:#b4b2a9;">−3:30</span></td>
           <td id="soe-show" style="padding:5px 6px;text-align:center;font-weight:600;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">—</td>
           <td id="soe-show-l" style="padding:5px 6px;text-align:center;font-weight:600;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;">—</td>
         </tr>
@@ -2805,7 +2805,7 @@ function soeCalc() {
   var entered = hh*60 + mm;
   // Normalize the entered takeoff time to Zulu
   var toZ = (zone === 'CT') ? (entered - ct*60) : entered;
-  var offsets = [-225, -165, -45, 360, 0];
+  var offsets = [-225, -210, -45, 360, 0];
   for (var i=0;i<offsets.length;i++){
     var z = toZ + offsets[i];
     document.getElementById(ids[i]).textContent = pad4(z);
