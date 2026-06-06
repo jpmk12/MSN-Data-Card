@@ -133,16 +133,27 @@ await page.selectOption('#ll-slow2-offset', '100');
 await page.waitForTimeout(120);
 eq('Slow 2 = LZ2 1746 − 1:40', await page.$eval('#ll-slow2', e => e.textContent), '17:44:20');
 
-// ── 8. LL Info route picker ─────────────────────────────────────────
+// ── 8. LL Info route picker + SCLZ/STLZ TOT visibility ──────────────
 eq('LL Info default IR-154 Entry A', await page.$eval('#ll-entry-pt', e => e.textContent), 'A');
 eq('LL Info default IR-154 Exit J',  await page.$eval('#ll-exit-pt',  e => e.textContent), 'J');
+ok('SCLZ TOT row visible for IR-154',
+   await page.evaluate(() => getComputedStyle(document.getElementById('ll-sclz-row')).display !== 'none'));
+ok('STLZ TOT row visible for IR-154',
+   await page.evaluate(() => getComputedStyle(document.getElementById('ll-stlz-row')).display !== 'none'));
 await page.selectOption('#ll-route-select', 'IR-155');
 await page.waitForTimeout(100);
 eq('IR-155 Entry A after switch', await page.$eval('#ll-entry-pt', e => e.textContent), 'A');
 eq('IR-155 Exit N after switch',  await page.$eval('#ll-exit-pt',  e => e.textContent), 'N');
+ok('SCLZ TOT row hidden for IR-155',
+   await page.evaluate(() => getComputedStyle(document.getElementById('ll-sclz-row')).display === 'none'));
+ok('STLZ TOT row hidden for IR-155',
+   await page.evaluate(() => getComputedStyle(document.getElementById('ll-stlz-row')).display === 'none'));
 await page.selectOption('#ll-route-select', 'IR-193');
 await page.waitForTimeout(100);
 eq('IR-193 Entry placeholder —', await page.$eval('#ll-entry-pt', e => e.textContent), '—');
+// Switch back to IR-154 so subsequent SCLZ/STLZ TOT edits work.
+await page.selectOption('#ll-route-select', 'IR-154');
+await page.waitForTimeout(100);
 
 // ── 9. Safety Supplements dynamic ───────────────────────────────────
 const ssBase = await page.$$eval('#ss-incorporated-list input.ss-input', els => els.map(e => e.value));
