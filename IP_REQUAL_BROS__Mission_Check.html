@@ -4165,6 +4165,11 @@ document.addEventListener('DOMContentLoaded', function() {
     { id: 'box-step3-list',     items: [] },
     { id: 'box-keypoints-list', items: ["1 min per 10,000' or 6 sec per 1,000' when TOC or BOD is prior to a waypoint", 'Be 1 min late every 10K of climb / Be 1 min early every 10K of descent'] }
   ].forEach(function(g) { g.items.forEach(function(v) { addBoxStep(g.id, v); }); });
+  // Pre-load default Briefings / Notes
+  [
+    'DUFF: engine start/initial takeoff/AR entry/back half LL/ first pattern work',
+    'DEAD: back half AR, LL entry/ final pattern work/ ground ops'
+  ].forEach(function(v) { addNote(v); });
   // Restore any previously persisted state (overrides defaults where set).
   mdcRestore();
   // Defensive cleanup: drop any safety supplement rows that ended up empty,

@@ -175,8 +175,13 @@ eq('EFB Pub Sync', await page.$eval('#efb-pubsync', e => e.value), '26 May 2026'
 eq('EFB FLIP',     await page.$eval('#efb-flip', e => e.value), '05/14/2026 thru 06/10/2026');
 
 // ── 11. Briefings / Notes ───────────────────────────────────────────
+const noteDefaults = await page.$$eval('#notes-list .note-input', els => els.map(e => e.value));
+eq('Briefings / Notes has 2 default notes', noteDefaults.length, 2);
+ok('DUFF default note present', noteDefaults.some(v => v.startsWith('DUFF:')));
+ok('DEAD default note present', noteDefaults.some(v => v.startsWith('DEAD:')));
 await page.click('button[onclick="addNote()"]');
-await page.fill('#notes-list .note-input', 'Weather check\nLine 2');
+const lastNote = await page.$('#notes-list [data-note-row]:last-of-type .note-input');
+await lastNote.fill('Weather check\nLine 2');
 await page.waitForTimeout(150);
 
 // ── 12. Box Setup defaults ──────────────────────────────────────────
@@ -216,7 +221,7 @@ eq('Persist: Custom row text',
 const ssAfter = await page.$$eval('#ss-incorporated-list input.ss-input', els => els.map(e => e.value));
 ok('Persist: empty SS row dropped', ssAfter.length === 4 && ssAfter.every(v => v.trim()));
 const notesAfter = await page.$$eval('#notes-list .note-input', els => els.map(e => e.value));
-eq('Persist: note with newline', notesAfter, ['Weather check\nLine 2']);
+ok('Persist: 2 defaults + the typed note', notesAfter.length === 3 && notesAfter[notesAfter.length - 1] === 'Weather check\nLine 2');
 ok('Persist: After Takeoff checkbox stays checked',
   await page.evaluate(() => {
     const t = [...document.querySelectorAll('.chk-title')].find(x => x.textContent.includes('After Takeoff'));
