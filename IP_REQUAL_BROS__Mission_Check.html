@@ -750,7 +750,8 @@
       <span style="position:relative;display:inline-flex;align-items:center;">
         <select id="ar-track-select" onchange="setARTrack()" aria-label="Select air refueling track"
           style="font-family:inherit;font-size:11px;font-weight:700;color:#fff;background:#C2517A;border:none;border-radius:999px;padding:3px 24px 3px 11px;letter-spacing:0.04em;cursor:pointer;outline:none;-webkit-appearance:none;-moz-appearance:none;appearance:none;">
-          <option value="AR197">AR197</option>
+          <option value="AR197H">AR197H</option>
+          <option value="AR197L">AR197L</option>
           <option value="AR312H">AR312H</option>
           <option value="AR312L" selected>AR312L</option>
         </select>
@@ -3233,7 +3234,8 @@ function rzCalc() {
 // ── AR Track data ──
 // To add a track: add a key here with freqs/tacan/block, and a matching <option> in #ar-track-select.
 var AR_TRACKS = {
-  'AR197': { freqs: '302.250 | 320.525', tacan: '58 / 121', block: 'FL240-260' },
+  'AR197H': { freqs: '302.250 | 320.525', tacan: '58 / 121', block: 'FL240-260' },
+  'AR197L': { freqs: '264.900 | 236.650', tacan: '62 / 125', block: 'FL190-220' },
   'AR312H': { freqs: '284.075 | 312.225', tacan: '53 / 116', block: 'FL240-260' },
   'AR312L': { freqs: '291.900 | 260.200', tacan: '51 / 114', block: 'FL200-220' }
 };
@@ -4082,6 +4084,11 @@ function mdcRestore() {
     // Legacy key migrations: copy old IDs into their new homes before applying.
     if (state.inputs['efb-ioi'] && !state.inputs['efb-ios']) {
       state.inputs['efb-ios'] = state.inputs['efb-ioi'];
+    }
+    // The single 'AR197' option was split into AR197H/AR197L. Treat any
+    // saved 'AR197' as 'AR197H' (the previous freqs/TACAN/block).
+    if (state.inputs['ar-track-select'] === 'AR197') {
+      state.inputs['ar-track-select'] = 'AR197H';
     }
     Object.keys(state.inputs).forEach(function(id) {
       var el = document.getElementById(id);

@@ -388,6 +388,50 @@ eq('Import: LL Exit 1749',      imp.llExit,   '1749');
 eq('Import: SCLZ TOT 1729',     imp.sclz,     '1729');
 eq('Import: STLZ TOT 1746',     imp.stlz,     '1746');
 
+// AR Track variants now have proper options. "AR 197L" should match AR197L
+// exactly (no fallback to AR197H).
+const schedAR197L = [
+  'CALLSIGN: CADDO50',
+  'TO: KLTS - 0900(L) / 1400(Z)',
+  'AR TRACK: AR 197L',
+  'RZ TYPE: G',
+  'ARCT: 1400Z',
+  'AREX: 1600Z',
+  'TNKR C/S: NITRO 1',
+  'TNKR TYPE: KC-46',
+].join('\n');
+await freshLoad();
+await page.click('button[onclick="openImport()"]');
+await page.waitForTimeout(150);
+await page.fill('#import-callsign', 'CADDO 50');
+await page.fill('#import-sched', schedAR197L);
+await page.click('button[onclick="applyImport()"]');
+await page.waitForTimeout(800);
+const ar197lImport = await page.evaluate(() => ({
+  track: document.getElementById('ar-track-select').value,
+  freqs: document.getElementById('ar-freqs').textContent,
+  tacan: document.getElementById('ar-tacan').textContent,
+  block: document.getElementById('ar-block').textContent,
+  tnkrType: document.getElementById('ar-tnkr-type').value,
+}));
+eq('Import: AR 197L → AR197L', ar197lImport.track, 'AR197L');
+eq('Import: AR197L freqs',     ar197lImport.freqs, '264.900 | 236.650');
+eq('Import: AR197L TACAN',     ar197lImport.tacan, '62 / 125');
+eq('Import: AR197L BLOCK',     ar197lImport.block, 'FL190-220');
+eq('Import: TNKR Type KC-46',  ar197lImport.tnkrType, 'KC-46');
+
+// Legacy persisted 'AR197' should migrate to 'AR197H' on next load.
+await page.evaluate(() => {
+  localStorage.setItem('iprq-bros-mdc-v1', JSON.stringify({
+    inputs: { 'ar-track-select': 'AR197' }
+  }));
+});
+await page.reload({ waitUntil: 'networkidle' });
+await page.waitForTimeout(400);
+eq('Legacy AR197 migrates to AR197H',
+  await page.$eval('#ar-track-select', e => e.value),
+  'AR197H');
+
 // Column-split AMT paste (PDF copy-paste flattens columns into a callsign
 // list at the bottom). The 5th callsign should map to the 5th data row,
 // even with single-digit hours.
