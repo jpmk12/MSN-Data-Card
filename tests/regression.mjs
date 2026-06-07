@@ -323,7 +323,7 @@ fs.writeFileSync(downloadOut, html);
 const dlPage = await ctx.newPage();
 await dlPage.goto('file://' + downloadOut, { waitUntil: 'networkidle' });
 const dlBtns = await dlPage.$$eval('.toolbar button', els => els.map(e => e.textContent.trim()));
-eq('Downloaded copy retains toolbar', dlBtns, ['Print / Save PDF', 'Download HTML', 'Reset']);
+eq('Downloaded copy retains toolbar', dlBtns, ['Print / Save PDF', 'Download HTML', 'Import', 'Reset']);
 await dlPage.close();
 fs.unlinkSync(downloadOut);
 
@@ -338,7 +338,68 @@ const afterDel = await page.$$eval('#pattern-list [data-preset]', els => els.len
 ok('Delegated × handler removes pattern row even without per-button onclick',
   afterDel === beforeDel - 1);
 
-// ── 25. No JS errors throughout ─────────────────────────────────────
+// ── 25. Schedule + AMT importer ─────────────────────────────────────
+const amtSample = [
+  '                     AMT FOR AIRCREW - AIRLAND',
+  '           CALLSIGN             Course       Ride          Low Level         Entry (z)      Exit (z)           LZ1        TOT1        LZ2      TOT2     Local Date',
+  '           CADDO 98             IAC          2             IR154                  17:15       17:49            SCLZ       17:29      STLZ      17:46         9-Jun',
+  ''
+].join('\n');
+const schedSample = [
+  'CALLSIGN: CADDO98                                                                       AR TRACK: AR 312L                                                          Config: STD',
+  'FUEL: 120K                                                                              RZ TYPE: G                                                                 Load: Load 5',
+  'SHOW/BUS: 0615 /                                                                        ARCT: 1515Z                                                                Flt Remarks: IPRQ 15-1',
+  'DATE: 09 JUN 2026                                                                       AREX: 1635Z',
+  'TO: KLTS - 0945(L) / 1445(Z)                                                            TNKR C/S: NITRO 63',
+  'DUR: 6.0                                                                                TNKR TYPE: KC-135'
+].join('\n');
+await freshLoad();
+await page.click('button[onclick="openImport()"]');
+await page.waitForTimeout(150);
+await page.fill('#import-callsign', 'CADDO 98');
+await page.fill('#import-amt', amtSample);
+await page.fill('#import-sched', schedSample);
+await page.click('button[onclick="applyImport()"]');
+await page.waitForTimeout(800);
+const imp = await page.evaluate(() => ({
+  takeoff: document.getElementById('soe-takeoff').value,
+  arct:    document.getElementById('soe-arct').value,
+  arex:    document.getElementById('soe-arex').value,
+  tanker:  document.getElementById('ar-tanker').value,
+  tnkrType:document.getElementById('ar-tnkr-type').value,
+  arTrack: document.getElementById('ar-track-select').value,
+  arType:  document.getElementById('ar-type-select').value,
+  llRoute: document.getElementById('ll-route-select').value,
+  llEntry: document.getElementById('soe-llentry').value,
+  llExit:  document.getElementById('soe-llexit').value,
+  sclz:    document.getElementById('soe-lztime').value,
+  stlz:    document.getElementById('soe-lz2tot').value,
+}));
+eq('Import: Takeoff (1445)',  imp.takeoff,  '1445');
+eq('Import: ARCT (1515)',     imp.arct,     '1515');
+eq('Import: AREX (1635)',     imp.arex,     '1635');
+eq('Import: Tanker (NITRO 63)', imp.tanker, 'NITRO 63');
+eq('Import: TNKR Type KC-135',  imp.tnkrType, 'KC-135');
+eq('Import: AR Track AR312L',   imp.arTrack,  'AR312L');
+eq('Import: RZ Type G',         imp.arType,   'G (Enroute)');
+eq('Import: LL Route IR-154',   imp.llRoute,  'IR-154');
+eq('Import: LL Entry 1715',     imp.llEntry,  '1715');
+eq('Import: LL Exit 1749',      imp.llExit,   '1749');
+eq('Import: SCLZ TOT 1729',     imp.sclz,     '1729');
+eq('Import: STLZ TOT 1746',     imp.stlz,     '1746');
+
+// Missing callsign should not modify anything and should show an error status.
+await page.click('button[onclick="openImport()"]');
+await page.waitForTimeout(150);
+await page.fill('#import-callsign', 'NOPE 99');
+await page.fill('#import-amt', amtSample);
+await page.fill('#import-sched', schedSample);
+await page.click('button[onclick="applyImport()"]');
+await page.waitForTimeout(300);
+const missingStatus = await page.evaluate(() => document.getElementById('import-status').textContent);
+ok('Import: missing callsign reports not-found', /not found/i.test(missingStatus));
+
+// ── 26. No JS errors throughout ─────────────────────────────────────
 ok('No page errors during the run', consoleErrors.length === 0,
   'errors: ' + consoleErrors.slice(0, 5).join(' | '));
 
