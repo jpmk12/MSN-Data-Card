@@ -388,6 +388,46 @@ eq('Import: LL Exit 1749',      imp.llExit,   '1749');
 eq('Import: SCLZ TOT 1729',     imp.sclz,     '1729');
 eq('Import: STLZ TOT 1746',     imp.stlz,     '1746');
 
+// Column-split AMT paste (PDF copy-paste flattens columns into a callsign
+// list at the bottom). The 5th callsign should map to the 5th data row,
+// even with single-digit hours.
+const amtColSplit = [
+  'Course Ride Low Level Entry (z) Exit (z) LZ1 TOT1 LZ2 TOT2 Local Date',
+  'PCO 6E IR154 16:55 17:29 SCLZ 17:09 STLZ 17:26 9-Jun',
+  'IAC 2 IR154 17:15 17:49 SCLZ 17:29 STLZ 17:46 9-Jun',
+  'PCO 2 IR154 17:25 17:59 SCLZ 17:39 STLZ 17:56 9-Jun',
+  'IAC 2 IR154 17:45 18:19 SCLZ 17:59 STLZ 18:16 9-Jun',
+  'IAC 3 IR154 3:40 4:14 SCLZ 3:54 STLZ 4:11 9-Jun',
+  'PIQ 2 IR154 2:20 2:54 SCLZ 2:34 STLZ 2:51 9-Jun',
+  'CALLSIGN',
+  'CADDO 50',
+  'CADDO 98',
+  'CADDO 44',
+  'CADDO 27',
+  'NOGS 18',
+  'NOGS 48',
+  'WRITE CHANGES BELOW THIS LINE'
+].join('\n');
+await freshLoad();
+await page.click('button[onclick="openImport()"]');
+await page.waitForTimeout(150);
+await page.fill('#import-callsign', 'NOGS 18');
+await page.fill('#import-amt', amtColSplit);
+await page.click('button[onclick="applyImport()"]');
+await page.waitForTimeout(800);
+const splitRow = await page.evaluate(() => ({
+  llRoute: document.getElementById('ll-route-select').value,
+  llEntry: document.getElementById('soe-llentry').value,
+  llExit:  document.getElementById('soe-llexit').value,
+  sclz:    document.getElementById('soe-lztime').value,
+  stlz:    document.getElementById('soe-lz2tot').value,
+}));
+eq('Column-split: NOGS 18 LL Route IR-154', splitRow.llRoute, 'IR-154');
+eq('Column-split: NOGS 18 LL Entry 0340',   splitRow.llEntry, '0340');
+eq('Column-split: NOGS 18 LL Exit 0414',    splitRow.llExit,  '0414');
+eq('Column-split: NOGS 18 SCLZ TOT 0354',   splitRow.sclz,    '0354');
+eq('Column-split: NOGS 18 STLZ TOT 0411',   splitRow.stlz,    '0411');
+
 // Missing callsign should not modify anything and should show an error status.
 await page.click('button[onclick="openImport()"]');
 await page.waitForTimeout(150);

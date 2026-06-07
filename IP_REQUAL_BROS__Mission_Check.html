@@ -4363,19 +4363,36 @@ function _normRzType(raw) {
   return '';
 }
 function parseAMT(text, callsign) {
-  // The AMT is one row per sortie. Each row has, in order:
-  //   CALLSIGN  Course  Ride  Low Level  Entry(z)  Exit(z)  LZ1  TOT1  LZ2  TOT2  Local Date
-  // Spaces between columns are arbitrary; treat any run of 2+ spaces as a separator.
+  // Two layouts come up in practice:
+  //
+  //  (A) Inline (when pdftotext -layout or pdfinfo preserves columns):
+  //      CADDO 98  IAC  2  IR154  17:15  17:49  SCLZ  17:29  STLZ  17:46  9-Jun
+  //
+  //  (B) Column-split (Acrobat / Preview copy-paste flattens columns into
+  //      separate sections):
+  //          Course Ride Low Level Entry (z) Exit (z) LZ1 TOT1 LZ2 TOT2 Local Date
+  //          IAC 2 IR154 17:15 17:49 SCLZ 17:29 STLZ 17:46 9-Jun
+  //          ...
+  //          CALLSIGN
+  //          CADDO 50
+  //          CADDO 98
+  //          ...
+  //      In this layout the data rows are in the same order as the
+  //      callsign list, so we match by index.
+  //
+  // LZ2 / TOT2 are optional in both layouts.
   if (!text || !callsign) return null;
   var want = _normCallsign(callsign);
   var lines = String(text).split(/\r?\n/);
+
+  // Pattern A — inline (callsign + data on the same logical row, with the
+  // layout-preserving 2+ space column separator).
   for (var i = 0; i < lines.length; i++) {
     var line = lines[i].trim();
     if (!line) continue;
     var cols = line.split(/\s{2,}/).map(function(c) { return c.trim(); }).filter(function(c) { return c.length; });
-    if (!cols.length) continue;
+    if (cols.length < 6) continue;
     if (_normCallsign(cols[0]) !== want) continue;
-    // cols[0]=CS, cols[1]=Course, cols[2]=Ride, cols[3]=Low Level, cols[4]=Entry(z), cols[5]=Exit(z), cols[6]=LZ1, cols[7]=TOT1, cols[8]=LZ2, cols[9]=TOT2, cols[10]=Local Date
     return {
       route:    _normRoute(cols[3] || ''),
       llEntry:  _hhmm(cols[4] || ''),
@@ -4385,6 +4402,60 @@ function parseAMT(text, callsign) {
       lz2Name:  (cols[8] || '').trim(),
       tot2:     _hhmm(cols[9] || ''),
     };
+  }
+
+  // Pattern B — column-split. Build a list of data rows and a list of
+  // callsigns, then match by index.
+  // Data row pattern: course (uppercase), ride (alphanumeric), route
+  // (IR/VR/SR + digits), entry, exit, lz1, tot1, optional lz2 + tot2.
+  var dataRowRe = /^([A-Z]+)\s+(\S+)\s+([IVS]R\d+)\s+(\d{1,2}:\d{2})\s+(\d{1,2}:\d{2})\s+(\S+)\s+(\d{1,2}:\d{2})(?:\s+(\S+)\s+(\d{1,2}:\d{2}))?(?:\s+\d+\-[A-Za-z]+)?\s*$/;
+  var dataRows = [];
+  for (var di = 0; di < lines.length; di++) {
+    var trimmed = lines[di].trim();
+    if (!trimmed) continue;
+    var dm = trimmed.match(dataRowRe);
+    if (!dm) continue;
+    dataRows.push({
+      route:   dm[3],
+      llEntry: dm[4],
+      llExit:  dm[5],
+      lz1Name: dm[6],
+      tot1:    dm[7],
+      lz2Name: dm[8] || '',
+      tot2:    dm[9] || '',
+    });
+  }
+
+  // Find the standalone "CALLSIGN" header and collect subsequent lines that
+  // look like callsign tokens ("CADDO 50", "NOGS 18", "CADDO98", …) until we
+  // hit a non-callsign line.
+  var csRe = /^[A-Z][A-Z]+\s*\d+$/;
+  var callsigns = [];
+  var inList = false;
+  for (var ci = 0; ci < lines.length; ci++) {
+    var t = lines[ci].trim();
+    if (!inList) {
+      if (t === 'CALLSIGN') inList = true;
+      continue;
+    }
+    if (csRe.test(t)) callsigns.push(t);
+    else if (callsigns.length) break;
+  }
+
+  // Match by index.
+  for (var ki = 0; ki < callsigns.length; ki++) {
+    if (_normCallsign(callsigns[ki]) === want && ki < dataRows.length) {
+      var r = dataRows[ki];
+      return {
+        route:   _normRoute(r.route),
+        llEntry: _hhmm(r.llEntry),
+        llExit:  _hhmm(r.llExit),
+        lz1Name: r.lz1Name,
+        tot1:    _hhmm(r.tot1),
+        lz2Name: r.lz2Name,
+        tot2:    _hhmm(r.tot2),
+      };
+    }
   }
   return null;
 }
