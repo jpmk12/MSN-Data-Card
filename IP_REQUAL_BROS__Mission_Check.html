@@ -4108,7 +4108,19 @@ function mdcRestore() {
     var glist = document.getElementById('ground-ops-list');
     var gsel = document.getElementById('ground-ops-select');
     if (glist) glist.innerHTML = '';
-    if (gsel) state.groundOps.forEach(function(v) { gsel.value = v; addGroundOp(); });
+    if (gsel) {
+      var validGops = Array.prototype.slice.call(gsel.querySelectorAll('option'))
+        .map(function(o) { return o.value; })
+        .filter(function(v) { return v; });
+      var seenGop = {};
+      state.groundOps.forEach(function(v) {
+        // Drop empties, unknown options, and duplicates.
+        if (!v || validGops.indexOf(v) === -1 || seenGop[v]) return;
+        seenGop[v] = true;
+        gsel.value = v;
+        addGroundOp();
+      });
+    }
   }
   if (Array.isArray(state.pattern)) {
     var plist = document.getElementById('pattern-list');
@@ -4264,6 +4276,24 @@ document.addEventListener('DOMContentLoaded', function() {
       if (k === 'Custom') return; // each custom row is unique; never dedupe / drop
       if (!PATTERN_PRESETS[k] || seen[k]) { g.remove(); return; }
       seen[k] = true;
+    });
+  })();
+  // Defensive cleanup: dedupe Ground Ops — keep first occurrence of each
+  // preset and drop any rows whose label is unknown.
+  (function() {
+    var glist = document.getElementById('ground-ops-list');
+    var gsel = document.getElementById('ground-ops-select');
+    if (!glist || !gsel) return;
+    var valid = {};
+    Array.prototype.slice.call(gsel.querySelectorAll('option')).forEach(function(o) {
+      if (o.value) valid[o.value] = true;
+    });
+    var seen = {};
+    Array.prototype.slice.call(glist.children).forEach(function(row) {
+      var s = row.querySelector('span');
+      var v = s ? s.textContent.trim() : '';
+      if (!v || !valid[v] || seen[v]) { row.remove(); return; }
+      seen[v] = true;
     });
   })();
   // Now allow further writes and persist on any change. Capture phase so

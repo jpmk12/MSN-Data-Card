@@ -488,7 +488,20 @@ await page.waitForTimeout(300);
 const missingStatus = await page.evaluate(() => document.getElementById('import-status').textContent);
 ok('Import: missing callsign reports not-found', /not found/i.test(missingStatus));
 
-// ── 26. No JS errors throughout ─────────────────────────────────────
+// ── 26. Ground Ops stale-state self-heal ───────────────────────────
+await page.evaluate(() => {
+  localStorage.setItem('iprq-bros-mdc-v1', JSON.stringify({
+    groundOps: ['Backing', 'Backing', 'Star Turn', 'NOPE', 'Star Turn', 'Backing']
+  }));
+});
+await page.reload({ waitUntil: 'networkidle' });
+await page.waitForTimeout(400);
+const healedGops = await page.$$eval('#ground-ops-list > div', els =>
+  els.map(r => r.querySelector('span')?.textContent.trim()).filter(Boolean));
+eq('Stale Ground Ops state dedupes + drops unknown on load',
+   healedGops, ['Backing', 'Star Turn']);
+
+// ── 27. No JS errors throughout ─────────────────────────────────────
 ok('No page errors during the run', consoleErrors.length === 0,
   'errors: ' + consoleErrors.slice(0, 5).join(' | '));
 
