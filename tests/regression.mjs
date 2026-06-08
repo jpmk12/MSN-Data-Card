@@ -82,7 +82,7 @@ ok('SOE Show is takeoff − 3:30 (1115)',  cells.some(r => r.includes('1115') &&
 ok('SOE Land row +6 from 1445 (2045)',   cells.some(r => r.includes('2045') && r.includes('1545')));
 
 // ── 4. Route of Flight defaults + MOTA picker ───────────────────────
-const rofDefault = 'ROCKN_.BFV MMB213050 AR312 PUB183022 AR312 MMB213050 FLOYD LBB106039 IR154 PNH123051 DOGIN';
+const rofDefault = 'KLTS ROCKN3.BFV MMB213050 AR312 PUB183022 AR312 MMB213050 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS';
 eq('Route of Flight default', await page.$eval('#rof-input', e => e.value), rofDefault);
 await page.selectOption('#rof-preset', 'MOTA4');
 await page.click('button[onclick="applyRoutePreset(\'insert\')"]');
@@ -183,6 +183,11 @@ await page.click('button[onclick="addNote()"]');
 const lastNote = await page.$('#notes-list [data-note-row]:last-of-type .note-input');
 await lastNote.fill('Weather check\nLine 2');
 await page.waitForTimeout(150);
+
+// ── 11b. Ground Ops defaults ────────────────────────────────────────
+const groundOpsDefaults = await page.$$eval('#ground-ops-list > div', els =>
+  els.map(r => r.querySelector('span')?.textContent.trim()).filter(Boolean));
+eq('Ground Ops defaults are Backing + Star Turn', groundOpsDefaults, ['Backing', 'Star Turn']);
 
 // ── 12. Box Setup defaults ──────────────────────────────────────────
 const box = await page.evaluate(() => ({
