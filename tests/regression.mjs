@@ -62,24 +62,24 @@ await freshLoad();
 eq('Title is IPRQ-BROS-MDC', await page.title(), 'IPRQ-BROS-MDC');
 
 // ── 2. Header default values ────────────────────────────────────────
-eq('Callsign default CADDO 98',  await page.$eval('#hdr-callsign', e => e.value), 'CADDO 98');
+eq('Callsign default CADDO 10',  await page.$eval('#hdr-callsign', e => e.value), 'CADDO 10');
 eq('Student 1 default DEAD',     await page.$eval('#hdr-student1', e => e.value), 'DEAD');
 eq('Student 2 default DUFF',     await page.$eval('#hdr-student2', e => e.value), 'DUFF');
 
 // ── 3. SOE defaults / calc ──────────────────────────────────────────
-eq('Takeoff default 1445',         await page.$eval('#soe-takeoff', e => e.value), '1445');
-eq('Low Level Entry default 1715', await page.$eval('#soe-llentry', e => e.value), '1715');
-eq('LZ 1 TOT default 1729',        await page.$eval('#soe-lztime',  e => e.value), '1729');
-eq('LL Exit default 1749',         await page.$eval('#soe-llexit',  e => e.value), '1749');
-eq('LZ 2 TOT default 1746',        await page.$eval('#soe-lz2tot',  e => e.value), '1746');
-eq('ARCT default 1515',            await page.$eval('#soe-arct',    e => e.value), '1515');
-eq('AREX default 1635',            await page.$eval('#soe-arex',    e => e.value), '1635');
+eq('Takeoff default 1415',         await page.$eval('#soe-takeoff', e => e.value), '1415');
+eq('Low Level Entry default 1900', await page.$eval('#soe-llentry', e => e.value), '1900');
+eq('SCLZ TOT default 1914',        await page.$eval('#soe-lztime',  e => e.value), '1914');
+eq('LL Exit default 1934',         await page.$eval('#soe-llexit',  e => e.value), '1934');
+eq('STLZ TOT default 1931',        await page.$eval('#soe-lz2tot',  e => e.value), '1931');
+eq('ARCT default 1700',            await page.$eval('#soe-arct',    e => e.value), '1700');
+eq('AREX default 1835',            await page.$eval('#soe-arex',    e => e.value), '1835');
 const cells = await page.$$eval('#tab-main table tr', rows =>
   rows.map(r => [...r.querySelectorAll('td')].map(t => t.textContent.trim())));
-// 1445 takeoff → Alert 1100, Show -3:30 = 1115, Stations 1400, Land +6 = 2045, Takeoff 1445
-ok('SOE Alert back-calcs from 1445',     cells.some(r => r.includes('1100') && r.includes('0600')));
-ok('SOE Show is takeoff − 3:30 (1115)',  cells.some(r => r.includes('1115') && r.includes('0615')));
-ok('SOE Land row +6 from 1445 (2045)',   cells.some(r => r.includes('2045') && r.includes('1545')));
+// 1415 takeoff → Alert 1030/0530, Show -3:30 = 1045/0545, Stations 1330, Land +6 = 2015
+ok('SOE Alert back-calcs from 1415',     cells.some(r => r.includes('1030') && r.includes('0530')));
+ok('SOE Show is takeoff − 3:30 (1045)',  cells.some(r => r.includes('1045') && r.includes('0545')));
+ok('SOE Land row +6 from 1415 (2015)',   cells.some(r => r.includes('2015') && r.includes('1515')));
 
 // ── 4. Route of Flight defaults + MOTA picker ───────────────────────
 const rofDefault = 'KLTS ROCKN3.BFV MMB213050 AR312 PUB183022 AR312 MMB213050 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS';
@@ -127,11 +127,11 @@ await page.selectOption('#ll-slow-offset', '180');
 await page.waitForTimeout(150);
 eq('Slow 1 = LZ1 1430 − 3:00', await page.$eval('#ll-slow', e => e.textContent), '14:27:00');
 // Default LZ 2 TOT is 1746, default Slow 2 offset is −2:00 (120s)
-eq('Slow 2 default = LZ2 1746 − 2:00', await page.$eval('#ll-slow2', e => e.textContent), '17:44:00');
+eq('Slow 2 default = LZ2 1931 − 2:00', await page.$eval('#ll-slow2', e => e.textContent), '19:29:00');
 // Change Slow 2 offset and verify it recomputes against soe-lz2tot.
 await page.selectOption('#ll-slow2-offset', '100');
 await page.waitForTimeout(120);
-eq('Slow 2 = LZ2 1746 − 1:40', await page.$eval('#ll-slow2', e => e.textContent), '17:44:20');
+eq('Slow 2 = LZ2 1931 − 1:40', await page.$eval('#ll-slow2', e => e.textContent), '19:29:20');
 
 // ── 8. LL Info route picker + SCLZ/STLZ TOT visibility ──────────────
 eq('LL Info default IR-154 Entry A', await page.$eval('#ll-entry-pt', e => e.textContent), 'A');
@@ -247,14 +247,14 @@ eq('Dedupe + drop unknown', dedup, ['DUKE TAC 6500', 'STR IN', 'DUKE BEAM']);
 // ── 16. Reset ───────────────────────────────────────────────────────
 await page.click('button[onclick="resetCard()"]');
 await page.waitForTimeout(700);
-eq('Reset: Callsign default', await page.$eval('#hdr-callsign', e => e.value), 'CADDO 98');
-eq('Reset: ARCT back to default 1515', await page.$eval('#soe-arct',    e => e.value), '1515');
-eq('Reset: AREX back to default 1635', await page.$eval('#soe-arex',    e => e.value), '1635');
-eq('Reset: LL Entry back to 1715',     await page.$eval('#soe-llentry', e => e.value), '1715');
-eq('Reset: LZ 1 TOT back to 1729',     await page.$eval('#soe-lztime',  e => e.value), '1729');
-eq('Reset: LL Exit back to 1749',      await page.$eval('#soe-llexit',  e => e.value), '1749');
-eq('Reset: LZ 2 TOT back to 1746',     await page.$eval('#soe-lz2tot',  e => e.value), '1746');
-eq('Reset: Takeoff back to 1445',      await page.$eval('#soe-takeoff', e => e.value), '1445');
+eq('Reset: Callsign default', await page.$eval('#hdr-callsign', e => e.value), 'CADDO 10');
+eq('Reset: ARCT back to default 1700', await page.$eval('#soe-arct',    e => e.value), '1700');
+eq('Reset: AREX back to default 1835', await page.$eval('#soe-arex',    e => e.value), '1835');
+eq('Reset: LL Entry back to 1900',     await page.$eval('#soe-llentry', e => e.value), '1900');
+eq('Reset: SCLZ TOT back to 1914',     await page.$eval('#soe-lztime',  e => e.value), '1914');
+eq('Reset: LL Exit back to 1934',      await page.$eval('#soe-llexit',  e => e.value), '1934');
+eq('Reset: STLZ TOT back to 1931',     await page.$eval('#soe-lz2tot',  e => e.value), '1931');
+eq('Reset: Takeoff back to 1415',      await page.$eval('#soe-takeoff', e => e.value), '1415');
 const patReset = await page.$$eval('#pattern-list [data-preset]', els => els.map(e => e.getAttribute('data-preset')));
 eq('Reset: Pattern 4 defaults', patReset, ['DUKE TAC 6500', 'DUKE BEAM', 'DUKE ACCEL 6500', 'STR IN']);
 eq('Reset: Slow 1 offset default', await page.$eval('#ll-slow-offset',  e => e.value), '120');
@@ -347,11 +347,11 @@ ok('Delegated × handler removes pattern row even without per-button onclick',
 const amtSample = [
   '                     AMT FOR AIRCREW - AIRLAND',
   '           CALLSIGN             Course       Ride          Low Level         Entry (z)      Exit (z)           LZ1        TOT1        LZ2      TOT2     Local Date',
-  '           CADDO 98             IAC          2             IR154                  17:15       17:49            SCLZ       17:29      STLZ      17:46         9-Jun',
+  '           CADDO 10             IAC          2             IR154                  17:15       17:49            SCLZ       17:29      STLZ      17:46         9-Jun',
   ''
 ].join('\n');
 const schedSample = [
-  'CALLSIGN: CADDO98                                                                       AR TRACK: AR 312L                                                          Config: STD',
+  'CALLSIGN: CADDO10                                                                       AR TRACK: AR 312L                                                          Config: STD',
   'FUEL: 120K                                                                              RZ TYPE: G                                                                 Load: Load 5',
   'SHOW/BUS: 0615 /                                                                        ARCT: 1515Z                                                                Flt Remarks: IPRQ 15-1',
   'DATE: 09 JUN 2026                                                                       AREX: 1635Z',
@@ -361,7 +361,7 @@ const schedSample = [
 await freshLoad();
 await page.click('button[onclick="openImport()"]');
 await page.waitForTimeout(150);
-await page.fill('#import-callsign', 'CADDO 98');
+await page.fill('#import-callsign', 'CADDO 10');
 await page.fill('#import-amt', amtSample);
 await page.fill('#import-sched', schedSample);
 await page.click('button[onclick="applyImport()"]');
@@ -450,7 +450,7 @@ const amtColSplit = [
   'PIQ 2 IR154 2:20 2:54 SCLZ 2:34 STLZ 2:51 9-Jun',
   'CALLSIGN',
   'CADDO 50',
-  'CADDO 98',
+  'CADDO 10',
   'CADDO 44',
   'CADDO 27',
   'NOGS 18',
