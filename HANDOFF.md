@@ -133,6 +133,13 @@ dispatches the matching event so downstream side effects (`syncLowLevel`,
 
 ## Pitfalls / gotchas
 
+- **`soe-lztime` and `soe-lz2tot` live on the Low Level Info card**,
+  not on SOE. They keep the `soe-` prefix for historical reasons (and
+  to preserve persisted state) but were moved into the LL Info table
+  rows labelled **SCLZ TOT** and **STLZ TOT**, which are shown / hidden
+  by `setLLRoute()` based on whether IR-154 is the selected route.
+  Don't be tempted to rename the IDs to match the label — that breaks
+  persistence and the Slow 1 / Slow 2 calc wiring.
 - **Don't change input IDs** unless you also add a legacy migration in
   `mdcRestore`. The user has saved state in production. The pattern is:
   ```js
