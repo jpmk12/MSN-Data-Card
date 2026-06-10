@@ -124,6 +124,7 @@ dispatches the matching event so downstream side effects (`syncLowLevel`,
 - Briefings / Notes: two pre-loaded (DUFF / DEAD assignments)
 - Box Setup Sequence: Step 1 (3), Step 2 (3), Step 3 (empty),
   Box Notes (2)
+- Safety Supplements Active: `1SS-326 -> MGPS & P-RAIM Induce Date Reversion`
 - Safety Supplements Incorporated: SS-325, SS-324, OP SUP 1S-323, SS-322
 - FCIF: `26-22B - C-17 Pubs Release`; SII: `none active`
 - EFB: Baseline `26-04 (23 Apr 26)`, iOS `26.5 CAO 12 May 26`,

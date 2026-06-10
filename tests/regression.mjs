@@ -182,6 +182,10 @@ await page.selectOption('#ll-route-select', 'IR-154');
 await page.waitForTimeout(100);
 
 // ── 9. Safety Supplements dynamic ───────────────────────────────────
+const ssActiveBase = await page.$$eval('#ss-active-list input.ss-input', els => els.map(e => e.value));
+eq('Active has 1 default', ssActiveBase, [
+  '1SS-326 -> MGPS & P-RAIM Induce Date Reversion',
+]);
 const ssBase = await page.$$eval('#ss-incorporated-list input.ss-input', els => els.map(e => e.value));
 eq('Incorporated has 4 defaults', ssBase, [
   'SS-325 (MGPS date anomaly)',

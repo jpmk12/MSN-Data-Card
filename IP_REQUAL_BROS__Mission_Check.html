@@ -4313,6 +4313,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var sel = document.getElementById('pattern-select');
     if (sel) { sel.value = v; addPatternItem(); }
   });
+  // Pre-load default Active safety supplements
+  [
+    '1SS-326 -> MGPS & P-RAIM Induce Date Reversion'
+  ].forEach(function(v) { addSafetyItem('active', v); });
   // Pre-load default Incorporated safety supplements
   [
     'SS-325 (MGPS date anomaly)',
