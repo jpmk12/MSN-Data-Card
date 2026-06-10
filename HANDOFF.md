@@ -122,7 +122,7 @@ dispatches the matching event so downstream side effects (`syncLowLevel`,
 - Pattern Work: DUKE TAC 6500, DUKE BEAM, DUKE ACCEL 6500, STR IN
 - Ground Ops: Backing, Star Turn
 - Briefings / Notes: two pre-loaded (DUFF / DEAD assignments)
-- Box Setup Sequence: Step 1 (3), Step 2 (2), Step 3 (empty),
+- Box Setup Sequence: Step 1 (3), Step 2 (3), Step 3 (empty),
   Box Notes (2)
 - Safety Supplements Incorporated: SS-325, SS-324, OP SUP 1S-323, SS-322
 - FCIF: `26-22B - C-17 Pubs Release`; SII: `none active`

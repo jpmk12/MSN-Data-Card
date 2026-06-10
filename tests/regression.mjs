@@ -203,7 +203,7 @@ const box = await page.evaluate(() => ({
   kp: [...document.querySelectorAll('#box-keypoints-list input')].map(i => i.value),
 }));
 eq('Box Step 1 defaults', box.s1, ['TAC Pts in SEC', 'Build FLT plan', 'Fix times']);
-eq('Box Step 2 defaults', box.s2, ['LZ Ldg/TO Told', 'Add BULL']);
+eq('Box Step 2 defaults', box.s2, ['LZ Ldg/TO Told', 'Add BULL', 'Build Orbit at FLOYD']);
 eq('Box Step 3 empty by default', box.s3, []);
 eq('Box Notes has 2 defaults', box.kp, [
   "1 min per 10,000' or 6 sec per 1,000' when TOC or BOD is prior to a waypoint",
