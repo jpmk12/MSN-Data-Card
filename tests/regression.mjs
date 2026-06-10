@@ -519,6 +519,22 @@ ok('Notional LZ Weather lists all 9 LZ identifiers',
    ['HELZ','LYLZ','MCLZ','SCLZ','STUZ','GDLZ','SMIZ','ROLZ','WILZ']
      .every((id, i) => wxRows[i].startsWith(id)));
 
+// ── 25c. IR-154 Threat Plot card (Scenario tab) ─────────────────────
+const tpHeader = await page.$eval('#ir154-threat-plot-card .card-header',
+  e => e.textContent.replace(/\s+/g, ' ').trim());
+ok('IR-154 Threat Plot card title present', /IR-154 Threat Plot/.test(tpHeader));
+const threatRows = await page.$$eval('#ir154-threat-plot-card tbody .threat-row',
+  els => els.map(r => [...r.querySelectorAll('td')].map(t => t.textContent.trim())));
+eq('Threat Plot has 4 rows', threatRows.length, 4);
+eq('Threat 1 row', threatRows[0],
+   ['Threat 1', 'TR001219089', 'LBB/R106065', 'N 33 12 23.5', 'W 100 45 16.8']);
+eq('Threat 2 row', threatRows[1],
+   ['Threat 2', 'TR001204098', 'LBB/R114088', 'N 32 51 30.8', 'W 100 28 46.6']);
+eq('Threat 3 row', threatRows[2],
+   ['Threat 3', 'TR001232072', 'LBB/R083059', 'N 33 37 45.5', 'W 100 44 41.8']);
+eq('Threat 4 row', threatRows[3],
+   ['Threat 4', 'TR001243048', 'LBB/R066076', 'N 33 59 24.6', 'W 100 26 06.4']);
+
 // ── 26. Ground Ops stale-state self-heal ───────────────────────────
 await page.evaluate(() => {
   localStorage.setItem('iprq-bros-mdc-v1', JSON.stringify({
