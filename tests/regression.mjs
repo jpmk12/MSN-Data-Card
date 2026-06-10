@@ -146,6 +146,10 @@ ok('SCLZ TOT row visible for IR-154',
    await page.evaluate(() => getComputedStyle(document.getElementById('ll-sclz-row')).display !== 'none'));
 ok('STLZ TOT row visible for IR-154',
    await page.evaluate(() => getComputedStyle(document.getElementById('ll-stlz-row')).display !== 'none'));
+// LL-tab IR-154 entry fixes: A = LL entry (1900), F = +19 (1919), J = +34 (1934)
+eq('LL entry fix A = 1900', await page.$eval('#ll-fix-a', e => e.textContent), '1900');
+eq('LL entry fix F = 1919', await page.$eval('#ll-fix-f', e => e.textContent), '1919');
+eq('LL entry fix J = 1934', await page.$eval('#ll-fix-j', e => e.textContent), '1934');
 await page.selectOption('#ll-route-select', 'IR-155');
 await page.waitForTimeout(100);
 eq('IR-155 Entry A after switch', await page.$eval('#ll-entry-pt', e => e.textContent), 'A');
