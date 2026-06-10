@@ -121,6 +121,12 @@ await page.waitForTimeout(150);
 eq('Three Rs ARCT-30 suffix', await page.$eval('#three-rs-suffix', e => e.textContent), ': 1500');
 eq('Three Cs ARCT-15 suffix', await page.$eval('#three-cs-suffix', e => e.textContent), ': 1515');
 
+// ── 6b. AR Info default track ───────────────────────────────────────
+eq('AR Track default AR197H', await page.$eval('#ar-track-select', e => e.value), 'AR197H');
+eq('AR197H freqs populate',   await page.$eval('#ar-freqs', e => e.textContent), '302.250 | 320.525');
+eq('AR197H TACAN populate',   await page.$eval('#ar-tacan', e => e.textContent), '58 / 121');
+eq('AR197H BLOCK populate',   await page.$eval('#ar-block', e => e.textContent), 'FL240-260');
+
 // ── 7. Slow 1 / Slow 2 offsets ──────────────────────────────────────
 await page.fill('#soe-lztime', '1430');
 await page.selectOption('#ll-slow-offset', '180');

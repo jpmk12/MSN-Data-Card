@@ -117,7 +117,7 @@ dispatches the matching event so downstream side effects (`syncLowLevel`,
 - SOE: Takeoff `1415`, LL Entry `1900`, LL Exit `1934`, ARCT `1700`, AREX `1835`
 - LL Info: route `IR-154`, Entry Pt `A`, Exit Pt `J`, SCLZ TOT `1914`,
   STLZ TOT `1931`, Slow 1/Slow 2 default offset `−2:00` (value 120)
-- AR Info: track `AR197L`, Tanker `DASH 85`, TNKR Type `KC-46`,
+- AR Info: track `AR197H`, Tanker `DASH 85`, TNKR Type `KC-46`,
   RZ Type `G (Enroute)`, AR SPD `265 (135)`
 - Pattern Work: DUKE TAC 6500, DUKE BEAM, DUKE ACCEL 6500, STR IN
 - Ground Ops: Backing, Star Turn
