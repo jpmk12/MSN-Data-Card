@@ -202,7 +202,7 @@ eq('SII default',  await page.$eval('#sii-value', e => e.value), 'none active');
 eq('EFB Baseline', await page.$eval('#efb-baseline', e => e.value), '26-04 (23 Apr 26)');
 eq('EFB iOS',      await page.$eval('#efb-ios', e => e.value), '26.5 CAO 12 May 26');
 eq('EFB Pub Sync', await page.$eval('#efb-pubsync', e => e.value), '26 May 2026');
-eq('EFB FLIP',     await page.$eval('#efb-flip', e => e.value), '05/14/2026 thru 06/10/2026');
+eq('EFB FLIP',     await page.$eval('#efb-flip', e => e.value), '06-11-2026 thru 07-08-2026');
 
 // ── 11. Briefings / Notes ───────────────────────────────────────────
 const noteDefaults = await page.$$eval('#notes-list .note-input', els => els.map(e => e.value));

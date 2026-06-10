@@ -128,7 +128,7 @@ dispatches the matching event so downstream side effects (`syncLowLevel`,
 - Safety Supplements Incorporated: SS-325, SS-324, OP SUP 1S-323, SS-322
 - FCIF: `26-22B - C-17 Pubs Release`; SII: `none active`
 - EFB: Baseline `26-04 (23 Apr 26)`, iOS `26.5 CAO 12 May 26`,
-  Pub Sync `26 May 2026`, FLIP `05/14/2026 thru 06/10/2026`
+  Pub Sync `26 May 2026`, FLIP `06-11-2026 thru 07-08-2026`
 - Route of Flight:
   `KTLS OKKIE_.CDS LBB360030 AR197 LBB322047 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS`
 
