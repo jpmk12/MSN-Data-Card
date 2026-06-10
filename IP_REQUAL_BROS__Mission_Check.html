@@ -755,9 +755,9 @@
         <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;width:42%;border-bottom:0.5px solid #d3d1c7;">LL Entry</td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-entry">—</span></td></tr>
         <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">Entry Pt</td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-entry-pt">A</span></td></tr>
         <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;"><span style="display:inline-flex;align-items:center;gap:6px;">Slow 1<select id="ll-slow-offset" onchange="syncLowLevel()" aria-label="SCLZ TOT offset to subtract" style="font-family:inherit;font-size:10.5px;font-weight:600;color:#5f5e5a;background:transparent;border:none;border-bottom:1px solid #b4b2a9;cursor:pointer;outline:none;padding:0 2px;"><option value="30">&minus;0:30</option><option value="60">&minus;1:00</option><option value="80">&minus;1:20</option><option value="100">&minus;1:40</option><option value="120" selected>&minus;2:00</option><option value="150">&minus;2:30</option><option value="180">&minus;3:00</option></select></span></td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-slow" style="font-size:14px;font-weight:700;color:#E24B4A;letter-spacing:0.02em;">—</span></td></tr>
-        <tr id="ll-sclz-row" style="background:#f9f8f5;display:none;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">SCLZ TOT</td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><input id="soe-lztime" type="text" maxlength="4" placeholder="——" value="1914" aria-label="SCLZ TOT in HHMM" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;" oninput="syncLowLevel()" /></td></tr>
+        <tr id="ll-sclz-row" style="background:#f9f8f5;display:none;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">SCLZ TOT</td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><input id="soe-lztime" type="text" maxlength="4" value="1914" aria-label="SCLZ TOT in HHMM (auto-calculated: LL Entry + 14)" readonly tabindex="-1" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#1a1a19;border:none;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;cursor:default;" /></td></tr>
         <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;"><span style="display:inline-flex;align-items:center;gap:6px;">Slow 2<select id="ll-slow2-offset" onchange="syncLowLevel()" aria-label="STLZ TOT offset to subtract" style="font-family:inherit;font-size:10.5px;font-weight:600;color:#5f5e5a;background:transparent;border:none;border-bottom:1px solid #b4b2a9;cursor:pointer;outline:none;padding:0 2px;"><option value="30">&minus;0:30</option><option value="60">&minus;1:00</option><option value="80">&minus;1:20</option><option value="100">&minus;1:40</option><option value="120" selected>&minus;2:00</option><option value="150">&minus;2:30</option><option value="180">&minus;3:00</option></select></span></td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-slow2" style="font-size:14px;font-weight:700;color:#E24B4A;letter-spacing:0.02em;">—</span></td></tr>
-        <tr id="ll-stlz-row" style="display:none;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">STLZ TOT</td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><input id="soe-lz2tot" type="text" maxlength="4" placeholder="——" value="1931" aria-label="STLZ TOT in HHMM" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;" oninput="syncLowLevel()" /></td></tr>
+        <tr id="ll-stlz-row" style="display:none;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">STLZ TOT</td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><input id="soe-lz2tot" type="text" maxlength="4" value="1931" aria-label="STLZ TOT in HHMM (auto-calculated: LL Entry + 31)" readonly tabindex="-1" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#1a1a19;border:none;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;cursor:default;" /></td></tr>
         <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;">Exit Pt</td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;"><span id="ll-exit-pt">J</span></td></tr>
       </tbody>
     </table>
@@ -1058,6 +1058,7 @@
     <label class="section-title teal banded chk-title" style="margin-top:8px"><span class="chk-text">Low Level Entry</span><input type="checkbox" class="chk-input"></label>
     <div class="item" id="ll-entry-fixes" style="font-weight:600;color:#0C447C;">IR-154 &rarr; A: <span id="ll-fix-a">—</span> &#124; F: <span id="ll-fix-f">—</span> &#124; J: <span id="ll-fix-j">—</span></div>
     <div class="item">Maintain 4500-10,000 between A and B to deconflict with VR-1116</div>
+    <div class="item">Entry: Lubbock App: 119.2 &#124; Pt J: Abq Center: 127.85 &#124; 285.475</div>
     <div class="item">Hack / Squawk / Talk</div>
     <div class="item">Speed Limits</div>
     <div class="item">Set Escape freq</div>
@@ -2645,7 +2646,6 @@
     <table style="width:100%;border-collapse:collapse;font-size:11.5px;">
       <thead><tr>
         <th style="padding:4px 6px;font-size:9.5px;font-weight:700;color:#fff;background:#185FA5;border-bottom:1.5px solid #d3d1c7;text-align:left;">Threat</th>
-        <th style="padding:4px 6px;font-size:9.5px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1.5px solid #d3d1c7;text-align:left;">Point</th>
         <th style="padding:4px 6px;font-size:9.5px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1.5px solid #d3d1c7;text-align:left;">LBB Radial</th>
         <th style="padding:4px 6px;font-size:9.5px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1.5px solid #d3d1c7;text-align:left;">Latitude</th>
         <th style="padding:4px 6px;font-size:9.5px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1.5px solid #d3d1c7;text-align:left;">Longitude</th>
@@ -2653,28 +2653,24 @@
       <tbody style="font-family:ui-monospace,Menlo,monospace;">
         <tr class="threat-row">
           <td style="padding:5px 6px;font-family:inherit;font-weight:700;color:#0C447C;border-bottom:0.5px solid #d3d1c7;">Threat 1</td>
-          <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">TR001219089</td>
           <td style="padding:5px 6px;color:#5f5e5a;border-bottom:0.5px solid #d3d1c7;">LBB/R106065</td>
           <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">N 33 12 23.5</td>
           <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">W 100 45 16.8</td>
         </tr>
         <tr class="threat-row">
           <td style="padding:5px 6px;font-family:inherit;font-weight:700;color:#0C447C;border-bottom:0.5px solid #d3d1c7;">Threat 2</td>
-          <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">TR001204098</td>
           <td style="padding:5px 6px;color:#5f5e5a;border-bottom:0.5px solid #d3d1c7;">LBB/R114088</td>
           <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">N 32 51 30.8</td>
           <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">W 100 28 46.6</td>
         </tr>
         <tr class="threat-row">
           <td style="padding:5px 6px;font-family:inherit;font-weight:700;color:#0C447C;border-bottom:0.5px solid #d3d1c7;">Threat 3</td>
-          <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">TR001232072</td>
           <td style="padding:5px 6px;color:#5f5e5a;border-bottom:0.5px solid #d3d1c7;">LBB/R083059</td>
           <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">N 33 37 45.5</td>
           <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">W 100 44 41.8</td>
         </tr>
         <tr class="threat-row">
           <td style="padding:5px 6px;font-family:inherit;font-weight:700;color:#0C447C;">Threat 4</td>
-          <td style="padding:5px 6px;color:#1a1a19;">TR001243048</td>
           <td style="padding:5px 6px;color:#5f5e5a;">LBB/R066076</td>
           <td style="padding:5px 6px;color:#1a1a19;">N 33 59 24.6</td>
           <td style="padding:5px 6px;color:#1a1a19;">W 100 26 06.4</td>
@@ -3175,6 +3171,20 @@ function syncLowLevel() {
   // Copy Low Level Entry value into the Low Level Info section
   var llRaw = (document.getElementById('soe-llentry').value || '').trim();
   document.getElementById('ll-entry').textContent = llRaw ? llRaw : '—';
+  // Parse the LL Entry time once; all IR-154 timings derive from it.
+  var base = null;
+  if (/^\d{3,4}$/.test(llRaw)) {
+    var p = llRaw.padStart(4, '0');
+    var h = parseInt(p.slice(0, 2), 10), m = parseInt(p.slice(2, 4), 10);
+    if (h < 24 && m < 60) base = h * 60 + m;
+  }
+  // SCLZ TOT = LL Entry + 14, STLZ TOT = LL Entry + 31 (auto-calculated).
+  var sclz = document.getElementById('soe-lztime');
+  var stlz = document.getElementById('soe-lz2tot');
+  if (base !== null) {
+    if (sclz) sclz.value = pad4(base + 14);
+    if (stlz) stlz.value = pad4(base + 31);
+  }
   _computeSlow('soe-lztime', 'll-slow-offset',  'll-slow');
   _computeSlow('soe-lz2tot', 'll-slow2-offset', 'll-slow2');
   // IR-154 entry fixes on the Low Level tab: A = LL entry, F = +19, J = +34.
@@ -3182,17 +3192,13 @@ function syncLowLevel() {
   var ff = document.getElementById('ll-fix-f');
   var fj = document.getElementById('ll-fix-j');
   if (fa && ff && fj) {
-    var dash = function() { fa.textContent = '—'; ff.textContent = '—'; fj.textContent = '—'; };
-    if (/^\d{3,4}$/.test(llRaw)) {
-      var p = llRaw.padStart(4, '0');
-      var h = parseInt(p.slice(0, 2), 10), m = parseInt(p.slice(2, 4), 10);
-      if (h < 24 && m < 60) {
-        var base = h * 60 + m;
-        fa.textContent = pad4(base);
-        ff.textContent = pad4(base + 19);
-        fj.textContent = pad4(base + 34);
-      } else { dash(); }
-    } else { dash(); }
+    if (base !== null) {
+      fa.textContent = pad4(base);
+      ff.textContent = pad4(base + 19);
+      fj.textContent = pad4(base + 34);
+    } else {
+      fa.textContent = '—'; ff.textContent = '—'; fj.textContent = '—';
+    }
   }
 }
 var ROUTE_PRESETS = {

@@ -127,17 +127,28 @@ eq('AR197H freqs populate',   await page.$eval('#ar-freqs', e => e.textContent),
 eq('AR197H TACAN populate',   await page.$eval('#ar-tacan', e => e.textContent), '58 / 121');
 eq('AR197H BLOCK populate',   await page.$eval('#ar-block', e => e.textContent), 'FL240-260');
 
-// ── 7. Slow 1 / Slow 2 offsets ──────────────────────────────────────
-await page.fill('#soe-lztime', '1430');
+// ── 7. SCLZ/STLZ TOT auto-derive + Slow 1 / Slow 2 offsets ───────────
+// SCLZ TOT = LL Entry + 14, STLZ TOT = LL Entry + 31 (auto-calculated,
+// read-only). Default LL Entry 1900 → SCLZ 1914, STLZ 1931.
+eq('SCLZ TOT derives 1900+14=1914', await page.$eval('#soe-lztime', e => e.value), '1914');
+eq('STLZ TOT derives 1900+31=1931', await page.$eval('#soe-lz2tot', e => e.value), '1931');
+// Change LL Entry and confirm both re-derive live.
+await page.fill('#soe-llentry', '2000');
+await page.waitForTimeout(120);
+eq('SCLZ TOT re-derives 2000+14=2014', await page.$eval('#soe-lztime', e => e.value), '2014');
+eq('STLZ TOT re-derives 2000+31=2031', await page.$eval('#soe-lz2tot', e => e.value), '2031');
+// Restore default LL Entry for the remaining checks.
+await page.fill('#soe-llentry', '1900');
+await page.waitForTimeout(120);
 await page.selectOption('#ll-slow-offset', '180');
 await page.waitForTimeout(150);
-eq('Slow 1 = LZ1 1430 − 3:00', await page.$eval('#ll-slow', e => e.textContent), '14:27:00');
-// Default LZ 2 TOT is 1746, default Slow 2 offset is −2:00 (120s)
-eq('Slow 2 default = LZ2 1931 − 2:00', await page.$eval('#ll-slow2', e => e.textContent), '19:29:00');
-// Change Slow 2 offset and verify it recomputes against soe-lz2tot.
+eq('Slow 1 = SCLZ 1914 − 3:00', await page.$eval('#ll-slow', e => e.textContent), '19:11:00');
+// Default Slow 2 offset is −2:00 (120s)
+eq('Slow 2 default = STLZ 1931 − 2:00', await page.$eval('#ll-slow2', e => e.textContent), '19:29:00');
+// Change Slow 2 offset and verify it recomputes against STLZ TOT.
 await page.selectOption('#ll-slow2-offset', '100');
 await page.waitForTimeout(120);
-eq('Slow 2 = LZ2 1931 − 1:40', await page.$eval('#ll-slow2', e => e.textContent), '19:29:20');
+eq('Slow 2 = STLZ 1931 − 1:40', await page.$eval('#ll-slow2', e => e.textContent), '19:29:20');
 
 // ── 8. LL Info route picker + SCLZ/STLZ TOT visibility ──────────────
 eq('LL Info default IR-154 Entry A', await page.$eval('#ll-entry-pt', e => e.textContent), 'A');
@@ -150,6 +161,11 @@ ok('STLZ TOT row visible for IR-154',
 eq('LL entry fix A = 1900', await page.$eval('#ll-fix-a', e => e.textContent), '1900');
 eq('LL entry fix F = 1919', await page.$eval('#ll-fix-f', e => e.textContent), '1919');
 eq('LL entry fix J = 1934', await page.$eval('#ll-fix-j', e => e.textContent), '1934');
+ok('LL Entry lists Lubbock App / Abq Center freqs',
+   await page.evaluate(() => [...document.querySelectorAll('#tab-llgk .item')].some(d =>
+     d.textContent.includes('Entry: Lubbock App: 119.2') &&
+     d.textContent.includes('Pt J: Abq Center: 127.85') &&
+     d.textContent.includes('285.475'))));
 await page.selectOption('#ll-route-select', 'IR-155');
 await page.waitForTimeout(100);
 eq('IR-155 Entry A after switch', await page.$eval('#ll-entry-pt', e => e.textContent), 'A');
@@ -232,7 +248,7 @@ await page.waitForTimeout(150);
 await page.reload({ waitUntil: 'networkidle' });
 await page.waitForTimeout(450);
 eq('Persist: ARCT', await page.$eval('#soe-arct', e => e.value), '1530');
-eq('Persist: LZ Time', await page.$eval('#soe-lztime', e => e.value), '1430');
+eq('Persist: SCLZ TOT re-derives to 1914', await page.$eval('#soe-lztime', e => e.value), '1914');
 eq('Persist: Slow offset', await page.$eval('#ll-slow-offset', e => e.value), '180');
 const patPersist = await page.$$eval('#pattern-list [data-preset]', els => els.map(e => e.getAttribute('data-preset')));
 eq('Persist: Pattern after × + Custom', patPersist, ['DUKE BEAM', 'DUKE ACCEL 6500', 'STR IN', 'Custom']);
@@ -527,13 +543,13 @@ const threatRows = await page.$$eval('#ir154-threat-plot-card tbody .threat-row'
   els => els.map(r => [...r.querySelectorAll('td')].map(t => t.textContent.trim())));
 eq('Threat Plot has 4 rows', threatRows.length, 4);
 eq('Threat 1 row', threatRows[0],
-   ['Threat 1', 'TR001219089', 'LBB/R106065', 'N 33 12 23.5', 'W 100 45 16.8']);
+   ['Threat 1', 'LBB/R106065', 'N 33 12 23.5', 'W 100 45 16.8']);
 eq('Threat 2 row', threatRows[1],
-   ['Threat 2', 'TR001204098', 'LBB/R114088', 'N 32 51 30.8', 'W 100 28 46.6']);
+   ['Threat 2', 'LBB/R114088', 'N 32 51 30.8', 'W 100 28 46.6']);
 eq('Threat 3 row', threatRows[2],
-   ['Threat 3', 'TR001232072', 'LBB/R083059', 'N 33 37 45.5', 'W 100 44 41.8']);
+   ['Threat 3', 'LBB/R083059', 'N 33 37 45.5', 'W 100 44 41.8']);
 eq('Threat 4 row', threatRows[3],
-   ['Threat 4', 'TR001243048', 'LBB/R066076', 'N 33 59 24.6', 'W 100 26 06.4']);
+   ['Threat 4', 'LBB/R066076', 'N 33 59 24.6', 'W 100 26 06.4']);
 
 // ── 26. Ground Ops stale-state self-heal ───────────────────────────
 await page.evaluate(() => {

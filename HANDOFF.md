@@ -140,6 +140,14 @@ dispatches the matching event so downstream side effects (`syncLowLevel`,
   by `setLLRoute()` based on whether IR-154 is the selected route.
   Don't be tempted to rename the IDs to match the label — that breaks
   persistence and the Slow 1 / Slow 2 calc wiring.
+  **These are now read-only / auto-calculated**: `syncLowLevel()` sets
+  `soe-lztime` = LL Entry (`soe-llentry`) + 14 min and `soe-lz2tot` =
+  LL Entry + 31 min, then feeds them into the Slow 1 / Slow 2 calc.
+  They are no longer user-editable (no `oninput`). The importer still
+  `_setValue`s them, but schedule data is internally consistent
+  (SCLZ = entry+14, STLZ = entry+31) so derived and imported agree.
+  The LL tab's `#ll-fix-a/f/j` line (A = entry, F = +19, J = +34) is
+  computed in the same function.
 - **Don't change input IDs** unless you also add a legacy migration in
   `mdcRestore`. The user has saved state in production. The pattern is:
   ```js
