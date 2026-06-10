@@ -494,18 +494,18 @@ await page.waitForTimeout(300);
 const missingStatus = await page.evaluate(() => document.getElementById('import-status').textContent);
 ok('Import: missing callsign reports not-found', /not found/i.test(missingStatus));
 
-// ── 25b. Notion Weather card (Scenario tab) ─────────────────────────
+// ── 25b. Notional LZ Weather card (Scenario tab) ─────────────────────────
 const wxHeader = await page.$eval('#notion-weather-card .card-header',
   e => e.textContent.replace(/\s+/g, ' ').trim());
-ok('Notion Weather card title present', /Notion Weather/.test(wxHeader));
+ok('Notional LZ Weather card title present', /Notional LZ Weather/.test(wxHeader));
 const wxRows = await page.$$eval('#notion-weather-list .wx-row',
   els => els.map(e => e.textContent.trim()));
-eq('Notion Weather has 9 station rows', wxRows.length, 9);
-eq('Notion Weather first row is HELZ', wxRows[0],
+eq('Notional LZ Weather has 9 station rows', wxRows.length, 9);
+eq('Notional LZ Weather first row is HELZ', wxRows[0],
    'HELZ 1535Z 09010G13 10SM SCT050 SCT100 25/07 QNH2992INS');
-eq('Notion Weather last row is WILZ', wxRows[8],
+eq('Notional LZ Weather last row is WILZ', wxRows[8],
    'WILZ 1555Z 15003 P6SM SCT180 25/21');
-ok('Notion Weather lists all 9 LZ identifiers',
+ok('Notional LZ Weather lists all 9 LZ identifiers',
    ['HELZ','LYLZ','MCLZ','SCLZ','STUZ','GDLZ','SMIZ','ROLZ','WILZ']
      .every((id, i) => wxRows[i].startsWith(id)));
 
