@@ -129,7 +129,7 @@ dispatches the matching event so downstream side effects (`syncLowLevel`,
 - EFB: Baseline `26-04 (23 Apr 26)`, iOS `26.5 CAO 12 May 26`,
   Pub Sync `26 May 2026`, FLIP `05/14/2026 thru 06/10/2026`
 - Route of Flight:
-  `KLTS ROCKN3.BFV MMB213050 AR312 PUB183022 AR312 MMB213050 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS`
+  `KTLS OKKIE_.CDS LBB360030 AR197 LBB322047 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS`
 
 ## Pitfalls / gotchas
 

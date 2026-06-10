@@ -576,7 +576,7 @@
 
     <!-- EDIT THE DEFAULT ROUTE HERE: change the value="..." below (comma-separated waypoints) -->
     <input id="rof-input" type="text"
-      value="KTLS OKKIE_.CDS LBB360030 AR197 LBB322047 CDS FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS"
+      value="KTLS OKKIE_.CDS LBB360030 AR197 LBB322047 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS"
       oninput="renderRoute()"
       aria-label="Flight plan waypoints, comma separated"
       style="width:100%;box-sizing:border-box;font-family:inherit;font-size:12px;color:#1a1a19;border:1px solid #d3d1c7;border-radius:8px;background:#fff;padding:8px 10px;outline:none;margin-bottom:4px;" />
@@ -4263,8 +4263,8 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   // Pre-load default Briefings / Notes
   [
-    'DEAD: engine start/initial takeoff/AR entry/back half LL/ first pattern work',
-    'DUFF: back half AR, LL entry/ final pattern work/ ground ops'
+    'DEAD: engine start, 1st pattern work ||AR entry || back half LL || ground ops',
+    'DUFF: 2nd pattern work || back half AR, LL entry || ground ops'
   ].forEach(function(v) { addNote(v); });
   // Restore any previously persisted state (overrides defaults where set).
   mdcRestore();

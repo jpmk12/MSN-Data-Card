@@ -82,7 +82,7 @@ ok('SOE Show is takeoff − 3:30 (1045)',  cells.some(r => r.includes('1045') &&
 ok('SOE Land row +6 from 1415 (2015)',   cells.some(r => r.includes('2015') && r.includes('1515')));
 
 // ── 4. Route of Flight defaults + MOTA picker ───────────────────────
-const rofDefault = 'KTLS OKKIE_.CDS LBB360030 AR197 LBB322047 CDS FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS';
+const rofDefault = 'KTLS OKKIE_.CDS LBB360030 AR197 LBB322047 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS';
 eq('Route of Flight default', await page.$eval('#rof-input', e => e.value), rofDefault);
 await page.selectOption('#rof-preset', 'MOTA4');
 await page.click('button[onclick="applyRoutePreset(\'insert\')"]');
@@ -179,12 +179,12 @@ const noteDefaults = await page.$$eval('#notes-list .note-input', els => els.map
 eq('Briefings / Notes has 2 default notes', noteDefaults.length, 2);
 ok('DEAD default note present', noteDefaults.some(v => v.startsWith('DEAD:')));
 ok('DUFF default note present', noteDefaults.some(v => v.startsWith('DUFF:')));
-eq('DEAD note covers engine start / first pattern work',
+eq('DEAD note covers engine start / 1st pattern work / ground ops',
    noteDefaults.find(v => v.startsWith('DEAD:')),
-   'DEAD: engine start/initial takeoff/AR entry/back half LL/ first pattern work');
-eq('DUFF note covers back half AR / final pattern work / ground ops',
+   'DEAD: engine start, 1st pattern work ||AR entry || back half LL || ground ops');
+eq('DUFF note covers 2nd pattern work / back half AR / ground ops',
    noteDefaults.find(v => v.startsWith('DUFF:')),
-   'DUFF: back half AR, LL entry/ final pattern work/ ground ops');
+   'DUFF: 2nd pattern work || back half AR, LL entry || ground ops');
 await page.click('button[onclick="addNote()"]');
 const lastNote = await page.$('#notes-list [data-note-row]:last-of-type .note-input');
 await lastNote.fill('Weather check\nLine 2');
