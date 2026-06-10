@@ -177,8 +177,14 @@ eq('EFB FLIP',     await page.$eval('#efb-flip', e => e.value), '05/14/2026 thru
 // ── 11. Briefings / Notes ───────────────────────────────────────────
 const noteDefaults = await page.$$eval('#notes-list .note-input', els => els.map(e => e.value));
 eq('Briefings / Notes has 2 default notes', noteDefaults.length, 2);
-ok('DUFF default note present', noteDefaults.some(v => v.startsWith('DUFF:')));
 ok('DEAD default note present', noteDefaults.some(v => v.startsWith('DEAD:')));
+ok('DUFF default note present', noteDefaults.some(v => v.startsWith('DUFF:')));
+eq('DEAD note covers engine start / first pattern work',
+   noteDefaults.find(v => v.startsWith('DEAD:')),
+   'DEAD: engine start/initial takeoff/AR entry/back half LL/ first pattern work');
+eq('DUFF note covers back half AR / final pattern work / ground ops',
+   noteDefaults.find(v => v.startsWith('DUFF:')),
+   'DUFF: back half AR, LL entry/ final pattern work/ ground ops');
 await page.click('button[onclick="addNote()"]');
 const lastNote = await page.$('#notes-list [data-note-row]:last-of-type .note-input');
 await lastNote.fill('Weather check\nLine 2');
