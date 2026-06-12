@@ -162,10 +162,10 @@ eq('LL entry fix A = 1900', await page.$eval('#ll-fix-a', e => e.textContent), '
 eq('LL entry fix F = 1919', await page.$eval('#ll-fix-f', e => e.textContent), '1919');
 eq('LL entry fix J = 1934', await page.$eval('#ll-fix-j', e => e.textContent), '1934');
 ok('LL Entry lists Lubbock App / Abq Center freqs',
-   await page.evaluate(() => [...document.querySelectorAll('#tab-llgk .item')].some(d =>
-     d.textContent.includes('Entry: Lubbock App: 119.2') &&
-     d.textContent.includes('Pt J: Abq Center: 127.85') &&
-     d.textContent.includes('285.475'))));
+   (await page.$$eval('#ll-entry-list .ll-input', els => els.map(e => e.value)))
+     .some(v => v.includes('Entry: Lubbock App: 119.2') &&
+                v.includes('Pt J: Abq Center: 127.85') &&
+                v.includes('285.475')));
 await page.selectOption('#ll-route-select', 'IR-155');
 await page.waitForTimeout(100);
 eq('IR-155 Entry A after switch', await page.$eval('#ll-entry-pt', e => e.textContent), 'A');
@@ -180,6 +180,61 @@ eq('IR-193 Entry placeholder —', await page.$eval('#ll-entry-pt', e => e.textC
 // Switch back to IR-154 so subsequent SCLZ/STLZ TOT edits work.
 await page.selectOption('#ll-route-select', 'IR-154');
 await page.waitForTimeout(100);
+
+// ── 8b. Editable Low level X Check sections ─────────────────────────
+const combatEntryDef = await page.$$eval('.ll-list[data-ll-key="combatEntry"] .ll-input', els => els.map(e => e.value));
+eq('Combat Entry default items', combatEntryDef,
+   ['RA MKR: 250 (50 feet - alt)', 'ESA in AFCS', 'GPWS/TAWS: Day 200/100 || Night 400/300']);
+eq('PFARTSS has 7 default items',
+   (await page.$$eval('.ll-list[data-ll-key="pfartss"] .ll-input', els => els.length)), 7);
+eq('Descent Check starts empty',
+   (await page.$$eval('.ll-list[data-ll-key="descent"] .ll-input', els => els.length)), 0);
+// LL Entry default for IR-154 (route currently IR-154): IR-154 top item + common 3-6
+eq('LL Entry IR-154 default list',
+   await page.$$eval('#ll-entry-list .ll-input', els => els.map(e => e.value)), [
+  'Maintain 4500-10,000 between A and B to deconflict with VR-1116',
+  'Entry: Lubbock App: 119.2 | Pt J: Abq Center: 127.85 | 285.475',
+  'Hack / Squawk / Talk',
+  'Speed Limits',
+  'Set Escape freq',
+]);
+ok('LL Entry fix line visible for IR-154',
+   await page.evaluate(() => getComputedStyle(document.getElementById('ll-entry-fixes')).display !== 'none'));
+// Switch to IR-155 → only common items 3-6, fix line hidden
+await page.selectOption('#ll-route-select', 'IR-155');
+await page.waitForTimeout(120);
+eq('LL Entry IR-155 shows only common items',
+   await page.$$eval('#ll-entry-list .ll-input', els => els.map(e => e.value)), [
+  'Entry: Lubbock App: 119.2 | Pt J: Abq Center: 127.85 | 285.475',
+  'Hack / Squawk / Talk',
+  'Speed Limits',
+  'Set Escape freq',
+]);
+ok('LL Entry fix line hidden for IR-155',
+   await page.evaluate(() => getComputedStyle(document.getElementById('ll-entry-fixes')).display === 'none'));
+// Edit an IR-155 item → per-route memory
+await page.$eval('#ll-entry-list .ll-input', el => { el.value = 'EDITED 155'; el.dispatchEvent(new Event('input', { bubbles: true })); });
+await page.waitForTimeout(100);
+await page.selectOption('#ll-route-select', 'IR-154');
+await page.waitForTimeout(100);
+eq('IR-154 list unaffected by IR-155 edit',
+   (await page.$$eval('#ll-entry-list .ll-input', els => els.map(e => e.value)))[0],
+   'Maintain 4500-10,000 between A and B to deconflict with VR-1116');
+await page.selectOption('#ll-route-select', 'IR-155');
+await page.waitForTimeout(100);
+eq('IR-155 edit remembered per route',
+   (await page.$$eval('#ll-entry-list .ll-input', els => els.map(e => e.value)))[0], 'EDITED 155');
+// Add then remove on a generic section
+await page.selectOption('#ll-route-select', 'IR-154');
+await page.waitForTimeout(100);
+await page.click('button[onclick="addLLItem(\'descent\')"]');
+await page.waitForTimeout(100);
+eq('Descent add creates a row',
+   (await page.$$eval('.ll-list[data-ll-key="descent"] .ll-input', els => els.length)), 1);
+await page.click('.ll-list[data-ll-key="descent"] .ll-rm');
+await page.waitForTimeout(100);
+eq('Descent remove clears the row',
+   (await page.$$eval('.ll-list[data-ll-key="descent"] .ll-input', els => els.length)), 0);
 
 // ── 9. Safety Supplements dynamic ───────────────────────────────────
 const ssActiveBase = await page.$$eval('#ss-active-list input.ss-input', els => els.map(e => e.value));

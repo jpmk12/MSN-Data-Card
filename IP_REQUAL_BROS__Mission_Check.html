@@ -216,6 +216,31 @@
   }
   .sub-item::before { content: '·'; position: absolute; left: 16px; }
 
+  /* ── Editable Low level X Check rows ── */
+  .ll-item-row {
+    display: flex; align-items: flex-start; gap: 6px;
+    padding: 2px 0 2px 16px; position: relative;
+  }
+  .ll-item-row::before { content: '—'; position: absolute; left: 0; top: 2px; color: #b4b2a9; }
+  .ll-input {
+    flex: 1; min-width: 0; font-family: inherit; font-size: 12.5px;
+    color: #5f5e5a; line-height: 1.65; background: transparent;
+    border: none; outline: none; padding: 0; margin: 0;
+    resize: none; overflow: hidden;
+  }
+  .ll-rm {
+    font-family: inherit; font-size: 13px; font-weight: 700; color: #c9c7bf;
+    background: transparent; border: none; cursor: pointer; outline: none;
+    padding: 0 2px; line-height: 1.4; flex-shrink: 0;
+  }
+  .ll-rm:hover { color: #888780; }
+  .ll-add-btn {
+    display: inline-block; font-family: inherit; font-size: 10px; font-weight: 600;
+    color: #185FA5; background: transparent; border: 1px solid #185FA5;
+    border-radius: 999px; padding: 1px 8px; cursor: pointer; outline: none;
+    margin: 3px 0 6px 16px;
+  }
+
   /* Boxed R / C badges for Three Rs / Three Cs items */
   .r-box, .c-box {
     display: inline-block;
@@ -1036,41 +1061,33 @@
       Low level X Check
     </div>
     <label class="section-title red banded chk-title"><span class="chk-text">Descent Check</span><input type="checkbox" class="chk-input"></label>
+    <div class="ll-list" data-ll-key="descent"></div>
+    <button type="button" class="ll-add-btn" onclick="addLLItem('descent')" aria-label="Add Descent Check item">+ item</button>
     <label class="section-title amber banded chk-title" style="margin-top:8px"><span class="chk-text">Combat Entry</span><input type="checkbox" class="chk-input"></label>
-    <div class="item">RA MKR: 250 (50 feet - alt)</div>
-    <div class="item">ESA in AFCS</div>
-    <div class="item">GPWS/TAWS: Day 200/100 &#124;&#124; Night 400/300</div>
+    <div class="ll-list" data-ll-key="combatEntry"></div>
+    <button type="button" class="ll-add-btn" onclick="addLLItem('combatEntry')" aria-label="Add Combat Entry item">+ item</button>
     <label class="section-title green banded chk-title" style="margin-top:8px"><span class="chk-text">Route Activation - Agent Check In</span><input type="checkbox" class="chk-input"></label>
-    <div class="item">Authentication</div>
-    <div class="sub-item">A-14-F = Y</div>
-    <div class="sub-item">B-21-W = V</div>
-    <div class="sub-item">C-9-Q = T</div>
-    <div class="item">Verify contract GUARD active</div>
+    <div class="ll-list" data-ll-key="routeActivation"></div>
+    <button type="button" class="ll-add-btn" onclick="addLLItem('routeActivation')" aria-label="Add Route Activation item">+ item</button>
     <label class="section-title blue banded chk-title" style="margin-top:8px"><span class="chk-text">PFARTSS</span><input type="checkbox" class="chk-input"></label>
-    <div class="item">PRFM (FPLANx3, rm SPD limits)</div>
-    <div class="item">Fix TOT (&plusmn; 0:05)</div>
-    <div class="item">AFCS (ERAA and VVI).</div>
-    <div class="item">Route data altitude</div>
-    <div class="item">Talk and display TAZs/GRPs</div>
-    <div class="item">Speed up (to planned value)</div>
-    <div class="item">Squawk</div>
+    <div class="ll-list" data-ll-key="pfartss"></div>
+    <button type="button" class="ll-add-btn" onclick="addLLItem('pfartss')" aria-label="Add PFARTSS item">+ item</button>
     <label class="section-title pink banded chk-title" style="margin-top:8px"><span class="chk-text">Approach Check</span><input type="checkbox" class="chk-input"></label>
+    <div class="ll-list" data-ll-key="approach"></div>
+    <button type="button" class="ll-add-btn" onclick="addLLItem('approach')" aria-label="Add Approach Check item">+ item</button>
     <label class="section-title teal banded chk-title" style="margin-top:8px"><span class="chk-text">Low Level Entry</span><input type="checkbox" class="chk-input"></label>
     <div class="item" id="ll-entry-fixes" style="font-weight:600;color:#0C447C;">IR-154 &rarr; A: <span id="ll-fix-a">—</span> &#124; F: <span id="ll-fix-f">—</span> &#124; J: <span id="ll-fix-j">—</span></div>
-    <div class="item">Maintain 4500-10,000 between A and B to deconflict with VR-1116</div>
-    <div class="item">Entry: Lubbock App: 119.2 &#124; Pt J: Abq Center: 127.85 &#124; 285.475</div>
-    <div class="item">Hack / Squawk / Talk</div>
-    <div class="item">Speed Limits</div>
-    <div class="item">Set Escape freq</div>
+    <div class="ll-list" id="ll-entry-list"></div>
+    <button type="button" class="ll-add-btn" onclick="addLLEntryRow('')" aria-label="Add Low Level Entry item">+ item</button>
     <label class="section-title red banded chk-title" style="margin-top:8px"><span class="chk-text">Scenario Objectives</span><input type="checkbox" class="chk-input"></label>
-    <div class="sub-item">HTLZ: VIRUS 299/65 &#124; VIRUS 326/68</div>
-    <div class="sub-item">STLZ: VIRUS 243/48 &#124; VIRUS 232/72</div>
+    <div class="ll-list" data-ll-key="scenarioObjectives"></div>
+    <button type="button" class="ll-add-btn" onclick="addLLItem('scenarioObjectives')" aria-label="Add Scenario Objectives item">+ item</button>
     <label class="section-title amber banded chk-title" style="margin-top:8px"><span class="chk-text">LZ Check-In</span><input type="checkbox" class="chk-input"></label>
-    <div class="item">Request Rancher R out</div>
-    <div class="item">Slow Down</div>
-    <div class="sub-item">Clb left turn</div>
-    <div class="sub-item">4500'</div>
+    <div class="ll-list" data-ll-key="lzCheckin"></div>
+    <button type="button" class="ll-add-btn" onclick="addLLItem('lzCheckin')" aria-label="Add LZ Check-In item">+ item</button>
     <label class="section-title green banded chk-title" style="margin-top:8px"><span class="chk-text">Combat Exit</span><input type="checkbox" class="chk-input"></label>
+    <div class="ll-list" data-ll-key="combatExit"></div>
+    <button type="button" class="ll-add-btn" onclick="addLLItem('combatExit')" aria-label="Add Combat Exit item">+ item</button>
   </div>
 
     </div>
@@ -3149,6 +3166,94 @@ function setLLRoute() {
   var stlzRow = document.getElementById('ll-stlz-row');
   if (sclzRow) sclzRow.style.display = show ? '' : 'none';
   if (stlzRow) stlzRow.style.display = show ? '' : 'none';
+  // The Low Level Entry checklist on the LL tab follows this dropdown.
+  if (typeof renderLLEntry === 'function') renderLLEntry();
+}
+
+// ─── Editable Low level X Check sections ───
+// Generic sections gather straight from the DOM. The Low Level Entry
+// section is route-dependent, so its per-route lists live in LL_ENTRY_STATE.
+function _makeLLRow(value, onChange) {
+  var row = document.createElement('div');
+  row.className = 'll-item-row';
+  var ta = document.createElement('textarea');
+  ta.className = 'll-input';
+  ta.rows = 1;
+  ta.value = value || '';
+  ta.setAttribute('aria-label', 'Checklist item');
+  var grow = function() { ta.style.height = 'auto'; ta.style.height = (ta.scrollHeight || 18) + 'px'; };
+  ta.addEventListener('input', function() { grow(); onChange(); });
+  setTimeout(grow, 0);
+  var rm = document.createElement('button');
+  rm.type = 'button';
+  rm.className = 'll-rm';
+  rm.textContent = '×';
+  rm.setAttribute('aria-label', 'Remove item');
+  rm.onclick = function() { row.remove(); onChange(); };
+  row.appendChild(ta);
+  row.appendChild(rm);
+  return { row: row, ta: ta };
+}
+function resizeLLInputs() {
+  document.querySelectorAll('#tab-llgk .ll-input').forEach(function(ta) {
+    ta.style.height = 'auto';
+    ta.style.height = (ta.scrollHeight || 18) + 'px';
+  });
+}
+function addLLItem(key, value) {
+  var list = document.querySelector('.ll-list[data-ll-key="' + key + '"]');
+  if (!list) return;
+  var made = _makeLLRow(value, function() { if (typeof mdcPersist === 'function') mdcPersist(); });
+  list.appendChild(made.row);
+  if (typeof mdcPersist === 'function') mdcPersist();
+  if (!value) { made.ta.focus(); resizeLLInputs(); }
+}
+// Low Level Entry — per-route, with a locked IR-154 fix line.
+var LL_ENTRY_COMMON = [
+  'Entry: Lubbock App: 119.2 | Pt J: Abq Center: 127.85 | 285.475',
+  'Hack / Squawk / Talk',
+  'Speed Limits',
+  'Set Escape freq'
+];
+var LL_ENTRY_ROUTE_TOP = {
+  'IR-154': ['Maintain 4500-10,000 between A and B to deconflict with VR-1116']
+};
+function llEntryDefaultFor(route) {
+  return (LL_ENTRY_ROUTE_TOP[route] || []).concat(LL_ENTRY_COMMON);
+}
+var LL_ENTRY_STATE = {};
+function _currentLLRoute() {
+  var sel = document.getElementById('ll-route-select');
+  return sel ? sel.value : 'IR-154';
+}
+function gatherLLEntry() {
+  var list = document.getElementById('ll-entry-list');
+  if (!list) return;
+  LL_ENTRY_STATE[_currentLLRoute()] = Array.prototype.slice.call(list.querySelectorAll('.ll-input'))
+    .map(function(t) { return t.value; });
+}
+function addLLEntryRow(value) {
+  var list = document.getElementById('ll-entry-list');
+  if (!list) return;
+  var made = _makeLLRow(value, function() { gatherLLEntry(); if (typeof mdcPersist === 'function') mdcPersist(); });
+  list.appendChild(made.row);
+  if (!value) {
+    gatherLLEntry();
+    if (typeof mdcPersist === 'function') mdcPersist();
+    made.ta.focus();
+    resizeLLInputs();
+  }
+}
+function renderLLEntry() {
+  var list = document.getElementById('ll-entry-list');
+  if (!list) return;
+  var route = _currentLLRoute();
+  if (!Array.isArray(LL_ENTRY_STATE[route])) LL_ENTRY_STATE[route] = llEntryDefaultFor(route);
+  list.innerHTML = '';
+  LL_ENTRY_STATE[route].forEach(function(v) { addLLEntryRow(v); });
+  var fixes = document.getElementById('ll-entry-fixes');
+  if (fixes) fixes.style.display = (route === 'IR-154') ? '' : 'none';
+  resizeLLInputs();
 }
 function _computeSlow(lzInputId, offsetSelectId, outputSpanId) {
   // Slow = LZ TOT minus the selected offset (seconds). LZ TOT entered as
@@ -4175,6 +4280,20 @@ function mdcGatherState() {
   if (nList) state.notes = Array.prototype.slice.call(nList.querySelectorAll('.note-input'))
     .map(function(i) { return i.value; })
     .filter(function(v) { return v.trim(); });
+  // Editable Low level X Check sections (generic, gathered from the DOM).
+  state.llItems = {};
+  document.querySelectorAll('.ll-list[data-ll-key]').forEach(function(list) {
+    var key = list.getAttribute('data-ll-key');
+    state.llItems[key] = Array.prototype.slice.call(list.querySelectorAll('.ll-input'))
+      .map(function(t) { return t.value; })
+      .filter(function(v) { return v.trim(); });
+  });
+  // Low Level Entry — per-route lists (sync the visible route first).
+  if (typeof gatherLLEntry === 'function') gatherLLEntry();
+  state.llEntry = {};
+  Object.keys(LL_ENTRY_STATE).forEach(function(r) {
+    state.llEntry[r] = (LL_ENTRY_STATE[r] || []).filter(function(v) { return v && v.trim(); });
+  });
   return state;
 }
 function mdcPersist() {
@@ -4285,6 +4404,25 @@ function mdcRestore() {
     state.notes.filter(function(v) { return v && v.trim(); })
       .forEach(function(v) { addNote(v); });
   }
+  // Editable Low level X Check sections (generic).
+  if (state.llItems && typeof state.llItems === 'object') {
+    Object.keys(state.llItems).forEach(function(key) {
+      var list = document.querySelector('.ll-list[data-ll-key="' + key + '"]');
+      if (!list) return;
+      var arr = state.llItems[key];
+      if (!Array.isArray(arr)) return;
+      list.innerHTML = '';
+      arr.filter(function(v) { return v && v.trim(); })
+        .forEach(function(v) { addLLItem(key, v); });
+    });
+  }
+  // Low Level Entry — per-route lists (rendered below by renderLLEntry()).
+  if (state.llEntry && typeof state.llEntry === 'object') {
+    Object.keys(state.llEntry).forEach(function(r) {
+      if (Array.isArray(state.llEntry[r])) LL_ENTRY_STATE[r] = state.llEntry[r].slice();
+    });
+  }
+  if (typeof renderLLEntry === 'function') renderLLEntry();
   // Re-run downstream calculators / displays with the restored input values.
   if (typeof soeCalc === 'function') soeCalc();
   if (typeof syncARCT === 'function') syncARCT();
@@ -4341,6 +4479,25 @@ document.addEventListener('DOMContentLoaded', function() {
     'DEAD: engine start, 1st pattern work ||AR entry || back half LL || ground ops',
     'DUFF: 2nd pattern work || back half AR, LL entry || ground ops'
   ].forEach(function(v) { addNote(v); });
+  // Pre-load default editable Low level X Check sections.
+  var LL_DEFAULTS = {
+    descent: [],
+    combatEntry: ['RA MKR: 250 (50 feet - alt)', 'ESA in AFCS', 'GPWS/TAWS: Day 200/100 || Night 400/300'],
+    routeActivation: ['Authentication', 'A-14-F = Y', 'B-21-W = V', 'C-9-Q = T', 'Verify contract GUARD active'],
+    pfartss: ['PRFM (FPLANx3, rm SPD limits)', 'Fix TOT (± 0:05)', 'AFCS (ERAA and VVI).', 'Route data altitude', 'Talk and display TAZs/GRPs', 'Speed up (to planned value)', 'Squawk'],
+    approach: [],
+    scenarioObjectives: ['HTLZ: VIRUS 299/65 | VIRUS 326/68', 'STLZ: VIRUS 243/48 | VIRUS 232/72'],
+    lzCheckin: ['Request Rancher R out', 'Slow Down', 'Clb left turn', "4500'"],
+    combatExit: []
+  };
+  Object.keys(LL_DEFAULTS).forEach(function(key) {
+    LL_DEFAULTS[key].forEach(function(v) { addLLItem(key, v); });
+  });
+  // Low Level Entry per-route defaults + initial render.
+  ['IR-193', 'VR-106', 'IR-155', 'IR-154'].forEach(function(r) {
+    LL_ENTRY_STATE[r] = llEntryDefaultFor(r);
+  });
+  renderLLEntry();
   // Restore any previously persisted state (overrides defaults where set).
   mdcRestore();
   // Defensive cleanup: drop any safety supplement rows that ended up empty,
@@ -4376,6 +4533,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (row) row.remove();
       }
     });
+  })();
+  // Defensive cleanup: drop any empty Low level X Check rows.
+  (function() {
+    document.querySelectorAll('#tab-llgk .ll-input').forEach(function(ta) {
+      if (!ta.value.trim()) {
+        var row = ta.closest('.ll-item-row');
+        if (row) row.remove();
+      }
+    });
+    if (typeof gatherLLEntry === 'function') gatherLLEntry();
   })();
   // Defensive cleanup: dedupe Pattern Work — keep only the first occurrence
   // of any preset and drop unknown / stale entries.
@@ -4448,6 +4615,8 @@ function switchTab(id, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + id).classList.add('active');
   btn.classList.add('active');
+  // Editable LL rows render with 0 height while hidden — fix once visible.
+  if (id === 'llgk' && typeof resizeLLInputs === 'function') resizeLLInputs();
 }
 function downloadHTML() {
   const clone = document.documentElement.cloneNode(true);

@@ -69,6 +69,8 @@ on the gate.
 | `#ss-incorporated-list`     | `addSafetyItem('incorporated', v)` | `state.ssIncorporated` |
 | `#box-step1-list`..`#box-keypoints-list` | `addBoxStep(listId, v)` | `state.boxSteps[listId]` |
 | `#notes-list`               | `addNote(v)`       | `state.notes`        |
+| `.ll-list[data-ll-key=…]` (LL tab "Low level X Check" sections) | `addLLItem(key, v)` | `state.llItems[key]` |
+| `#ll-entry-list` (Low Level Entry, per-route) | `addLLEntryRow(v)` / `renderLLEntry()` | `state.llEntry[route]` |
 
 Each helper creates a row with an `×` button. Pattern Work also has a
 delegated `click` handler on `#pattern-list` as a defense if the
@@ -131,6 +133,32 @@ dispatches the matching event so downstream side effects (`syncLowLevel`,
   Pub Sync `26 May 2026`, FLIP `06-11-2026 thru 07-08-2026`
 - Route of Flight:
   `KTLS OKKIE_.CDS LBB360030 AR197 LBB322047 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS`
+
+## Low level X Check (LL tab) — editable + route-aware
+
+Every section in the "Low level X Check" card (Descent Check, Combat
+Entry, Route Activation, PFARTSS, Approach Check, Low Level Entry,
+Scenario Objectives, LZ Check-In, Combat Exit) is now an **editable
+list** (`.ll-list[data-ll-key]` container + `+ item` button, rows are
+`textarea.ll-input` with an `×`). Section titles + checkboxes are fixed;
+only the items are editable. Generic sections persist via
+`state.llItems[key]` (gathered straight from the DOM like the SS lists).
+
+**Low Level Entry is special — route-dependent.** It follows the
+**Brief tab** `#ll-route-select` ("Low Level Info"), NOT the LL-tab
+`#route-select` (Route Data). `setLLRoute()` calls `renderLLEntry()`.
+Per-route item lists live in `LL_ENTRY_STATE[route]` (persisted as
+`state.llEntry`). Defaults: `llEntryDefaultFor(route)` =
+`LL_ENTRY_ROUTE_TOP[route]` (IR-154 gets the "Maintain 4500-10,000…"
+line) + `LL_ENTRY_COMMON` (the freq line + Hack/Squawk/Talk + Speed
+Limits + Set Escape freq — shared default for every route). Edits are
+remembered per route. The `#ll-entry-fixes` line (auto-calculated
+A/F/J from SOE LL Entry) is **locked / not editable** and shown only for
+IR-154 (toggled in `renderLLEntry`).
+
+`resizeLLInputs()` re-grows the auto-sizing textareas; it's called from
+`switchTab('llgk')` because textareas render at 0 height while the tab
+is hidden.
 
 ## Pitfalls / gotchas
 
