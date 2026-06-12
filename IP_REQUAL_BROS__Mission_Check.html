@@ -222,12 +222,21 @@
     padding: 2px 0 2px 16px; position: relative;
   }
   .ll-item-row::before { content: '—'; position: absolute; left: 0; top: 2px; color: #b4b2a9; }
+  .ll-item-row[data-sub="1"] { padding-left: 28px; }
+  .ll-item-row[data-sub="1"]::before { content: '·'; left: 16px; top: 1px; }
+  .ll-item-row[data-sub="1"] .ll-input { font-size: 11.5px; color: #888780; line-height: 1.6; }
   .ll-input {
     flex: 1; min-width: 0; font-family: inherit; font-size: 12.5px;
     color: #5f5e5a; line-height: 1.65; background: transparent;
     border: none; outline: none; padding: 0; margin: 0;
     resize: none; overflow: hidden;
   }
+  .ll-indent {
+    font-family: inherit; font-size: 12px; color: #c9c7bf;
+    background: transparent; border: none; cursor: pointer; outline: none;
+    padding: 0 2px; line-height: 1.4; flex-shrink: 0;
+  }
+  .ll-indent:hover { color: #185FA5; }
   .ll-rm {
     font-family: inherit; font-size: 13px; font-weight: 700; color: #c9c7bf;
     background: transparent; border: none; cursor: pointer; outline: none;
@@ -3186,17 +3195,37 @@ function syncLLRoute(source) {
 // ─── Editable Low level X Check sections ───
 // Generic sections gather straight from the DOM. The Low Level Entry
 // section is route-dependent, so its per-route lists live in LL_ENTRY_STATE.
+// A row value is either a plain string (top-level item) or
+// { text, sub:true } for an indented sub-item.
+function _llNormalize(value) {
+  if (value && typeof value === 'object') return { text: value.text || '', sub: !!value.sub };
+  return { text: value || '', sub: false };
+}
 function _makeLLRow(value, onChange) {
+  var item = _llNormalize(value);
   var row = document.createElement('div');
   row.className = 'll-item-row';
+  row.setAttribute('data-sub', item.sub ? '1' : '0');
   var ta = document.createElement('textarea');
   ta.className = 'll-input';
   ta.rows = 1;
-  ta.value = value || '';
+  ta.value = item.text;
   ta.setAttribute('aria-label', 'Checklist item');
   var grow = function() { ta.style.height = 'auto'; ta.style.height = (ta.scrollHeight || 18) + 'px'; };
   ta.addEventListener('input', function() { grow(); onChange(); });
   setTimeout(grow, 0);
+  var indent = document.createElement('button');
+  indent.type = 'button';
+  indent.className = 'll-indent';
+  indent.textContent = item.sub ? '⇤' : '⇥';
+  indent.title = 'Indent / outdent';
+  indent.setAttribute('aria-label', 'Toggle sub-item indent');
+  indent.onclick = function() {
+    var cur = row.getAttribute('data-sub') === '1';
+    row.setAttribute('data-sub', cur ? '0' : '1');
+    indent.textContent = cur ? '⇥' : '⇤';
+    onChange();
+  };
   var rm = document.createElement('button');
   rm.type = 'button';
   rm.className = 'll-rm';
@@ -3204,8 +3233,19 @@ function _makeLLRow(value, onChange) {
   rm.setAttribute('aria-label', 'Remove item');
   rm.onclick = function() { row.remove(); onChange(); };
   row.appendChild(ta);
+  row.appendChild(indent);
   row.appendChild(rm);
   return { row: row, ta: ta };
+}
+// Read a row's value back as a string (top-level) or { text, sub:true }.
+function _llRowValue(row) {
+  var ta = row.querySelector('.ll-input');
+  var text = ta ? ta.value : '';
+  return (row.getAttribute('data-sub') === '1') ? { text: text, sub: true } : text;
+}
+function _llHasText(v) {
+  var t = (typeof v === 'string') ? v : (v && v.text);
+  return !!(t && t.trim());
 }
 function resizeLLInputs() {
   document.querySelectorAll('#tab-llgk .ll-input').forEach(function(ta) {
@@ -3242,8 +3282,8 @@ function _currentLLRoute() {
 function gatherLLEntry() {
   var list = document.getElementById('ll-entry-list');
   if (!list) return;
-  LL_ENTRY_STATE[_currentLLRoute()] = Array.prototype.slice.call(list.querySelectorAll('.ll-input'))
-    .map(function(t) { return t.value; });
+  LL_ENTRY_STATE[_currentLLRoute()] = Array.prototype.slice.call(list.querySelectorAll('.ll-item-row'))
+    .map(_llRowValue);
 }
 function addLLEntryRow(value) {
   var list = document.getElementById('ll-entry-list');
@@ -4297,15 +4337,15 @@ function mdcGatherState() {
   state.llItems = {};
   document.querySelectorAll('.ll-list[data-ll-key]').forEach(function(list) {
     var key = list.getAttribute('data-ll-key');
-    state.llItems[key] = Array.prototype.slice.call(list.querySelectorAll('.ll-input'))
-      .map(function(t) { return t.value; })
-      .filter(function(v) { return v.trim(); });
+    state.llItems[key] = Array.prototype.slice.call(list.querySelectorAll('.ll-item-row'))
+      .map(_llRowValue)
+      .filter(_llHasText);
   });
   // Low Level Entry — per-route lists (sync the visible route first).
   if (typeof gatherLLEntry === 'function') gatherLLEntry();
   state.llEntry = {};
   Object.keys(LL_ENTRY_STATE).forEach(function(r) {
-    state.llEntry[r] = (LL_ENTRY_STATE[r] || []).filter(function(v) { return v && v.trim(); });
+    state.llEntry[r] = (LL_ENTRY_STATE[r] || []).filter(_llHasText);
   });
   return state;
 }
@@ -4425,8 +4465,7 @@ function mdcRestore() {
       var arr = state.llItems[key];
       if (!Array.isArray(arr)) return;
       list.innerHTML = '';
-      arr.filter(function(v) { return v && v.trim(); })
-        .forEach(function(v) { addLLItem(key, v); });
+      arr.filter(_llHasText).forEach(function(v) { addLLItem(key, v); });
     });
   }
   // Low Level Entry — per-route lists (rendered below by renderLLEntry()).
@@ -4503,11 +4542,11 @@ document.addEventListener('DOMContentLoaded', function() {
   var LL_DEFAULTS = {
     descent: [],
     combatEntry: ['RA MKR: 250 (50 feet - alt)', 'ESA in AFCS', 'GPWS/TAWS: Day 200/100 || Night 400/300'],
-    routeActivation: ['Authentication', 'A-14-F = Y', 'B-21-W = V', 'C-9-Q = T', 'Verify contract GUARD active'],
+    routeActivation: ['Authentication', { text: 'A-14-F = Y', sub: true }, { text: 'B-21-W = V', sub: true }, { text: 'C-9-Q = T', sub: true }, 'Verify contract GUARD active'],
     pfartss: ['PRFM (FPLANx3, rm SPD limits)', 'Fix TOT (± 0:05)', 'AFCS (ERAA and VVI).', 'Route data altitude', 'Talk and display TAZs/GRPs', 'Speed up (to planned value)', 'Squawk'],
     approach: [],
-    scenarioObjectives: ['HTLZ: VIRUS 299/65 | VIRUS 326/68', 'STLZ: VIRUS 243/48 | VIRUS 232/72'],
-    lzCheckin: ['Request Rancher R out', 'Slow Down', 'Clb left turn', "4500'"],
+    scenarioObjectives: [{ text: 'HTLZ: VIRUS 299/65 | VIRUS 326/68', sub: true }, { text: 'STLZ: VIRUS 243/48 | VIRUS 232/72', sub: true }],
+    lzCheckin: ['Request Rancher R out', 'Slow Down', { text: 'Clb left turn', sub: true }, { text: "4500'", sub: true }],
     combatExit: []
   };
   Object.keys(LL_DEFAULTS).forEach(function(key) {

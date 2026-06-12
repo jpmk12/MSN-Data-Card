@@ -144,6 +144,15 @@ list** (`.ll-list[data-ll-key]` container + `+ item` button, rows are
 only the items are editable. Generic sections persist via
 `state.llItems[key]` (gathered straight from the DOM like the SS lists).
 
+**Nesting (sub-items).** Each row can be a top-level item or an indented
+sub-item, toggled by the per-row `⇥`/`⇤` button (`.ll-indent`, drives the
+`data-sub` attribute + CSS). A row value is a plain **string** for
+top-level or `{ text, sub:true }` for a sub-item — see `_llNormalize` /
+`_llRowValue` / `_llHasText`. Defaults that ship nested: Route Activation
+auth codes, Scenario Objectives lines, LZ Check-In "Clb left turn"/
+"4500'". Old saved state (all strings) restores as flat — reset to pick
+up the nested defaults.
+
 **Low Level Entry is special — route-dependent.** It follows the
 **Brief tab** `#ll-route-select` ("Low Level Info"). The two low-level
 route dropdowns — `#ll-route-select` and the LL-tab `#route-select`
