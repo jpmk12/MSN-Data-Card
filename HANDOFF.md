@@ -113,13 +113,16 @@ fallback), `_normRzType`, `_normCallsign`.
 dispatches the matching event so downstream side effects (`syncLowLevel`,
 `setARTrack`, etc.) fire.
 
-## Current defaults (as of last commit `1cdc142` — IPRQ FLT 2)
+## Current defaults (IPRQ FLT 3)
 
-- Header badge `IPRQ FLT 2`, callsign `CADDO 10`, students `DEAD` / `DUFF`
-- SOE: Takeoff `1415`, LL Entry `1900`, LL Exit `1934`, ARCT `1700`, AREX `1835`
-- LL Info: route `IR-154`, Entry Pt `A`, Exit Pt `J`, SCLZ TOT `1914`,
-  STLZ TOT `1931`, Slow 1/Slow 2 default offset `−2:00` (value 120)
-- AR Info: track `AR197H`, Tanker `DASH 85`, TNKR Type `KC-46`,
+- Header badge `IPRQ FLT 3`, callsign `NOGS 27`, students `DEAD` / `DUFF`
+- SOE: Takeoff `0120`, LL Entry **blank**, LL Exit **blank**, ARCT `0345`, AREX `0505`
+- LL Info: route `IR-154`, Entry Pt `A`, Exit Pt `J`, SCLZ TOT / STLZ TOT
+  blank (derive from blank LL Entry), Slow 1/Slow 2 default offset `−2:00`
+  (value 120). The dropdown also has an **`NA`** option — when selected the
+  whole `#ll-info-table` is hidden (no data) and the LL-tab Low Level Entry
+  list is empty; both route dropdowns sync to NA.
+- AR Info: track `AR312L`, Tanker `OILER 91`, TNKR Type `KC-46`,
   RZ Type `G (Enroute)`, AR SPD `265 (135)`
 - Pattern Work: DUKE TAC 6500, DUKE BEAM, DUKE ACCEL 6500, STR IN
 - Ground Ops: Backing, Star Turn
