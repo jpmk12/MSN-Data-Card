@@ -765,7 +765,7 @@
     <div class="section-title blue banded" style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
       <span>Low Level Info</span>
       <span style="position:relative;display:inline-flex;align-items:center;">
-        <select id="ll-route-select" onchange="setLLRoute()" aria-label="Select low level route"
+        <select id="ll-route-select" onchange="syncLLRoute('ll')" aria-label="Select low level route"
           style="font-family:inherit;font-size:11px;font-weight:700;color:#fff;background:#185FA5;border:none;border-radius:999px;padding:3px 24px 3px 11px;letter-spacing:0.04em;cursor:pointer;outline:none;-webkit-appearance:none;-moz-appearance:none;appearance:none;">
           <option value="IR-193">IR-193</option>
           <option value="VR-106">VR-106</option>
@@ -1101,7 +1101,7 @@
         Route Data
       </span>
       <span style="position:relative;display:inline-flex;align-items:center;">
-        <select id="route-select" onchange="renderRouteData()" aria-label="Select training route"
+        <select id="route-select" onchange="syncLLRoute('rd')" aria-label="Select training route"
           style="font-family:inherit;font-size:11px;font-weight:700;color:#fff;background:#185FA5;border:none;border-radius:999px;padding:4px 26px 4px 12px;letter-spacing:0.04em;cursor:pointer;outline:none;-webkit-appearance:none;-moz-appearance:none;appearance:none;">
           <option value="IR-193">IR-193</option>
           <option value="VR-106">VR-106</option>
@@ -3169,6 +3169,19 @@ function setLLRoute() {
   // The Low Level Entry checklist on the LL tab follows this dropdown.
   if (typeof renderLLEntry === 'function') renderLLEntry();
 }
+// Keep the two low-level route dropdowns (Brief-tab "Low Level Info"
+// #ll-route-select and LL-tab "Route Data" #route-select) in sync.
+function syncLLRoute(source) {
+  var ll = document.getElementById('ll-route-select');
+  var rd = document.getElementById('route-select');
+  if (!ll || !rd) return;
+  var val = (source === 'rd') ? rd.value : ll.value;
+  if (ll.value !== val) ll.value = val;
+  if (rd.value !== val) rd.value = val;
+  setLLRoute();       // entry/exit pts, SCLZ/STLZ visibility, renderLLEntry
+  renderRouteData();  // route data table + SVG
+  if (typeof mdcPersist === 'function') mdcPersist();
+}
 
 // ─── Editable Low level X Check sections ───
 // Generic sections gather straight from the DOM. The Low Level Entry
@@ -4422,7 +4435,14 @@ function mdcRestore() {
       if (Array.isArray(state.llEntry[r])) LL_ENTRY_STATE[r] = state.llEntry[r].slice();
     });
   }
-  if (typeof renderLLEntry === 'function') renderLLEntry();
+  // Keep the two low-level route dropdowns in sync (Low Level Info wins),
+  // then refresh the LL Entry / route displays for the restored route.
+  (function() {
+    var ll = document.getElementById('ll-route-select');
+    var rd = document.getElementById('route-select');
+    if (ll && rd && rd.value !== ll.value) rd.value = ll.value;
+  })();
+  if (typeof setLLRoute === 'function') setLLRoute();
   // Re-run downstream calculators / displays with the restored input values.
   if (typeof soeCalc === 'function') soeCalc();
   if (typeof syncARCT === 'function') syncARCT();

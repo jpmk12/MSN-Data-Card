@@ -145,8 +145,12 @@ only the items are editable. Generic sections persist via
 `state.llItems[key]` (gathered straight from the DOM like the SS lists).
 
 **Low Level Entry is special — route-dependent.** It follows the
-**Brief tab** `#ll-route-select` ("Low Level Info"), NOT the LL-tab
-`#route-select` (Route Data). `setLLRoute()` calls `renderLLEntry()`.
+**Brief tab** `#ll-route-select` ("Low Level Info"). The two low-level
+route dropdowns — `#ll-route-select` and the LL-tab `#route-select`
+(Route Data) — are kept **in sync** by `syncLLRoute(source)` (both
+`onchange` handlers; Low Level Info wins on restore). Changing either
+updates both, runs `setLLRoute()` (entry/exit pts, SCLZ/STLZ,
+`renderLLEntry()`) and `renderRouteData()`.
 Per-route item lists live in `LL_ENTRY_STATE[route]` (persisted as
 `state.llEntry`). Defaults: `llEntryDefaultFor(route)` =
 `LL_ENTRY_ROUTE_TOP[route]` (IR-154 gets the "Maintain 4500-10,000…"

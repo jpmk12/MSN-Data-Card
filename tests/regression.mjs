@@ -235,6 +235,17 @@ await page.click('.ll-list[data-ll-key="descent"] .ll-rm');
 await page.waitForTimeout(100);
 eq('Descent remove clears the row',
    (await page.$$eval('.ll-list[data-ll-key="descent"] .ll-input', els => els.length)), 0);
+// The two low-level route dropdowns stay in sync, either direction.
+await page.selectOption('#ll-route-select', 'IR-155');
+await page.waitForTimeout(100);
+eq('Route Data dropdown follows Low Level Info',
+   await page.$eval('#route-select', e => e.value), 'IR-155');
+await page.selectOption('#route-select', 'IR-154');
+await page.waitForTimeout(100);
+eq('Low Level Info follows Route Data dropdown',
+   await page.$eval('#ll-route-select', e => e.value), 'IR-154');
+eq('LL Entry re-renders to IR-154 after Route Data switch',
+   (await page.$$eval('#ll-entry-list .ll-input', els => els.length)), 5);
 
 // ── 9. Safety Supplements dynamic ───────────────────────────────────
 const ssActiveBase = await page.$$eval('#ss-active-list input.ss-input', els => els.map(e => e.value));
