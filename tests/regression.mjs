@@ -63,7 +63,9 @@ eq('Title is IPRQ-BROS-MDC', await page.title(), 'IPRQ-BROS-MDC');
 
 // ── 2. Header default values ────────────────────────────────────────
 eq('Callsign default NOGS 27',  await page.$eval('#hdr-callsign', e => e.value), 'NOGS 27');
-eq('Header badge IPRQ FLT 3', await page.$eval('.badge-info', e => e.textContent.trim()), 'IPRQ FLT 3');
+eq('Header badge IPRQ FLT 3', await page.$eval('#hdr-flt', e => e.value), 'IPRQ FLT 3');
+eq('Header badge is an editable input',
+   await page.$eval('#hdr-flt', e => e.tagName + (e.readOnly ? ':ro' : '')), 'INPUT');
 eq('Student 1 default DEAD',     await page.$eval('#hdr-student1', e => e.value), 'DEAD');
 eq('Student 2 default DUFF',     await page.$eval('#hdr-student2', e => e.value), 'DUFF');
 
