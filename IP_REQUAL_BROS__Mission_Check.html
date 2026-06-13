@@ -3281,14 +3281,18 @@ function llEntryDefaultFor(route) {
   return (LL_ENTRY_ROUTE_TOP[route] || []).concat(LL_ENTRY_COMMON);
 }
 var LL_ENTRY_STATE = {};
+// The route whose items are currently rendered in #ll-entry-list. Gather
+// must attribute edits to THIS route, not the dropdown's live value — on a
+// route change the dropdown updates before the list re-renders.
+var _llEntryRoute = null;
 function _currentLLRoute() {
   var sel = document.getElementById('ll-route-select');
   return sel ? sel.value : 'IR-154';
 }
 function gatherLLEntry() {
   var list = document.getElementById('ll-entry-list');
-  if (!list) return;
-  LL_ENTRY_STATE[_currentLLRoute()] = Array.prototype.slice.call(list.querySelectorAll('.ll-item-row'))
+  if (!list || _llEntryRoute === null) return;
+  LL_ENTRY_STATE[_llEntryRoute] = Array.prototype.slice.call(list.querySelectorAll('.ll-item-row'))
     .map(_llRowValue);
 }
 function addLLEntryRow(value) {
@@ -3308,6 +3312,7 @@ function renderLLEntry() {
   if (!list) return;
   var route = _currentLLRoute();
   if (!Array.isArray(LL_ENTRY_STATE[route])) LL_ENTRY_STATE[route] = llEntryDefaultFor(route);
+  _llEntryRoute = route;
   list.innerHTML = '';
   LL_ENTRY_STATE[route].forEach(function(v) { addLLEntryRow(v); });
   var fixes = document.getElementById('ll-entry-fixes');

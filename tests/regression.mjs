@@ -204,12 +204,13 @@ eq('Route Activation: Verify GUARD is a top item', raRows[4], { text: 'Verify co
 eq('LZ Check-In: Clb left turn is a sub-item',
    (await page.$$eval('.ll-list[data-ll-key="lzCheckin"] .ll-item-row',
      rows => rows.map(r => r.getAttribute('data-sub') === '1'))), [false, false, true, true]);
-// Indent toggle flips a row's level (then restore it).
-await page.click('.ll-list[data-ll-key="combatEntry"] .ll-item-row .ll-indent');
+// Indent toggle flips a row's level (then restore it). Use evaluate-click
+// since the LL tab is hidden while the Brief tab is active.
+await page.evaluate(() => document.querySelector('.ll-list[data-ll-key="combatEntry"] .ll-item-row .ll-indent').click());
 await page.waitForTimeout(80);
 eq('Indent toggle makes a row a sub-item',
    await page.$eval('.ll-list[data-ll-key="combatEntry"] .ll-item-row', r => r.getAttribute('data-sub')), '1');
-await page.click('.ll-list[data-ll-key="combatEntry"] .ll-item-row .ll-indent');
+await page.evaluate(() => document.querySelector('.ll-list[data-ll-key="combatEntry"] .ll-item-row .ll-indent').click());
 await page.waitForTimeout(80);
 eq('Indent toggle restores top-level',
    await page.$eval('.ll-list[data-ll-key="combatEntry"] .ll-item-row', r => r.getAttribute('data-sub')), '0');
@@ -248,14 +249,14 @@ await page.selectOption('#ll-route-select', 'IR-155');
 await page.waitForTimeout(100);
 eq('IR-155 edit remembered per route',
    (await page.$$eval('#ll-entry-list .ll-input', els => els.map(e => e.value)))[0], 'EDITED 155');
-// Add then remove on a generic section
+// Add then remove on a generic section (evaluate-click; LL tab hidden).
 await page.selectOption('#ll-route-select', 'IR-154');
 await page.waitForTimeout(100);
-await page.click('button[onclick="addLLItem(\'descent\')"]');
+await page.evaluate(() => document.querySelector('button[onclick="addLLItem(\'descent\')"]').click());
 await page.waitForTimeout(100);
 eq('Descent add creates a row',
    (await page.$$eval('.ll-list[data-ll-key="descent"] .ll-input', els => els.length)), 1);
-await page.click('.ll-list[data-ll-key="descent"] .ll-rm');
+await page.evaluate(() => document.querySelector('.ll-list[data-ll-key="descent"] .ll-rm').click());
 await page.waitForTimeout(100);
 eq('Descent remove clears the row',
    (await page.$$eval('.ll-list[data-ll-key="descent"] .ll-input', els => els.length)), 0);
@@ -264,7 +265,7 @@ await page.selectOption('#ll-route-select', 'IR-155');
 await page.waitForTimeout(100);
 eq('Route Data dropdown follows Low Level Info',
    await page.$eval('#route-select', e => e.value), 'IR-155');
-await page.selectOption('#route-select', 'IR-154');
+await page.evaluate(() => { const s = document.getElementById('route-select'); s.value = 'IR-154'; s.dispatchEvent(new Event('change', { bubbles: true })); });
 await page.waitForTimeout(100);
 eq('Low Level Info follows Route Data dropdown',
    await page.$eval('#ll-route-select', e => e.value), 'IR-154');
