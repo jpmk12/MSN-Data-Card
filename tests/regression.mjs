@@ -451,11 +451,11 @@ eq('IR-154 first turn row', rows[0], ['B1','122','3150M','3068M','3068M','3700M'
 // ── 18b. Route Information: Required Chart row ──────────────────────
 const reqChart = await page.evaluate(() => {
   const r = [...document.querySelectorAll('#tab-llgk table tr')]
-    .find(tr => tr.querySelector('td') && tr.querySelector('td').textContent.trim() === 'Required Chart');
+    .find(tr => tr.querySelector('td') && tr.querySelector('td').textContent.trim() === 'Required Chart Info');
   return r ? r.querySelectorAll('td')[1].textContent.trim() : null;
 });
-eq('Route Information has Required Chart row', reqChart,
-   'Info Turn points, Initial Point (IP), objective area, course line, navigation information, VVOD data and date, ERAA, and chart series/date.');
+eq('Route Information has Required Chart Info row', reqChart,
+   'Turn points, Initial Point (IP), objective area, course line, navigation information, VVOD data and date, ERAA, and chart series/date.');
 
 // ── 19. Air Refueling badge checkboxes exist ────────────────────────
 await clickTab('AR');
