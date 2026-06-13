@@ -117,13 +117,16 @@ dispatches the matching event so downstream side effects (`syncLowLevel`,
 
 - Header badge `IPRQ FLT 3` (editable `#hdr-flt`), callsign `NOGS 96`, students `DEAD` / `DUFF`
 - SOE: Takeoff `0130`, LL Entry **blank**, LL Exit **blank**, ARCT `0335`, AREX `0510`
-- LL Info: route `IR-154`, Entry Pt `A`, Exit Pt `J`, SCLZ TOT / STLZ TOT
-  blank (derive from blank LL Entry), Slow 1/Slow 2 default offset `−2:00`
-  (value 120). The dropdown also has an **`NA`** option — when selected the
-  whole `#ll-info-table` is hidden (no data) and the LL-tab Low Level Entry
-  list is empty; both route dropdowns sync to NA.
-- AR Info: track `AR197L`, Tanker `DASH 95`, TNKR Type `KC-46`,
-  RZ Type `D (Pt Parallel)`, AR SPD `275 (KC-46)`
+- **Low Level** card (titled "Low Level"; was "Low Level Info"): route
+  `IR-154`, Entry Pt `A`, Exit Pt `J`, SCLZ TOT / STLZ TOT blank (derive
+  from blank LL Entry), Slow 1/Slow 2 default offset `−2:00` (value 120).
+  The dropdown has an **`NA`** option — when selected `#ll-info-table` is
+  hidden (no data) and the LL-tab Low Level Entry list is empty; both
+  route dropdowns sync to NA.
+- **Air Refueling** card (titled "Air Refueling"; was "AR Info"): track
+  `AR197L`, Tanker `DASH 95`, TNKR Type `KC-46`, RZ Type `D (Pt Parallel)`,
+  AR SPD `275 (KC-46)`. The track dropdown also has an **`NA`** option —
+  when selected `#ar-info-table` is hidden (handled in `setARTrack`).
 - Pattern Work: DUKE TAC 6500, DUKE BEAM, DUKE ACCEL 6500, STR IN
 - Ground Ops: Backing, Star Turn
 - Briefings / Notes: two pre-loaded (DUFF / DEAD assignments)

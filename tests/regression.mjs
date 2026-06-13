@@ -142,6 +142,19 @@ eq('Tanker default DASH 95',  await page.$eval('#ar-tanker', e => e.value), 'DAS
 eq('RZ Type default D (Pt Parallel)', await page.$eval('#ar-type-select', e => e.value), 'D (Pt Parallel)');
 eq('AR SPD default 275 (KC-46)', await page.$eval('#ar-spd-select', e => e.value), '275 (KC-46)');
 eq('TNKR Type default KC-46', await page.$eval('#ar-tnkr-type', e => e.value), 'KC-46');
+// Brief-tab section renames.
+const briefText = await page.$eval('#tab-main', e => e.textContent);
+ok('Section renamed to "Air Refueling"', briefText.includes('Air Refueling') && !briefText.includes('AR Info'));
+ok('Section renamed to "Low Level"', !briefText.includes('Low Level Info'));
+// NA on the Air Refueling dropdown hides the AR data table.
+await page.selectOption('#ar-track-select', 'NA');
+await page.waitForTimeout(100);
+ok('NA hides the Air Refueling table',
+   await page.evaluate(() => getComputedStyle(document.getElementById('ar-info-table')).display === 'none'));
+await page.selectOption('#ar-track-select', 'AR197L');
+await page.waitForTimeout(100);
+ok('AR197L shows the Air Refueling table again',
+   await page.evaluate(() => getComputedStyle(document.getElementById('ar-info-table')).display !== 'none'));
 
 // ── 7. SCLZ/STLZ TOT auto-derive + Slow 1 / Slow 2 offsets ───────────
 // SCLZ TOT = LL Entry + 14, STLZ TOT = LL Entry + 31 (auto-calculated,
