@@ -339,10 +339,10 @@ ok('DEAD default note present', noteDefaults.some(v => v.startsWith('DEAD:')));
 ok('DUFF default note present', noteDefaults.some(v => v.startsWith('DUFF:')));
 eq('DEAD note covers engine start / 1st pattern work / ground ops',
    noteDefaults.find(v => v.startsWith('DEAD:')),
-   'DEAD: engine start, 1st pattern work (ss) back half AR, arrival, ground ops (ss)');
+   'DEAD: engine start, 1st pattern work ⇄ back half AR, arrival, ground ops ⇄');
 eq('DUFF note covers 2nd pattern work / AR entry / ground ops',
    noteDefaults.find(v => v.startsWith('DUFF:')),
-   'DUFF: 2nd pattern work, AR entry (ss) ground ops, shutdown');
+   'DUFF: 2nd pattern work, AR entry ⇄ ground ops, shutdown');
 await page.click('button[onclick="addNote()"]');
 const lastNote = await page.$('#notes-list [data-note-row]:last-of-type .note-input');
 await lastNote.fill('Weather check\nLine 2');
