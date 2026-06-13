@@ -1,0 +1,12 @@
+{
+  "name": "iprq-bros-mdc",
+  "version": "1.0.0",
+  "private": true,
+  "description": "IPRQ-BROS Mission Data Card — single-file offline app plus a Playwright regression suite.",
+  "scripts": {
+    "test": "python3 -m http.server 8000 >/dev/null 2>&1 & SV=$!; sleep 1; node tests/regression.mjs; R=$?; kill $SV 2>/dev/null; exit $R"
+  },
+  "devDependencies": {
+    "playwright": "^1.60.0"
+  }
+}
