@@ -66,6 +66,15 @@ eq('Callsign default NOGS 96',  await page.$eval('#hdr-callsign', e => e.value),
 eq('Header badge IPRQ FLT 3', await page.$eval('#hdr-flt', e => e.value), 'IPRQ FLT 3');
 eq('Header badge is an editable input',
    await page.$eval('#hdr-flt', e => e.tagName + (e.readOnly ? ':ro' : '')), 'INPUT');
+// Badge auto-grows with its text (size attribute tracks content length).
+const fltGrow = await page.$eval('#hdr-flt', e => {
+  const before = e.getBoundingClientRect().width;
+  e.value = 'IPRQ FLT 1234567890 LONG';
+  e.dispatchEvent(new Event('input', { bubbles: true }));
+  return { grew: e.getBoundingClientRect().width > before, size: e.size };
+});
+ok('Header badge auto-grows with content', fltGrow.grew && fltGrow.size > 12);
+await page.$eval('#hdr-flt', e => { e.value = 'IPRQ FLT 3'; e.dispatchEvent(new Event('input', { bubbles: true })); });
 eq('Student 1 default DEAD',     await page.$eval('#hdr-student1', e => e.value), 'DEAD');
 eq('Student 2 default DUFF',     await page.$eval('#hdr-student2', e => e.value), 'DUFF');
 
