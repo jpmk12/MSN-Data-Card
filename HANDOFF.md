@@ -228,7 +228,17 @@ is hidden.
 4. **Slow row split / SCLZ/STLZ moved to LL Info** (`567d3c2` and `bb1dc89`)
 5. **Ground Ops self-heal** (`4ec7b7c`)
 6. **Slow 1/Slow 2 red highlight** (`6ef1aba`)
-7. **IPRQ FLT 2 defaults refresh** (`1cdc142` — current tip)
+7. **IPRQ FLT 2 defaults refresh** (`1cdc142`)
+8. **Editable + route-aware Low Level X Check, NA option, per-route LL
+   Entry, auto-derived SCLZ/STLZ, synced route dropdowns** (cont branch)
+9. **IPRQ FLT 3 config** — NOGS 96, Takeoff 0130, AR197L / DASH 95 /
+   D (Pt Parallel) / 275 (KC-46), blank LL Entry, editable badge
+10. **SessionStart hook** provisions Playwright Chromium from GCS so the
+    suite runs on the web (`.claude/hooks/session-start.sh`)
+
+The single source of truth for the current flight config is the
+**Current defaults (IPRQ FLT 3)** section above — update it whenever a
+default changes.
 
 ## Open items / nice-to-haves the user mentioned
 
