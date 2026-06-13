@@ -135,7 +135,7 @@ dispatches the matching event so downstream side effects (`syncLowLevel`,
 - EFB: Baseline `26-04 (23 Apr 26)`, iOS `26.5 CAO 12 May 26`,
   Pub Sync `26 May 2026`, FLIP `06-11-2026 thru 07-08-2026`
 - Route of Flight:
-  `KTLS OKKIE_.CDS LBB360030 AR197 LBB322047 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS`
+  `KLTS OKKIE_.CDS LBB360030 AR197 LBB322047 CDS ZOCKS KLTS`
 
 ## Low level X Check (LL tab) — editable + route-aware
 
