@@ -515,7 +515,7 @@ fs.writeFileSync(downloadOut, html);
 const dlPage = await ctx.newPage();
 await dlPage.goto('file://' + downloadOut, { waitUntil: 'networkidle' });
 const dlBtns = await dlPage.$$eval('.toolbar button', els => els.map(e => e.textContent.trim()));
-eq('Downloaded copy retains toolbar', dlBtns, ['Print PDF', 'Print Tab', 'Download', 'Save Data', 'Load Data', 'Reset']);
+eq('Downloaded copy retains toolbar', dlBtns, ['Print', 'Download', 'Save Data', 'Load Data', 'Reset']);
 await dlPage.close();
 fs.unlinkSync(downloadOut);
 
