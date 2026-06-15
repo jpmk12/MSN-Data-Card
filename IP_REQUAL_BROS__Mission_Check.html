@@ -52,7 +52,12 @@
     display: flex;
     gap: 10px;
     justify-content: flex-end;
+    flex-wrap: wrap;
     margin-bottom: 16px;
+  }
+  @media (max-width: 640px) {
+    .toolbar { justify-content: center; gap: 8px; }
+    .btn-export { padding: 7px 12px; font-size: 12px; }
   }
   .btn-export {
     font-family: inherit;
@@ -421,6 +426,7 @@
   .tab-bar {
     display: flex;
     gap: 4px;
+    flex-wrap: wrap;
     margin-bottom: 0;
     border-bottom: 1.5px solid #d3d1c7;
     padding-bottom: 0;
