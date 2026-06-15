@@ -751,6 +751,29 @@ eq('Load Card rejects a non-card file (no reload)',
    await page.$eval('#hdr-callsign', e => e.value), 'LOADED 42');
 fs.unlinkSync(cardPath);
 
+// ── 26d. Active tab persists across reload ─────────────────────────
+await clickTab('GK');
+await page.waitForTimeout(150);
+await page.reload({ waitUntil: 'networkidle' });
+await page.waitForTimeout(500);
+ok('Active tab (GK) restored after reload',
+   await page.evaluate(() => document.getElementById('tab-lifesupport').classList.contains('active')));
+
+// ── 26e. Undo restores the card after Reset ────────────────────────
+await clickTab('Brief');
+await page.waitForTimeout(100);
+await page.fill('#hdr-callsign', 'UNDOTEST 1');
+await page.waitForTimeout(200);
+await page.click('button[onclick="resetCard()"]');
+await page.waitForTimeout(700);
+eq('Reset cleared the callsign to default', await page.$eval('#hdr-callsign', e => e.value), 'NOGS 96');
+ok('Undo bar appears after Reset',
+   await page.evaluate(() => !!document.querySelector('button') &&
+     [...document.querySelectorAll('button')].some(b => b.textContent.trim() === 'Undo')));
+await page.evaluate(() => [...document.querySelectorAll('button')].find(b => b.textContent.trim() === 'Undo').click());
+await page.waitForTimeout(700);
+eq('Undo restored the pre-Reset callsign', await page.$eval('#hdr-callsign', e => e.value), 'UNDOTEST 1');
+
 // ── 27. No JS errors throughout ─────────────────────────────────────
 ok('No page errors during the run', consoleErrors.length === 0,
   'errors: ' + consoleErrors.slice(0, 5).join(' | '));

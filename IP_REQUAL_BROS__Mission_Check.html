@@ -4319,7 +4319,7 @@ function mdcCheckboxKey(input) {
 function mdcGatherState() {
   var state = { inputs: {}, checkboxes: {}, groundOps: [], pattern: [] };
   document.querySelectorAll('input[id], select[id], textarea[id]').forEach(function(el) {
-    if (el.type === 'checkbox' || el.type === 'radio') return;
+    if (el.type === 'checkbox' || el.type === 'radio' || el.type === 'file') return;
     state.inputs[el.id] = el.value;
   });
   document.querySelectorAll('.chk-input').forEach(function(c) {
@@ -4407,7 +4407,7 @@ function mdcRestore() {
     Object.keys(state.inputs).forEach(function(id) {
       var el = document.getElementById(id);
       if (el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA')) {
-        if (el.type !== 'checkbox' && el.type !== 'radio') el.value = state.inputs[id];
+        if (el.type !== 'checkbox' && el.type !== 'radio' && el.type !== 'file') el.value = state.inputs[id];
       }
     });
   }
@@ -4712,7 +4712,63 @@ function switchTab(id, btn) {
   btn.classList.add('active');
   // Editable LL rows render with 0 height while hidden — fix once visible.
   if (id === 'llgk' && typeof resizeLLInputs === 'function') resizeLLInputs();
+  // Remember the active tab so a reload returns here (per-device, not part
+  // of the shared card state).
+  try { localStorage.setItem('iprq-bros-mdc-tab', id); } catch (e) { /* ignore */ }
 }
+function _restoreActiveTab() {
+  var id;
+  try { id = localStorage.getItem('iprq-bros-mdc-tab'); } catch (e) { return; }
+  if (!id || id === 'main') return;
+  if (!document.getElementById('tab-' + id)) return;
+  var btn = Array.prototype.slice.call(document.querySelectorAll('.tab-btn'))
+    .find(function(b) { var o = b.getAttribute('onclick') || ''; return o.indexOf("'" + id + "'") !== -1; });
+  if (btn) btn.click();
+}
+// ─── Undo for destructive actions (Reset / Load Card) ──────────────
+// confirm()/prompt() are blocked, so instead we stash the pre-action card
+// and offer a brief "Undo" after the reload.
+function _mdcStashUndo(label) {
+  try {
+    var cur = localStorage.getItem('iprq-bros-mdc-v1');
+    localStorage.setItem('iprq-bros-mdc-undo', cur === null ? '' : cur);
+    localStorage.setItem('iprq-bros-mdc-undo-meta', JSON.stringify({ label: label, ts: Date.now() }));
+  } catch (e) { /* ignore */ }
+}
+function _mdcMaybeShowUndo() {
+  var raw, meta;
+  try {
+    raw = localStorage.getItem('iprq-bros-mdc-undo');
+    meta = JSON.parse(localStorage.getItem('iprq-bros-mdc-undo-meta') || 'null');
+  } catch (e) { return; }
+  if (raw === null || !meta || (Date.now() - meta.ts) > 60000) return;
+  // Only prompt once per action.
+  try { localStorage.removeItem('iprq-bros-mdc-undo-meta'); } catch (e) { /* ignore */ }
+  var bar = document.createElement('div');
+  bar.className = 'no-print';
+  bar.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:10000;display:flex;align-items:center;gap:14px;background:#1a1a19;color:#fff;font-family:inherit;font-size:13px;padding:10px 14px 10px 16px;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.25);opacity:0;transition:opacity .2s;';
+  var txt = document.createElement('span');
+  txt.textContent = (meta.label === 'Load' ? 'Card replaced by loaded file.' : 'Card was reset.');
+  var btn = document.createElement('button');
+  btn.textContent = 'Undo';
+  btn.style.cssText = 'font-family:inherit;font-size:13px;font-weight:700;color:#7fb2ff;background:transparent;border:none;cursor:pointer;outline:none;padding:2px 4px;';
+  btn.onclick = function() {
+    try {
+      if (raw === '') localStorage.removeItem('iprq-bros-mdc-v1');
+      else localStorage.setItem('iprq-bros-mdc-v1', raw);
+      localStorage.removeItem('iprq-bros-mdc-undo');
+    } catch (e) { /* ignore */ }
+    location.reload();
+  };
+  bar.appendChild(txt); bar.appendChild(btn);
+  document.body.appendChild(bar);
+  requestAnimationFrame(function() { bar.style.opacity = '1'; });
+  setTimeout(function() { bar.style.opacity = '0'; setTimeout(function() { bar.remove(); }, 300); }, 12000);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  _restoreActiveTab();
+  _mdcMaybeShowUndo();
+});
 function downloadHTML() {
   const clone = document.documentElement.cloneNode(true);
   // Keep everything (toolbar included) so Reset / Print / Download all
@@ -4762,6 +4818,7 @@ function _loadCardFile(evt) {
     var state = (parsed && parsed.state && typeof parsed.state === 'object') ? parsed.state
               : (parsed && typeof parsed.inputs === 'object') ? parsed : null;
     if (!state || typeof state.inputs !== 'object') { _cardToast('That doesn’t look like a saved card.'); return; }
+    _mdcStashUndo('Load');
     try { localStorage.setItem('iprq-bros-mdc-v1', JSON.stringify(state)); }
     catch (e) { _cardToast('Storage unavailable — could not load the card.'); return; }
     location.reload();
@@ -5033,7 +5090,11 @@ function applyImport() {
   if (!missed.length) setTimeout(closeImport, 700);
 }
 function resetCard() {
-  try { localStorage.removeItem('iprq-bros-mdc-v1'); } catch (e) { /* ignore */ }
+  _mdcStashUndo('Reset');
+  try {
+    localStorage.removeItem('iprq-bros-mdc-v1');
+    localStorage.removeItem('iprq-bros-mdc-tab');
+  } catch (e) { /* ignore */ }
   location.reload();
 }
 </script>
