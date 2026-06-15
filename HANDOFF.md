@@ -59,6 +59,23 @@ init defaults don't clobber saved state. Any new dynamic list helper
 should respect this pattern — call `mdcPersist()` at the end and rely
 on the gate.
 
+**Defaults versioning (`MDC_DEFAULTS_VERSION`):** saved cards stamp the
+version they were built on. When you change a baked-in default, **bump
+`MDC_DEFAULTS_VERSION`** — older saved cards then show an "Updated brief
+data available · Apply/Dismiss" banner. **Apply** (`applyLatestDefaults`)
+resets every `id`'d input/select to its HTML default (`defaultValue` /
+`defaultSelected`) and re-runs the calculators, while leaving the dynamic
+lists (no `id`) and checkboxes untouched; **Dismiss** just stamps the
+current version. This is how a default correction reaches pilots who
+already have saved state without wiping their edits.
+
+**Toolbar:** Save Card / Load Card export & import the full state as JSON
+(`saveCard` / `loadCard` / `_loadCardFile`). Reset and Load stash the
+prior card for a one-tap **Undo** (`_mdcStashUndo` / `_mdcMaybeShowUndo`).
+The active tab is remembered in `iprq-bros-mdc-tab`; print injects per-tab
+headers via `_mdcPrintHeaders` on `beforeprint`. `type=file` inputs are
+excluded from gather/restore.
+
 ## Key dynamic lists (and where each lives)
 
 | Container ID                | Helper             | Save key in state    |

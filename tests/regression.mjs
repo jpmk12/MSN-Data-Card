@@ -791,6 +791,30 @@ await page.emulateMedia({ media: 'screen' });
 ok('Print: headers hidden on screen',
    await page.$$eval('.print-tab-header', els => els.every(e => getComputedStyle(e).display === 'none')));
 
+// ── 26g. Versioned defaults banner (Apply keeps user content) ──────
+await page.evaluate(() => {
+  localStorage.setItem('iprq-bros-mdc-v1', JSON.stringify({
+    inputs: { 'hdr-callsign': 'OLDVER 9' }, checkboxes: {},
+    notes: ['MY CUSTOM NOTE'], defaultsVersion: 0
+  }));
+});
+await page.reload({ waitUntil: 'networkidle' });
+await page.waitForTimeout(500);
+ok('Defaults banner shows for an outdated card',
+   await page.evaluate(() => !!document.getElementById('mdc-defaults-banner')));
+eq('Outdated card loads its saved callsign', await page.$eval('#hdr-callsign', e => e.value), 'OLDVER 9');
+await page.evaluate(() =>
+  [...document.querySelectorAll('#mdc-defaults-banner button')].find(b => b.textContent.trim() === 'Apply').click());
+await page.waitForTimeout(300);
+eq('Apply resets callsign to the current default', await page.$eval('#hdr-callsign', e => e.value), 'NOGS 96');
+ok('Apply preserves the user note',
+   (await page.$$eval('#notes-list .note-input', els => els.map(e => e.value))).includes('MY CUSTOM NOTE'));
+ok('Banner removed after Apply', await page.evaluate(() => !document.getElementById('mdc-defaults-banner')));
+await page.reload({ waitUntil: 'networkidle' });
+await page.waitForTimeout(400);
+ok('No banner after Apply stamps the version',
+   await page.evaluate(() => !document.getElementById('mdc-defaults-banner')));
+
 // ── 27. No JS errors throughout ─────────────────────────────────────
 ok('No page errors during the run', consoleErrors.length === 0,
   'errors: ' + consoleErrors.slice(0, 5).join(' | '));

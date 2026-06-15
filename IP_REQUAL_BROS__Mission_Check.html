@@ -4312,6 +4312,11 @@ function calcTR() {
 }
 // ─── Persistence (localStorage) ───
 var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
+// Bump whenever the baked-in defaults change. A saved card built on an
+// older version is offered an "Apply latest brief data" banner that
+// refreshes the canonical fields while keeping the pilot's edits.
+var MDC_DEFAULTS_VERSION = 1;
+var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {
   var label = input.closest('label');
@@ -4392,6 +4397,7 @@ function mdcGatherState() {
   Object.keys(LL_ENTRY_STATE).forEach(function(r) {
     state.llEntry[r] = (LL_ENTRY_STATE[r] || []).filter(_llHasText);
   });
+  state.defaultsVersion = MDC_DEFAULTS_VERSION;
   return state;
 }
 function mdcPersist() {
@@ -4406,6 +4412,10 @@ function mdcRestore() {
   var state;
   try { state = JSON.parse(raw); } catch (e) { return; }
   if (!state || typeof state !== 'object') return;
+  // A saved card built on older defaults → offer to refresh canonical fields.
+  if ((typeof state.defaultsVersion === 'number' ? state.defaultsVersion : 0) < MDC_DEFAULTS_VERSION) {
+    _mdcDefaultsOutdated = true;
+  }
   if (state.inputs) {
     // Legacy key migrations: copy old IDs into their new homes before applying.
     if (state.inputs['efb-ioi'] && !state.inputs['efb-ios']) {
@@ -4713,7 +4723,48 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   document.addEventListener('input',  mdcPersist, true);
   document.addEventListener('change', mdcPersist, true);
+  // If this saved card predates the current defaults, offer to refresh.
+  _mdcShowDefaultsBanner();
 });
+// Refresh the canonical (default-backed) fields to their current HTML
+// defaults, while leaving the pilot's authored content alone (the dynamic
+// lists have no id, so they're untouched; checkboxes/progress are kept).
+function applyLatestDefaults() {
+  document.querySelectorAll('input[id], select[id], textarea[id]').forEach(function(el) {
+    if (el.type === 'checkbox' || el.type === 'radio' || el.type === 'file') return;
+    if (el.tagName === 'SELECT') {
+      var def = Array.prototype.slice.call(el.options).filter(function(o) { return o.defaultSelected; })[0];
+      el.value = def ? def.value : (el.options[0] ? el.options[0].value : el.value);
+    } else {
+      el.value = el.defaultValue;
+    }
+  });
+  [soeCalc, syncARCT, syncLowLevel, setARTrack, renderRouteData, renderRoute, setLLRoute, renderLLEntry]
+    .forEach(function(fn) { if (typeof fn === 'function') { try { fn(); } catch (e) { /* ignore */ } } });
+  if (typeof autoSizeFlt === 'function') autoSizeFlt(document.getElementById('hdr-flt'));
+  _mdcDefaultsOutdated = false;
+  if (typeof mdcPersist === 'function') mdcPersist();   // re-saves with the new version stamp
+}
+function _mdcShowDefaultsBanner() {
+  if (!_mdcDefaultsOutdated || document.getElementById('mdc-defaults-banner')) return;
+  var bar = document.createElement('div');
+  bar.id = 'mdc-defaults-banner';
+  bar.className = 'no-print';
+  bar.style.cssText = 'position:sticky;top:0;z-index:48;display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:#E6F1FB;color:#0C447C;border-bottom:1px solid #b4d2f0;padding:8px 14px;font-size:12.5px;line-height:1.4;';
+  var txt = document.createElement('span');
+  txt.style.cssText = 'flex:1;min-width:220px;';
+  txt.textContent = 'Updated brief data is available. Apply refreshes the canonical fields (callsign, route, times, AR…) and keeps your notes, lists, and check marks.';
+  var apply = document.createElement('button');
+  apply.textContent = 'Apply';
+  apply.style.cssText = 'font-family:inherit;font-size:12.5px;font-weight:700;color:#fff;background:#185FA5;border:none;border-radius:6px;padding:4px 12px;cursor:pointer;outline:none;';
+  apply.onclick = function() { applyLatestDefaults(); bar.remove(); if (typeof _cardToast === 'function') _cardToast('Brief data updated to the latest.'); };
+  var dismiss = document.createElement('button');
+  dismiss.textContent = 'Dismiss';
+  dismiss.style.cssText = 'font-family:inherit;font-size:12.5px;font-weight:600;color:#0C447C;background:transparent;border:none;cursor:pointer;outline:none;';
+  dismiss.onclick = function() { _mdcDefaultsOutdated = false; if (typeof mdcPersist === 'function') mdcPersist(); bar.remove(); };
+  bar.appendChild(txt); bar.appendChild(apply); bar.appendChild(dismiss);
+  document.body.insertBefore(bar, document.body.firstChild);
+}
 </script>
 <script>
 'use strict';
