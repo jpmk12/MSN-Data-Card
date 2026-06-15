@@ -515,7 +515,7 @@ fs.writeFileSync(downloadOut, html);
 const dlPage = await ctx.newPage();
 await dlPage.goto('file://' + downloadOut, { waitUntil: 'networkidle' });
 const dlBtns = await dlPage.$$eval('.toolbar button', els => els.map(e => e.textContent.trim()));
-eq('Downloaded copy retains toolbar', dlBtns, ['Print / Save PDF', 'Download HTML', 'Import', 'Reset']);
+eq('Downloaded copy retains toolbar', dlBtns, ['Print / Save PDF', 'Download HTML', 'Save Card', 'Load Card', 'Import', 'Reset']);
 await dlPage.close();
 fs.unlinkSync(downloadOut);
 
@@ -718,6 +718,38 @@ const healedGops = await page.$$eval('#ground-ops-list > div', els =>
   els.map(r => r.querySelector('span')?.textContent.trim()).filter(Boolean));
 eq('Stale Ground Ops state dedupes + drops unknown on load',
    healedGops, ['Backing', 'Star Turn']);
+
+// ── 26b. Save Card exports the full state as a JSON file ────────────
+const [cardDownload] = await Promise.all([
+  page.waitForEvent('download'),
+  page.evaluate(() => saveCard()),
+]);
+const exported = JSON.parse(fs.readFileSync(await cardDownload.path(), 'utf8'));
+ok('Save Card exports a wrapped state object',
+   exported && exported._type === 'iprq-bros-mdc' && exported.state && typeof exported.state.inputs === 'object');
+eq('Save Card captures the current callsign',
+   exported.state.inputs['hdr-callsign'], await page.$eval('#hdr-callsign', e => e.value));
+ok('Save Card filename includes "MDC"', /MDC/.test(cardDownload.suggestedFilename()));
+
+// ── 26c. Load Card imports state from a file and reloads ───────────
+const cardPath = path.join(__dirname, 'tmp-load-test.json');
+fs.writeFileSync(cardPath, JSON.stringify({
+  _type: 'iprq-bros-mdc', _v: 1,
+  state: { inputs: { 'hdr-callsign': 'LOADED 42', 'hdr-flt': 'IPRQ FLT TEST' }, checkboxes: {} }
+}));
+await page.setInputFiles('#load-card-input', cardPath);
+await page.waitForTimeout(900); // FileReader + location.reload()
+await page.waitForLoadState('networkidle');
+eq('Load Card applied imported callsign', await page.$eval('#hdr-callsign', e => e.value), 'LOADED 42');
+eq('Load Card applied imported flight',   await page.$eval('#hdr-flt', e => e.value), 'IPRQ FLT TEST');
+fs.unlinkSync(cardPath);
+// Loading a non-card JSON is rejected (callsign stays as just-loaded value).
+fs.writeFileSync(cardPath, JSON.stringify({ hello: 'world' }));
+await page.setInputFiles('#load-card-input', cardPath);
+await page.waitForTimeout(400);
+eq('Load Card rejects a non-card file (no reload)',
+   await page.$eval('#hdr-callsign', e => e.value), 'LOADED 42');
+fs.unlinkSync(cardPath);
 
 // ── 27. No JS errors throughout ─────────────────────────────────────
 ok('No page errors during the run', consoleErrors.length === 0,

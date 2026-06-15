@@ -446,6 +446,15 @@
     <svg style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
     Download HTML
   </button>
+  <button class="btn-export" onclick="saveCard()" aria-label="Save card to a file">
+    <svg style="width:14px;height:14px;stroke:#1a1a19;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+    Save Card
+  </button>
+  <button class="btn-export" onclick="loadCard()" aria-label="Load card from a file">
+    <svg style="width:14px;height:14px;stroke:#1a1a19;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+    Load Card
+  </button>
+  <input id="load-card-input" type="file" accept=".json,application/json" onchange="_loadCardFile(event)" class="no-print" style="display:none;" aria-hidden="true" />
   <button class="btn-export" onclick="openImport()" aria-label="Import schedule data">
     <svg style="width:14px;height:14px;stroke:#1a1a19;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
     Import
@@ -4716,6 +4725,58 @@ function downloadHTML() {
   a.click();
   // Release the blob URL after the click is processed to avoid memory leak
   setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+}
+// ─── Save / Load the full filled-in card as a JSON file ────────────
+// Unlike "Download HTML" (the whole app) this is just the editable state,
+// so a pilot can back up / share a completed card independent of browser
+// storage. "Load Card" replaces the saved state and reloads.
+function saveCard() {
+  try {
+    if (typeof mdcGatherState !== 'function') return;
+    var payload = { _type: 'iprq-bros-mdc', _v: 1, savedAt: new Date().toISOString(), state: mdcGatherState() };
+    var cs  = (document.getElementById('hdr-callsign') || {}).value || 'card';
+    var flt = (document.getElementById('hdr-flt') || {}).value || '';
+    var base = ('MDC ' + cs + ' ' + flt).trim().replace(/[^A-Za-z0-9._-]+/g, '_').replace(/_+/g, '_');
+    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = base + '_' + new Date().toISOString().slice(0, 10) + '.json';
+    a.click();
+    setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+  } catch (e) { _cardToast('Could not save the card.'); }
+}
+function loadCard() {
+  var inp = document.getElementById('load-card-input');
+  if (inp) inp.click();
+}
+function _loadCardFile(evt) {
+  var file = evt.target && evt.target.files && evt.target.files[0];
+  if (evt.target) evt.target.value = '';   // allow re-loading the same file later
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function() {
+    var parsed;
+    try { parsed = JSON.parse(String(reader.result)); }
+    catch (e) { _cardToast('That file isn’t valid JSON.'); return; }
+    var state = (parsed && parsed.state && typeof parsed.state === 'object') ? parsed.state
+              : (parsed && typeof parsed.inputs === 'object') ? parsed : null;
+    if (!state || typeof state.inputs !== 'object') { _cardToast('That doesn’t look like a saved card.'); return; }
+    try { localStorage.setItem('iprq-bros-mdc-v1', JSON.stringify(state)); }
+    catch (e) { _cardToast('Storage unavailable — could not load the card.'); return; }
+    location.reload();
+  };
+  reader.readAsText(file);
+}
+function _cardToast(msg) {
+  var t = document.createElement('div');
+  t.textContent = msg;
+  t.setAttribute('role', 'status');
+  t.className = 'no-print';
+  t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:10000;background:#1a1a19;color:#fff;font-family:inherit;font-size:13px;padding:10px 16px;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.25);opacity:0;transition:opacity .2s;';
+  document.body.appendChild(t);
+  requestAnimationFrame(function() { t.style.opacity = '1'; });
+  setTimeout(function() { t.style.opacity = '0'; setTimeout(function() { t.remove(); }, 300); }, 3200);
 }
 // ─── Import (from AMT and Schedule PDF text) ───────────────────────
 function openImport() {
