@@ -126,6 +126,15 @@
   }
   .full-row { grid-column: 1 / -1; }
   .two-col { grid-column: span 2; }
+  /* Responsive: the 3-col board overflows phones — drop to 2 then 1 col
+     so the page fits the viewport (and the header bar fills its width). */
+  @media (max-width: 820px) {
+    .board { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .two-col { grid-column: 1 / -1; }
+  }
+  @media (max-width: 560px) {
+    .board { grid-template-columns: minmax(0, 1fr); }
+  }
 
   /* ── Cards ── */
   .card {
@@ -144,6 +153,7 @@
     margin-bottom: 10px;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 7px;
   }
   .card-header svg { flex-shrink: 0; }
@@ -342,6 +352,9 @@
 
   /* ── Box setup steps ── */
   .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 6px; }
+  /* Responsive (after the base rules so source order wins). */
+  @media (max-width: 820px) { .steps-grid, .devbox { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+  @media (max-width: 560px) { .steps-grid, .devbox { grid-template-columns: minmax(0, 1fr); } }
   .step-item {
     background: #f1efe8;
     border-radius: 8px;
