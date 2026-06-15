@@ -135,6 +135,9 @@
   }
   @media (max-width: 560px) {
     .board { grid-template-columns: minmax(0, 1fr); }
+    /* Stack the side-by-side card pairs (flex .full-row rows); grid
+       .full-row cards ignore flex-direction, so they're unaffected. */
+    .full-row { flex-direction: column; }
   }
 
   /* ── Cards ── */
@@ -143,6 +146,11 @@
     border: 0.5px solid #d3d1c7;
     border-radius: 12px;
     padding: 14px 16px;
+  }
+  /* Phones: let a card with a wide data table scroll sideways within
+     itself instead of overflowing the whole page. */
+  @media (max-width: 560px) {
+    .card { overflow-x: auto; }
   }
 
   .card-header {
@@ -373,7 +381,7 @@
   #notion-weather-list {
     list-style: none; padding: 0; margin: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
     column-gap: 26px;
     font-family: ui-monospace, Menlo, monospace;
     font-size: 12px; color: #1a1a19;
