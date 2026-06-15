@@ -108,27 +108,14 @@ into `CUSTOM_ROUTES` and re-renders a `<optgroup label="Custom">` in
 - `setLLRoute()` toggles visibility of `#ll-sclz-row` and `#ll-stlz-row`
   (only shown when IR-154 is selected).
 
-## Importer (Toolbar → Import button)
+## Importer — REMOVED
 
-`openImport()` / `closeImport()` show / hide `#import-modal`.
-`applyImport()` parses two textareas:
-
-- **AMT**: `parseAMT(text, callsign)` tries two layouts —
-  1. Inline (callsign and data on one line, layout-preserved spaces)
-  2. Column-split (data rows separately, callsign list at the bottom,
-     matched by index). Acrobat / Preview copy-paste produces this.
-- **Schedule**: `parseSchedule(text, callsign)` finds the `CALLSIGN:`
-  block for the target and pulls TO(Z), AR TRACK, RZ TYPE, ARCT, AREX,
-  TNKR C/S, TNKR TYPE via field-specific regexes that stop at 2+ spaces
-  (the column separator in PDF text).
-
-Normalizers: `_hhmm`, `_normRoute` (adds the hyphen `IR154 → IR-154`),
-`_normArTrack` (exact match first, then strips trailing H/L as a
-fallback), `_normRzType`, `_normCallsign`.
-
-`_setValue(id, value, eventName)` writes to the target field AND
-dispatches the matching event so downstream side effects (`syncLowLevel`,
-`setARTrack`, etc.) fire.
+The AMT/Schedule paste importer (button, `#import-modal`, `openImport` /
+`applyImport` / `parseAMT` / `parseSchedule` / normalizers / `_setValue`)
+was removed — it only served one base's workflow. The legacy
+`AR197 → AR197H` migration in `mdcRestore` is unrelated and stays. If a
+PDF/schedule import is ever wanted again, recover it from git history
+(pre-removal tip).
 
 ## Current defaults (IPRQ FLT 3)
 

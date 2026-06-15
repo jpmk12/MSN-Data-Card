@@ -515,7 +515,7 @@ fs.writeFileSync(downloadOut, html);
 const dlPage = await ctx.newPage();
 await dlPage.goto('file://' + downloadOut, { waitUntil: 'networkidle' });
 const dlBtns = await dlPage.$$eval('.toolbar button', els => els.map(e => e.textContent.trim()));
-eq('Downloaded copy retains toolbar', dlBtns, ['Print PDF', 'Print Tab', 'Download', 'Save Data', 'Load Data', 'Import', 'Reset']);
+eq('Downloaded copy retains toolbar', dlBtns, ['Print PDF', 'Print Tab', 'Download', 'Save Data', 'Load Data', 'Reset']);
 await dlPage.close();
 fs.unlinkSync(downloadOut);
 
@@ -530,89 +530,8 @@ const afterDel = await page.$$eval('#pattern-list [data-preset]', els => els.len
 ok('Delegated × handler removes pattern row even without per-button onclick',
   afterDel === beforeDel - 1);
 
-// ── 25. Schedule + AMT importer ─────────────────────────────────────
-const amtSample = [
-  '                     AMT FOR AIRCREW - AIRLAND',
-  '           CALLSIGN             Course       Ride          Low Level         Entry (z)      Exit (z)           LZ1        TOT1        LZ2      TOT2     Local Date',
-  '           CADDO 10             IAC          2             IR154                  17:15       17:49            SCLZ       17:29      STLZ      17:46         9-Jun',
-  ''
-].join('\n');
-const schedSample = [
-  'CALLSIGN: CADDO10                                                                       AR TRACK: AR 312L                                                          Config: STD',
-  'FUEL: 120K                                                                              RZ TYPE: G                                                                 Load: Load 5',
-  'SHOW/BUS: 0615 /                                                                        ARCT: 1515Z                                                                Flt Remarks: IPRQ 15-1',
-  'DATE: 09 JUN 2026                                                                       AREX: 1635Z',
-  'TO: KLTS - 0945(L) / 1445(Z)                                                            TNKR C/S: NITRO 63',
-  'DUR: 6.0                                                                                TNKR TYPE: KC-135'
-].join('\n');
+// ── 25. Legacy AR197 → AR197H migration ───────────────────────────
 await freshLoad();
-await page.click('button[onclick="openImport()"]');
-await page.waitForTimeout(150);
-await page.fill('#import-callsign', 'CADDO 10');
-await page.fill('#import-amt', amtSample);
-await page.fill('#import-sched', schedSample);
-await page.click('button[onclick="applyImport()"]');
-await page.waitForTimeout(800);
-const imp = await page.evaluate(() => ({
-  takeoff: document.getElementById('soe-takeoff').value,
-  arct:    document.getElementById('soe-arct').value,
-  arex:    document.getElementById('soe-arex').value,
-  tanker:  document.getElementById('ar-tanker').value,
-  tnkrType:document.getElementById('ar-tnkr-type').value,
-  arTrack: document.getElementById('ar-track-select').value,
-  arType:  document.getElementById('ar-type-select').value,
-  llRoute: document.getElementById('ll-route-select').value,
-  llEntry: document.getElementById('soe-llentry').value,
-  llExit:  document.getElementById('soe-llexit').value,
-  sclz:    document.getElementById('soe-lztime').value,
-  stlz:    document.getElementById('soe-lz2tot').value,
-}));
-eq('Import: Takeoff (1445)',  imp.takeoff,  '1445');
-eq('Import: ARCT (1515)',     imp.arct,     '1515');
-eq('Import: AREX (1635)',     imp.arex,     '1635');
-eq('Import: Tanker (NITRO 63)', imp.tanker, 'NITRO 63');
-eq('Import: TNKR Type KC-135',  imp.tnkrType, 'KC-135');
-eq('Import: AR Track AR312L',   imp.arTrack,  'AR312L');
-eq('Import: RZ Type G',         imp.arType,   'G (Enroute)');
-eq('Import: LL Route IR-154',   imp.llRoute,  'IR-154');
-eq('Import: LL Entry 1715',     imp.llEntry,  '1715');
-eq('Import: LL Exit 1749',      imp.llExit,   '1749');
-eq('Import: SCLZ TOT 1729',     imp.sclz,     '1729');
-eq('Import: STLZ TOT 1746',     imp.stlz,     '1746');
-
-// AR Track variants now have proper options. "AR 197L" should match AR197L
-// exactly (no fallback to AR197H).
-const schedAR197L = [
-  'CALLSIGN: CADDO50',
-  'TO: KLTS - 0900(L) / 1400(Z)',
-  'AR TRACK: AR 197L',
-  'RZ TYPE: G',
-  'ARCT: 1400Z',
-  'AREX: 1600Z',
-  'TNKR C/S: NITRO 1',
-  'TNKR TYPE: KC-46',
-].join('\n');
-await freshLoad();
-await page.click('button[onclick="openImport()"]');
-await page.waitForTimeout(150);
-await page.fill('#import-callsign', 'CADDO 50');
-await page.fill('#import-sched', schedAR197L);
-await page.click('button[onclick="applyImport()"]');
-await page.waitForTimeout(800);
-const ar197lImport = await page.evaluate(() => ({
-  track: document.getElementById('ar-track-select').value,
-  freqs: document.getElementById('ar-freqs').textContent,
-  tacan: document.getElementById('ar-tacan').textContent,
-  block: document.getElementById('ar-block').textContent,
-  tnkrType: document.getElementById('ar-tnkr-type').value,
-}));
-eq('Import: AR 197L → AR197L', ar197lImport.track, 'AR197L');
-eq('Import: AR197L freqs',     ar197lImport.freqs, '264.900 | 236.650');
-eq('Import: AR197L TACAN',     ar197lImport.tacan, '62 / 125');
-eq('Import: AR197L BLOCK',     ar197lImport.block, 'FL190-220');
-eq('Import: TNKR Type KC-46',  ar197lImport.tnkrType, 'KC-46');
-
-// Legacy persisted 'AR197' should migrate to 'AR197H' on next load.
 await page.evaluate(() => {
   localStorage.setItem('iprq-bros-mdc-v1', JSON.stringify({
     inputs: { 'ar-track-select': 'AR197' }
@@ -623,57 +542,6 @@ await page.waitForTimeout(400);
 eq('Legacy AR197 migrates to AR197H',
   await page.$eval('#ar-track-select', e => e.value),
   'AR197H');
-
-// Column-split AMT paste (PDF copy-paste flattens columns into a callsign
-// list at the bottom). The 5th callsign should map to the 5th data row,
-// even with single-digit hours.
-const amtColSplit = [
-  'Course Ride Low Level Entry (z) Exit (z) LZ1 TOT1 LZ2 TOT2 Local Date',
-  'PCO 6E IR154 16:55 17:29 SCLZ 17:09 STLZ 17:26 9-Jun',
-  'IAC 2 IR154 17:15 17:49 SCLZ 17:29 STLZ 17:46 9-Jun',
-  'PCO 2 IR154 17:25 17:59 SCLZ 17:39 STLZ 17:56 9-Jun',
-  'IAC 2 IR154 17:45 18:19 SCLZ 17:59 STLZ 18:16 9-Jun',
-  'IAC 3 IR154 3:40 4:14 SCLZ 3:54 STLZ 4:11 9-Jun',
-  'PIQ 2 IR154 2:20 2:54 SCLZ 2:34 STLZ 2:51 9-Jun',
-  'CALLSIGN',
-  'CADDO 50',
-  'CADDO 10',
-  'CADDO 44',
-  'CADDO 27',
-  'NOGS 18',
-  'NOGS 48',
-  'WRITE CHANGES BELOW THIS LINE'
-].join('\n');
-await freshLoad();
-await page.click('button[onclick="openImport()"]');
-await page.waitForTimeout(150);
-await page.fill('#import-callsign', 'NOGS 18');
-await page.fill('#import-amt', amtColSplit);
-await page.click('button[onclick="applyImport()"]');
-await page.waitForTimeout(800);
-const splitRow = await page.evaluate(() => ({
-  llRoute: document.getElementById('ll-route-select').value,
-  llEntry: document.getElementById('soe-llentry').value,
-  llExit:  document.getElementById('soe-llexit').value,
-  sclz:    document.getElementById('soe-lztime').value,
-  stlz:    document.getElementById('soe-lz2tot').value,
-}));
-eq('Column-split: NOGS 18 LL Route IR-154', splitRow.llRoute, 'IR-154');
-eq('Column-split: NOGS 18 LL Entry 0340',   splitRow.llEntry, '0340');
-eq('Column-split: NOGS 18 LL Exit 0414',    splitRow.llExit,  '0414');
-eq('Column-split: NOGS 18 SCLZ TOT 0354',   splitRow.sclz,    '0354');
-eq('Column-split: NOGS 18 STLZ TOT 0411',   splitRow.stlz,    '0411');
-
-// Missing callsign should not modify anything and should show an error status.
-await page.click('button[onclick="openImport()"]');
-await page.waitForTimeout(150);
-await page.fill('#import-callsign', 'NOPE 99');
-await page.fill('#import-amt', amtSample);
-await page.fill('#import-sched', schedSample);
-await page.click('button[onclick="applyImport()"]');
-await page.waitForTimeout(300);
-const missingStatus = await page.evaluate(() => document.getElementById('import-status').textContent);
-ok('Import: missing callsign reports not-found', /not found/i.test(missingStatus));
 
 // ── 25b. Notional LZ Weather card (Scenario tab) ─────────────────────────
 const wxHeader = await page.$eval('#notion-weather-card .card-header',
