@@ -25,11 +25,23 @@
 
   /* ── Print ── */
   @media print {
-    body { background: #fff; padding: 10px; }
+    body { background: #fff; padding: 0; }
     .no-print { display: none !important; }
-    .board { page-break-inside: avoid; }
+    /* Every tab prints, each starting on its own page (Brief leads). */
+    .tab-panel { display: block !important; break-before: page; page-break-before: always; }
+    #tab-main { break-before: avoid; page-break-before: avoid; }
+    .board { page-break-inside: auto; }
     .card { page-break-inside: avoid; break-inside: avoid; }
-    .tab-panel { display: block !important; }
+    /* Per-tab page header (callsign · flight · tab) for loose-page ID. */
+    .print-tab-header { display: block !important; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  .print-tab-header {
+    display: none;
+    font-size: 12px; font-weight: 700; color: #1a1a19;
+    border-bottom: 2px solid #185FA5;
+    padding: 0 0 6px; margin: 0 0 12px;
+    letter-spacing: 0.04em; text-transform: uppercase;
   }
 
   /* ── Print button ── */
@@ -4782,6 +4794,20 @@ function downloadHTML() {
   // Release the blob URL after the click is processed to avoid memory leak
   setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
 }
+// ─── Per-tab print headers (callsign · flight · tab name) ──────────
+function _mdcPrintHeaders() {
+  var names = { main: 'Brief', msn: 'AR', llgk: 'Low Level', tacgk: 'Tactical', lifesupport: 'GK', scenario: 'Scenario' };
+  var cs  = (document.getElementById('hdr-callsign') || {}).value || '';
+  var flt = (document.getElementById('hdr-flt') || {}).value || '';
+  Object.keys(names).forEach(function(id) {
+    var panel = document.getElementById('tab-' + id);
+    if (!panel) return;
+    var hdr = panel.querySelector('.print-tab-header');
+    if (!hdr) { hdr = document.createElement('div'); hdr.className = 'print-tab-header'; panel.insertBefore(hdr, panel.firstChild); }
+    hdr.textContent = [cs, flt, names[id]].filter(Boolean).join('   ·   ');
+  });
+}
+window.addEventListener('beforeprint', _mdcPrintHeaders);
 // ─── Save / Load the full filled-in card as a JSON file ────────────
 // Unlike "Download HTML" (the whole app) this is just the editable state,
 // so a pilot can back up / share a completed card independent of browser

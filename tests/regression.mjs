@@ -774,6 +774,23 @@ await page.evaluate(() => [...document.querySelectorAll('button')].find(b => b.t
 await page.waitForTimeout(700);
 eq('Undo restored the pre-Reset callsign', await page.$eval('#hdr-callsign', e => e.value), 'UNDOTEST 1');
 
+// ── 26f. Print: per-tab page headers + pagination ──────────────────
+await page.emulateMedia({ media: 'print' });
+await page.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
+await page.waitForTimeout(100);
+const pHdrs = await page.$$eval('.print-tab-header',
+  els => els.map(e => ({ text: e.textContent.trim(), shown: getComputedStyle(e).display !== 'none' })));
+eq('Print: a header for each of the 6 tabs', pHdrs.length, 6);
+ok('Print: headers visible under print media', pHdrs.every(h => h.shown));
+const liveCs = await page.$eval('#hdr-callsign', e => e.value);
+ok('Print: Brief header shows callsign + tab name',
+   pHdrs.some(h => h.text.includes('Brief') && h.text.includes(liveCs)));
+ok('Print: each tab panel breaks to a new page',
+   await page.evaluate(() => getComputedStyle(document.getElementById('tab-msn')).breakBefore === 'page'));
+await page.emulateMedia({ media: 'screen' });
+ok('Print: headers hidden on screen',
+   await page.$$eval('.print-tab-header', els => els.every(e => getComputedStyle(e).display === 'none')));
+
 // ── 27. No JS errors throughout ─────────────────────────────────────
 ok('No page errors during the run', consoleErrors.length === 0,
   'errors: ' + consoleErrors.slice(0, 5).join(' | '));
