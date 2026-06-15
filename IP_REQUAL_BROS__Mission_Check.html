@@ -126,9 +126,10 @@
   }
   .full-row { grid-column: 1 / -1; }
   .two-col { grid-column: span 2; }
-  /* Responsive: the 3-col board overflows phones — drop to 2 then 1 col
-     so the page fits the viewport (and the header bar fills its width). */
-  @media (max-width: 820px) {
+  /* Responsive: 3-col fits down to ~800px (covers portrait iPads — the
+     iPad Air 11" is 820px), so only switch to 2 then 1 column below that
+     for phones/small tablets. Keeps the EFB layout unchanged. */
+  @media (max-width: 799px) {
     .board { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
     .two-col { grid-column: 1 / -1; }
   }
@@ -353,7 +354,7 @@
   /* ── Box setup steps ── */
   .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 6px; }
   /* Responsive (after the base rules so source order wins). */
-  @media (max-width: 820px) { .steps-grid, .devbox { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+  @media (max-width: 799px) { .steps-grid, .devbox { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
   @media (max-width: 560px) { .steps-grid, .devbox { grid-template-columns: minmax(0, 1fr); } }
   .step-item {
     background: #f1efe8;
