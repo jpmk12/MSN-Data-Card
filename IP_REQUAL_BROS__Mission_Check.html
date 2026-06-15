@@ -131,10 +131,14 @@
      for phones/small tablets. Keeps the EFB layout unchanged. */
   @media (max-width: 799px) {
     .board { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    /* Brief is the priority page — keep its 3 columns through iPad
+       half-screen (minmax(0,1fr) lets columns shrink instead of blowing
+       out; wide tables scroll within their card, see .card below). */
+    #tab-main .board { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .two-col { grid-column: 1 / -1; }
   }
   @media (max-width: 560px) {
-    .board { grid-template-columns: minmax(0, 1fr); }
+    .board, #tab-main .board { grid-template-columns: minmax(0, 1fr); }
     /* Stack the side-by-side card pairs (flex .full-row rows); grid
        .full-row cards ignore flex-direction, so they're unaffected. */
     .full-row { flex-direction: column; }
@@ -147,9 +151,10 @@
     border-radius: 12px;
     padding: 14px 16px;
   }
-  /* Phones: let a card with a wide data table scroll sideways within
-     itself instead of overflowing the whole page. */
-  @media (max-width: 560px) {
+  /* Narrow columns (phones, iPad half-screen): let a card with a wide
+     data table scroll sideways within itself instead of overflowing the
+     page — needed so Brief can keep 3 columns at half-screen. */
+  @media (max-width: 799px) {
     .card { overflow-x: auto; }
   }
 
