@@ -190,7 +190,15 @@
     background: #f1efe8;
     padding: 4px 8px;
     border-radius: 0 4px 4px 0;
+    flex-wrap: wrap;
+    row-gap: 6px;
   }
+  /* Let the banded section-title control group (select pill + add button)
+     shrink to fit narrow columns instead of forcing horizontal scroll.
+     The closed select truncates; its dropdown popup is still full-width. */
+  .section-title.banded > span { min-width: 0; max-width: 100%; }
+  .section-title.banded > span > span { min-width: 0; max-width: 100%; }
+  .section-title.banded select { min-width: 0; max-width: 100%; }
 
   /* Checklist toggles for Air Refueling section headings */
   .chk-title {
@@ -263,6 +271,7 @@
     position: relative;
   }
   .item::before { content: '—'; position: absolute; left: 0; color: #b4b2a9; }
+  .item input[type="text"] { max-width: 100%; box-sizing: border-box; }
 
   .sub-item {
     font-size: 11.5px;
