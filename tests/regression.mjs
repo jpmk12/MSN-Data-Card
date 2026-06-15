@@ -341,12 +341,15 @@ eq('EFB FLIP',     await page.$eval('#efb-flip', e => e.value), '06-11-2026 thru
 
 // ── 11. Briefings / Notes ───────────────────────────────────────────
 const noteDefaults = await page.$$eval('#notes-list .note-input', els => els.map(e => e.value));
-eq('Briefings / Notes has 3 default notes', noteDefaults.length, 3);
+eq('Briefings / Notes has 4 default notes', noteDefaults.length, 4);
 ok('DEAD default note present', noteDefaults.some(v => v.startsWith('DEAD:')));
 ok('DUFF default note present', noteDefaults.some(v => v.startsWith('DUFF:')));
 eq('MIN FLAP Emphasis default note',
    noteDefaults.find(v => v.startsWith('MIN FLAP')),
    'MIN FLAP Emphasis: selected OFF when: EOCS REQUIRED YES // CG < 28% or > 39% // Crosswind > 25 kts');
+eq('Pattern-delay default note',
+   noteDefaults.find(v => v.startsWith('1+30')),
+   '1+30 pattern delay -> ~0315z departure for AR');
 eq('DEAD note covers engine start / 1st pattern work / ground ops',
    noteDefaults.find(v => v.startsWith('DEAD:')),
    'DEAD: engine start, 1st pattern work ⇄ back half AR, arrival, ground ops ⇄');
@@ -400,7 +403,7 @@ eq('Persist: Custom row text',
 const ssAfter = await page.$$eval('#ss-incorporated-list input.ss-input', els => els.map(e => e.value));
 ok('Persist: empty SS row dropped', ssAfter.length === 4 && ssAfter.every(v => v.trim()));
 const notesAfter = await page.$$eval('#notes-list .note-input', els => els.map(e => e.value));
-ok('Persist: 3 defaults + the typed note', notesAfter.length === 4 && notesAfter[notesAfter.length - 1] === 'Weather check\nLine 2');
+ok('Persist: 4 defaults + the typed note', notesAfter.length === 5 && notesAfter[notesAfter.length - 1] === 'Weather check\nLine 2');
 ok('Persist: After Takeoff checkbox stays checked',
   await page.evaluate(() => {
     const t = [...document.querySelectorAll('.chk-title')].find(x => x.textContent.includes('After Takeoff'));
