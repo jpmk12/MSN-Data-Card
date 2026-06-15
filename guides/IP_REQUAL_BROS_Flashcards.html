@@ -1,0 +1,598 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0d1117; color: #e6edf3; font-family: Georgia, serif; min-height: 100vh; padding-bottom: 40px; }
+
+  .header { background: linear-gradient(135deg, #0d1117 0%, #1a0808 50%, #0d1117 100%); border-bottom: 2px solid #c0392b; padding: 12px 20px; display: flex; align-items: center; gap: 14px; }
+  .htitle { font-size: 1rem; font-weight: bold; letter-spacing: 1px; }
+  .hsub { font-size: 0.6rem; color: #8b949e; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+  .cao { margin-left: auto; font-size: 0.6rem; color: #8b949e; letter-spacing: 1px; text-transform: uppercase; background: #21262d; border: 1px solid #30363d; border-radius: 4px; padding: 3px 8px; white-space: nowrap; }
+
+  .mode-bar { background: #0d1117; border-bottom: 2px solid #30363d; padding: 10px 20px; display: flex; justify-content: center; gap: 0; }
+  .mbtn { background: #21262d; border: 1px solid #30363d; color: #8b949e; cursor: pointer; font-family: Georgia, serif; font-size: 0.7rem; font-weight: bold; letter-spacing: 1px; padding: 8px 24px; text-transform: uppercase; transition: all 0.15s; }
+  .mbtn:first-child { border-radius: 6px 0 0 6px; }
+  .mbtn:last-child { border-radius: 0 6px 6px 0; border-left: none; }
+  .mbtn.on { background: #c0392b; border-color: #c0392b; color: #fff; }
+
+  .filters { background: #161b22; border-bottom: 1px solid #30363d; padding: 8px 16px; display: flex; flex-wrap: wrap; gap: 5px; }
+  .fbtn { background: #21262d; border: 1px solid #30363d; border-radius: 20px; color: #8b949e; cursor: pointer; font-family: Georgia, serif; font-size: 0.6rem; font-weight: bold; letter-spacing: 0.8px; padding: 4px 10px; text-transform: uppercase; transition: all 0.15s; }
+  .fbtn:hover { color: #e6edf3; border-color: #8b949e; }
+  .fbtn.on { background: #c0392b; border-color: #e74c3c; color: #fff; }
+
+  .statsbar { max-width: 820px; margin: 0 auto; padding: 10px 20px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .stat { font-size: 0.7rem; color: #8b949e; }
+  .stat b { color: #e6edf3; }
+  .progwrap { flex: 1; height: 4px; background: #30363d; border-radius: 2px; min-width: 60px; }
+  .progfill { height: 100%; border-radius: 2px; transition: width 0.3s; }
+  .progfill.study { background: linear-gradient(to right, #c0392b, #f0a500); }
+  .progfill.test  { background: linear-gradient(to right, #27ae60, #f0a500); }
+  .shuf { background: none; border: 1px solid #30363d; border-radius: 4px; color: #8b949e; cursor: pointer; font-family: Georgia, serif; font-size: 0.6rem; letter-spacing: 1px; padding: 4px 10px; text-transform: uppercase; transition: all 0.15s; }
+  .shuf:hover { border-color: #f0a500; color: #f0a500; }
+
+  .scoreboard { display: none; max-width: 820px; margin: 0 auto; padding: 6px 20px 0; }
+  .scoreboard.show { display: flex; gap: 10px; flex-wrap: wrap; }
+  .scard { flex: 1; min-width: 100px; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 10px 14px; text-align: center; }
+  .scard .slabel { font-size: 0.58rem; letter-spacing: 1.5px; text-transform: uppercase; color: #8b949e; margin-bottom: 4px; }
+  .scard .sval { font-size: 1.4rem; font-weight: bold; }
+  .scard.green .sval { color: #27ae60; }
+  .scard.red .sval   { color: #e74c3c; }
+  .scard.gold .sval  { color: #f0a500; }
+  .scard.blue .sval  { color: #4a9eff; }
+
+  .queue-info { display: none; max-width: 820px; margin: 6px auto 0; padding: 0 20px; }
+  .queue-info.show { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .qpill { font-size: 0.62rem; padding: 3px 10px; border-radius: 12px; font-weight: bold; letter-spacing: 0.5px; }
+  .qpill.wrong  { background: rgba(231,76,60,0.15);  border: 1px solid rgba(231,76,60,0.4);  color: #e74c3c; }
+  .qpill.unseen { background: rgba(74,158,255,0.12); border: 1px solid rgba(74,158,255,0.35); color: #4a9eff; }
+  .qpill.right  { background: rgba(39,174,96,0.12);  border: 1px solid rgba(39,174,96,0.35);  color: #27ae60; }
+
+  .main { max-width: 820px; margin: 0 auto; padding: 14px 20px; display: flex; flex-direction: column; align-items: center; }
+
+  /* CARD */
+  .scene { width: 100%; perspective: 1400px; cursor: pointer; margin-bottom: 10px; }
+  .inner { position: relative; width: 100%; min-height: 260px; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.4,0,0.2,1); }
+  .inner.flipped { transform: rotateY(180deg); }
+  .face { position: absolute; top: 0; left: 0; width: 100%; min-height: 260px; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 8px; }
+  .front { background: #161b22; border: 1px solid #30363d; border-left: 4px solid #e74c3c; padding: 28px 32px; display: flex; flex-direction: column; justify-content: center; }
+  .back  { background: #1c2333; border: 1px solid #30363d; border-left: 4px solid #f0a500; transform: rotateY(180deg); padding: 22px 24px; display: flex; flex-direction: column; justify-content: flex-start; }
+  .front.test-mode { border-left-color: #4a9eff; }
+
+  /* back layout: answer left, mnemonic right */
+  .back-body { display: flex; gap: 16px; align-items: flex-start; flex: 1; }
+  .back-answer { flex: 1; min-width: 0; }
+  .back-mnemonic { flex-shrink: 0; width: 170px; }
+
+  .ctag { display: inline-block; background: #21262d; border: 1px solid #30363d; border-radius: 3px; font-size: 0.58rem; padding: 2px 7px; color: #8b949e; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 10px; align-self: flex-start; }
+  .clabel { font-size: 0.58rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .front .clabel { color: #e74c3c; }
+  .front.test-mode .clabel { color: #4a9eff; }
+  .back .clabel { color: #f0a500; }
+  .qtext { font-size: 1.05rem; color: #e6edf3; line-height: 1.6; }
+  .atext { font-size: 0.88rem; color: #f39c12; line-height: 1.7; white-space: pre-line; }
+  .rtext { font-size: 0.65rem; color: #8b949e; font-style: italic; margin-top: 10px; }
+
+  /* MNEMONIC PANEL */
+  .mnem-panel { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 10px 12px; }
+  .mnem-word { font-size: 1.05rem; font-weight: bold; letter-spacing: 4px; color: #e6edf3; text-align: center; margin-bottom: 8px; }
+  .mnem-word span.t { color: #7F77DD; }
+  .mnem-word span.n { color: #1D9E75; }
+  .mnem-word span.e { color: #D85A30; }
+  .mnem-row { display: flex; align-items: baseline; gap: 6px; margin-bottom: 5px; }
+  .mnem-letter { font-size: 0.95rem; font-weight: bold; width: 14px; flex-shrink: 0; }
+  .mnem-letter.t { color: #7F77DD; }
+  .mnem-letter.n { color: #1D9E75; }
+  .mnem-letter.e { color: #D85A30; }
+  .mnem-desc { font-size: 0.7rem; color: #8b949e; line-height: 1.3; }
+  .mnem-divider { border: none; border-top: 1px solid #30363d; margin: 6px 0; }
+
+  .attempt-badge { display: none; position: absolute; top: 14px; right: 14px; font-size: 0.6rem; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px; border-radius: 12px; }
+  .attempt-badge.show { display: inline-block; }
+  .attempt-badge.w1 { background: rgba(231,76,60,0.2); border: 1px solid rgba(231,76,60,0.5); color: #e74c3c; }
+  .attempt-badge.w2 { background: rgba(231,76,60,0.35); border: 1px solid #e74c3c; color: #ff8080; }
+  .attempt-badge.w3 { background: rgba(231,76,60,0.5); border: 1px solid #e74c3c; color: #ffb0b0; }
+
+  .hint { font-size: 0.6rem; color: #8b949e; letter-spacing: 1px; text-transform: uppercase; text-align: center; margin-bottom: 14px; opacity: 0.6; }
+
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 16px; }
+  .btn { border: none; border-radius: 6px; cursor: pointer; font-family: Georgia, serif; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px; padding: 9px 20px; text-transform: uppercase; transition: all 0.15s; }
+  .bprev { background: #21262d; border: 1px solid #30363d; color: #8b949e; }
+  .bprev:hover { color: #e6edf3; border-color: #8b949e; }
+  .bnext { background: #c0392b; color: #fff; }
+  .bnext:hover { background: #e74c3c; }
+  .bknow { background: rgba(39,174,96,0.12); border: 1px solid rgba(39,174,96,0.4); color: #6fc98a; }
+  .bknow:hover { background: rgba(39,174,96,0.22); }
+  .bagain { background: rgba(240,165,0,0.1); border: 1px solid rgba(240,165,0,0.35); color: #f0a500; }
+  .bagain:hover { background: rgba(240,165,0,0.2); }
+  .btest-right { background: rgba(39,174,96,0.15); border: 1px solid rgba(39,174,96,0.5); color: #27ae60; }
+  .btest-right:hover { background: rgba(39,174,96,0.28); }
+  .btest-wrong { background: rgba(231,76,60,0.15); border: 1px solid rgba(231,76,60,0.5); color: #e74c3c; }
+  .btest-wrong:hover { background: rgba(231,76,60,0.28); }
+  .hidden { display: none !important; }
+
+  .dots { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; max-width: 820px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #30363d; cursor: pointer; transition: background 0.2s; flex-shrink: 0; }
+  .dot.cur    { background: #8b949e; transform: scale(1.3); }
+  .dot.know   { background: #27ae60; }
+  .dot.again  { background: #f0a500; }
+  .dot.tright { background: #27ae60; }
+  .dot.twrong { background: #e74c3c; }
+  .dot.tunseen{ background: #30363d; }
+
+  .round-done { display: none; width: 100%; }
+  .round-done.show { display: block; }
+  .rdcard { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 28px 32px; margin-bottom: 14px; }
+  .rd-title { font-size: 1.1rem; color: #f0a500; font-weight: bold; letter-spacing: 1px; margin-bottom: 6px; }
+  .rd-sub { font-size: 0.78rem; color: #8b949e; margin-bottom: 20px; }
+  .rd-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
+  .rd-stat { background: #0d1117; border-radius: 6px; padding: 12px; text-align: center; }
+  .rd-stat .n { font-size: 2rem; font-weight: bold; }
+  .rd-stat .l { font-size: 0.6rem; letter-spacing: 1.5px; text-transform: uppercase; color: #8b949e; margin-top: 2px; }
+  .rd-stat.g .n { color: #27ae60; }
+  .rd-stat.r .n { color: #e74c3c; }
+  .rd-stat.b .n { color: #4a9eff; }
+  .rd-stat.o .n { color: #f0a500; }
+  .rd-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+  .bblue  { background: rgba(74,158,255,0.15); border: 1px solid rgba(74,158,255,0.4); color: #4a9eff; }
+  .bblue:hover  { background: rgba(74,158,255,0.25); }
+  .bgreen { background: rgba(39,174,96,0.15); border: 1px solid rgba(39,174,96,0.4); color: #27ae60; }
+  .bgreen:hover { background: rgba(39,174,96,0.25); }
+  .wl-header { font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase; color: #e74c3c; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #30363d; }
+  .wl-item { background: #161b22; border: 1px solid #30363d; border-left: 3px solid #e74c3c; border-radius: 5px; padding: 12px 16px; margin-bottom: 8px; }
+  .wl-q { font-size: 0.82rem; color: #e6edf3; margin-bottom: 6px; }
+  .wl-a { font-size: 0.78rem; color: #f39c12; white-space: pre-line; }
+  .wl-tries { font-size: 0.62rem; color: #e74c3c; margin-top: 4px; }
+
+  @media (max-width: 520px) {
+    .back-mnemonic { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="htitle">IP REQUAL BROS MSN GK</div>
+    <div class="hsub">C-17 IACRQ &mdash; Flashcards</div>
+  </div>
+  <div class="cao">CAO: 13 May 26</div>
+</div>
+
+<div class="mode-bar">
+  <button class="mbtn on" id="mStudy" onclick="setMode('study')">&#9632; Study Mode</button>
+  <button class="mbtn"    id="mTest"  onclick="setMode('test')">&#9670; Test Mode</button>
+</div>
+
+<div class="filters" id="filters"></div>
+
+<div class="statsbar">
+  <div class="stat">Card <b id="cnum">1</b> of <b id="ctot">0</b></div>
+  <div class="progwrap"><div class="progfill study" id="prog" style="width:0%"></div></div>
+  <div id="studyStats" class="stat">&#10003; <b id="kct" style="color:#6fc98a">0</b> &nbsp;&#8635; <b id="act" style="color:#f0a500">0</b></div>
+  <div id="testStats" class="stat hidden">Round <b id="roundNum">1</b></div>
+  <button class="shuf" id="shuffleBtn">&#8644; Shuffle</button>
+</div>
+
+<div class="scoreboard" id="scoreboard">
+  <div class="scard green"><div class="slabel">Mastered</div><div class="sval" id="sc-mastered">0</div></div>
+  <div class="scard red">  <div class="slabel">Still Wrong</div><div class="sval" id="sc-wrong">0</div></div>
+  <div class="scard blue"> <div class="slabel">Unseen</div><div class="sval" id="sc-unseen">0</div></div>
+  <div class="scard gold"> <div class="slabel">Total</div><div class="sval" id="sc-total">0</div></div>
+</div>
+
+<div class="queue-info" id="queueInfo">
+  <div class="qpill wrong"  id="qp-wrong">0 wrong</div>
+  <div class="qpill unseen" id="qp-unseen">0 unseen</div>
+  <div class="qpill right"  id="qp-right">0 mastered</div>
+  <span style="font-size:0.6rem;color:#8b949e;margin-left:4px;">in this round</span>
+</div>
+
+<div class="main">
+
+  <div class="scene" id="scene">
+    <div class="inner" id="inner">
+
+      <!-- FRONT -->
+      <div class="face front" id="frontFace">
+        <div class="ctag" id="ftag">section</div>
+        <div class="clabel" id="frontLabel">Question</div>
+        <div class="qtext" id="qtext">Loading...</div>
+        <div class="attempt-badge" id="attemptBadge"></div>
+      </div>
+
+      <!-- BACK -->
+      <div class="face back">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div class="ctag" id="btag" style="margin-bottom:0;">section</div>
+          <div class="clabel" style="margin-bottom:0;">Answer</div>
+        </div>
+        <div class="back-body">
+          <div class="back-answer">
+            <div class="atext" id="atext"></div>
+            <div class="rtext" id="rtext"></div>
+          </div>
+          <div class="back-mnemonic" id="mnemonicPanel" style="display:none;">
+            <div class="mnem-panel">
+              <div class="mnem-word">
+                <span class="t">TIC</span>-<span class="n">NAV</span>-<span class="e">EC</span>
+              </div>
+              <div class="mnem-row"><span class="mnem-letter t">T</span><span class="mnem-desc">Turn points</span></div>
+              <div class="mnem-row"><span class="mnem-letter t">I</span><span class="mnem-desc">Initial point (IP)</span></div>
+              <div class="mnem-row"><span class="mnem-letter t">C</span><span class="mnem-desc">Course line</span></div>
+              <hr class="mnem-divider">
+              <div class="mnem-row"><span class="mnem-letter n">N</span><span class="mnem-desc">Nav information</span></div>
+              <div class="mnem-row"><span class="mnem-letter n">A</span><span class="mnem-desc">Area (objective)</span></div>
+              <div class="mnem-row"><span class="mnem-letter n">V</span><span class="mnem-desc">VVOD data & date</span></div>
+              <hr class="mnem-divider">
+              <div class="mnem-row"><span class="mnem-letter e">E</span><span class="mnem-desc">ERAA</span></div>
+              <div class="mnem-row"><span class="mnem-letter e">C</span><span class="mnem-desc">Chart series & date</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="hint" id="flipHint">Click card or press Space to flip</div>
+
+  <div class="controls" id="controls">
+    <button class="btn bprev"         id="prevBtn">&#9664; Prev</button>
+    <button class="btn bagain hidden" id="againBtn">&#8635; Again</button>
+    <button class="btn bknow  hidden" id="knowBtn">&#10003; Got It</button>
+    <button class="btn bnext"         id="nextBtn">Next &#9654;</button>
+    <button class="btn btest-wrong hidden" id="twrongBtn">&#10007; Wrong</button>
+    <button class="btn btest-right hidden" id="trightBtn">&#10003; Correct</button>
+  </div>
+
+  <div class="dots" id="dots"></div>
+
+  <div id="studyDone" class="round-done">
+    <div class="rdcard">
+      <div class="rd-title">&#127919; Deck Complete!</div>
+      <div class="rd-sub">Study session finished.</div>
+      <div class="rd-grid">
+        <div class="rd-stat g"><div class="n" id="sd-know">0</div><div class="l">Got It</div></div>
+        <div class="rd-stat o"><div class="n" id="sd-again">0</div><div class="l">Again</div></div>
+      </div>
+      <div class="rd-btns">
+        <button class="btn bnext" onclick="studyRestart()">&#8635; Restart</button>
+        <button class="btn bagain" id="sd-missed-btn" onclick="studyMissed()">&#8635; Review Missed</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="testDone" class="round-done">
+    <div class="rdcard">
+      <div class="rd-title" id="td-title">Round Complete</div>
+      <div class="rd-sub"   id="td-sub"></div>
+      <div class="rd-grid">
+        <div class="rd-stat g"><div class="n" id="td-right">0</div><div class="l">Correct</div></div>
+        <div class="rd-stat r"><div class="n" id="td-wrong">0</div><div class="l">Wrong</div></div>
+        <div class="rd-stat b"><div class="n" id="td-mastered">0</div><div class="l">Mastered</div></div>
+        <div class="rd-stat o"><div class="n" id="td-remaining">0</div><div class="l">Still Wrong</div></div>
+      </div>
+      <div class="rd-btns" id="tdBtns"></div>
+    </div>
+    <div class="rdcard" id="wrongReview" style="display:none">
+      <div class="wl-header">&#9888; Cards You Missed This Round</div>
+      <div id="wrongItems"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+var MNEM_Q = "What are the minimum chart/doghouse requirements?";
+
+var ALL = [
+  {s:"LIFE SUPPORT",q:"What is normal O\u2082 system pressure?",a:"285\u2013430 PSI",r:"TO 1C-17A-1 Sec 1-2635"},
+  {s:"LIFE SUPPORT",q:"What are the O\u2082 reservoir sizes for Cockpit and Passenger/Airdrop?",a:"Cockpit: 25 Liters. Passenger/Airdrop: 75 Liters.",r:"TO 1C-17A-1 Sec 1-2635"},
+  {s:"LIFE SUPPORT",q:"How many FED hatch openings are there?",a:"4 hatch openings.",r:"TO 1C-17A-1 Sec 1-2635"},
+  {s:"LIFE SUPPORT",q:"How many life rafts are installed and which opening is NOT equipped?",a:"3 of 4 openings have 46-man life rafts. The left aft opening is NOT equipped.",r:"TO 1C-17A-1 Sec 1-2635"},
+  {s:"LIFE SUPPORT",q:"How many FED initiators are there, and which handles are solenoid guarded?",a:"7 initiators. M/D hatch and forward loadmaster station initiator handles are solenoid guarded.",r:"TO 1C-17A-1 Sec 1-2635"},
+  {s:"LIFE SUPPORT",q:"How many fire extinguishers, crash axes, and walk-around bottles are on the aircraft?",a:"Fire Extinguishers: 9 | Crash Axes: 2 | Walk-Around Bottles: 10",r:"TO 1C-17A-1 Sec 1-2635"},
+  {s:"LIFE SUPPORT",q:"How many first aid kits, smoke detectors, and emergency exits are on the aircraft?",a:"First Aid Kits: 6 (26 total items) | Smoke Detectors: 22 | Emergency Exits: 10 escape ropes",r:"TO 1C-17A-1 Sec 1-2635"},
+  {s:"WINDSHEAR",q:"What is the purpose of the windshear procedure?",a:"The pilot's primary objective is to accelerate the aircraft through the windshear while minimizing altitude loss.",r:"TO 1C-17A-1 Sec 7-148"},
+  {s:"WINDSHEAR",q:"Where do you find windshear Recognition procedures (Inc and Dec)?",a:"TO 1C-17A-1 Section 7-142",r:"TO 1C-17A-1 Sec 7-142"},
+  {s:"WINDSHEAR",q:"Where do you find windshear Recovery procedures (prior to and after rotate)?",a:"TO 1C-17A-1 Section 7-148",r:"TO 1C-17A-1 Sec 7-148"},
+  {s:"WINDSHEAR",q:"What are PM duties during windshear?",a:"Reference TO 1C-17A-1 Section 7-144 for full PM duties during windshear.",r:"TO 1C-17A-1 Sec 7-144"},
+  {s:"WINDSHEAR",q:"How does the Low-Level windshear recovery differ from the standard procedure?",a:"No 200 ft AGL requirement. If a sink rate develops at 15 deg pitch and terrain impact appears imminent, increase pitch to stick shaker/CAWS alert onset and maintain speed until clear.",r:"TO 1C-17A-1 Sec 7-154"},
+  {s:"LOW-LEVEL",q:"What are the minimum chart/doghouse requirements?",a:"Turn points, Initial Point (IP), objective area, course line, navigation information, VVOD data and date, ERAA, and chart series/date.",r:"11-2C-17V3 par 14.5.1"},
+  {s:"LOW-LEVEL",q:"What does ROLLTIDE stand for?",a:"Route overview, Obstacles along route, Leg info (course/altitudes/obstacles), Low-level hazards & mitigation, Terrain features, Individual crew duties, Discussion of airspace restrictions, ERAA controlling obstacle & location.",r:"11-2C-17V3 par 13.7"},
+  {s:"LOW-LEVEL",q:"What is ERAA and how is it defined?",a:"1,000 ft (2,000 ft mountainous) above the highest obstruction within 22 NM of planned route centerline.",r:"11-2C-17V3 par 14.3"},
+  {s:"LOW-LEVEL",q:"What is MSA and how is it defined?",a:"500 ft above the highest obstruction within 5 NM of route centerline.",r:"11-2C-17V3 par 14.3"},
+  {s:"LOW-LEVEL",q:"What is the IFR enroute altitude?",a:"1,000 ft (2,000 ft mountainous) above the highest obstruction within 4 NM of route centerline.",r:"11-2C-17V3 par 14.3"},
+  {s:"LOW-LEVEL",q:"What is the Night VMC enroute altitude?",a:"500 ft above the highest obstruction within a tactical corridor.",r:"11-2C-17V3 par 14.3"},
+  {s:"LOW-LEVEL",q:"What is the NVG enroute altitude?",a:"500 ft above the highest spot terrain (charted or DTED spot elevation) within a tactical corridor.",r:"11-2C-17V3 par 14.3"},
+  {s:"LOW-LEVEL",q:"What do you do if an obstacle is not identified by 3 NM?",a:"Climb to 500 ft above the obstacle until the aircrew confirms the aircraft is past it, or until the crew can identify the obstacle and maintain well clear.",r:"11-2C-17V3 par 14.3.3.2"},
+  {s:"LOW-LEVEL",q:"What GPS/ANP is required to go below MSA at night or in a tactical corridor less than 3 NM?",a:"ANP 1.0 for night. ANP 0.3 for tactical corridor less than 3 NM.",r:"AFMAN 11-2C-17V3 14.3.7"},
+  {s:"LOW-LEVEL",q:"How do you know if a low-level route is in mountainous terrain?",a:"Terrain elevation changes exceed 3,000 ft within 10 NM. Designated in NAS per 11-202V3 Fig 4.9.",r:"11-202V3 Fig 4.9"},
+  {s:"LOW-LEVEL",q:"What squawk and weather minimums apply to SR routes?",a:"1200 squawk. Weather varies.",r:"AP-1B section intros"},
+  {s:"LOW-LEVEL",q:"What squawk and weather minimums apply to VR routes?",a:"4000 squawk. Weather: 3000 ft / 5 SM.",r:"AP-1B section intros"},
+  {s:"TIME CONTROL",q:"How does the Mission Computer compute delta-T?",a:"Ground speed to the TO waypoint is used to calculate ETE/ETA. Down-path waypoints use the selected profile's airspeeds, altitude profile, and wind/temperature from the Atmospheric Model.",r:"TO 1C-17A-2 1-731"},
+  {s:"TIME CONTROL",q:"What is the 3-3 axiom for building an accurate flight plan?",a:"Make the computer look like what you are going to fly.",r:"3-3 par 4.5.1"},
+  {s:"TIME CONTROL",q:"What is the difference between a Fixed and Advisory time constraint?",a:"Fixed constraints modify speed guidance when F-PLN is selected. Advisory constraints do NOT affect flight guidance.",r:"3-3 / TO 1C-17A-2"},
+  {s:"TIME CONTROL",q:"What does the 3-3 recommend for time constraint entry?",a:"ADVISORY with tolerances of +/-59:00 for faster MC calculations, then FIX the upcoming timing point at +/- 0:05 per PFARTSS Check.",r:"3-3"},
+  {s:"A/R",q:"What is the required equipment for aerial refueling?",a:"UHF, TACAN A/A (Range and Bearing), Weather Radar (when TCAS is inop), A/R Flood and Slipway lights for night A/R, plus all A/R-related systems and most fuel system components.",r:"TO 1C-17A-1 Sec 7-142"},
+  {s:"A/R",q:"What are the Three R's required at 30 minutes prior to ARCT?",a:"Rendezvous Check, Radios, Radar.",r:"3-3 6.3.3.2.1"},
+  {s:"A/R",q:"What are the A/R requirements at 15 minutes per 3-3?",a:"NLT 10 min per 3.3.4.2 (15 min in 3-3): Contact tanker and pass EMCON information, plus 3-3 recommends passing tail number and end AR request.",r:"3-3 6.3.1.3"},
+  {s:"A/R",q:"Why is 310 KCAS used from the IP?",a:"Contracted Airspeed per US National SRD Appendix Information.",r:"US National SRD"},
+  {s:"A/R",q:"How long can you hold at the first IP and continue the mission?",a:"The lowest of STORED and UNID Extra.",r:"TO 1C-17A-1-2 1-1580"},
+  {s:"A/R",q:"What is the AR BINGO point?",a:"A soft waypoint placed 150 NM down track from ARCP, which is the start of the AR ALTN route.",r:"TO 1C-17A-1-2 1-1580"},
+  {s:"A/R",q:"How is A/R Recovery fuel to the A/R alternate determined?",a:"From an AR recovery routing input into the flight plan pages.",r:"TO 1C-17A-1-2 1-1580"},
+  {s:"A/R",q:"What visibility is required for formation aerial refueling?",a:"2 NM",r:"AFMAN11-2C-17 13.2.10.2"},
+  {s:"A/R",q:"For heading changes greater than 45 degrees, where must the receiver be?",a:"In contact/pre-contact with any tanker, OR 1,000 ft below and 2 NM in trail of the lead tanker throughout the entire turn.",r:"TO 1C-17A-1 8-154"},
+  {s:"A/R",q:"Can you refuel with a KC-135 weighing 200K at FL270 if your ending weight is 585K?",a:"NO. Formatting altitude restriction applies.",r:"1-1 Chart 7-3 / 3-3 Table 6.1"},
+  {s:"ALZ",q:"What is the minimum runway length?",a:"3,500 feet",r:"AFMAN11-2C-17V3 5.11"},
+  {s:"ALZ",q:"How is the minimum runway for a normal landing computed?",a:"Computed landing distance with IDLE reverse (3/4 or full flap).",r:"AFMAN11-2C-17V3 5.11"},
+  {s:"ALZ",q:"How is the minimum runway for a full flap assault landing including SPRO computed?",a:"Computed ground roll with MAX reverse (including NEAT corrections), plus marked LZ distance (normally 500 ft).",r:"AFMAN11-2C-17V3 5.11"},
+  {s:"ALZ",q:"What are the crosswind limits for normal ops, NVG 90-120 ft, and NVG 120 ft or wider?",a:"Normal: 30 kts (20 kts Altus students). NVG 90-120 ft: 15 kts. NVG 120 ft or wider: 20 kts.",r:"AFMAN11-2C-17V3 6.17"},
+  {s:"ALZ",q:"What are the circling weather minimums?",a:"No lower than 600-2.",r:"AFMAN11-2C-17V3 5.11.3"},
+  {s:"ALZ",q:"What is the max weight for regular and SPRO operations?",a:"486K. SPRO: 165,000 lbs total fuel unless less than 4,000 lbs in the four extended range compartments combined.",r:"TO 1C-17A-2 Table 5-13, 5-83"},
+  {s:"ALZ",q:"What should the PM observe upon touchdown?",a:"AGS deployed upon touchdown AND all four REV indications displayed on a Normal or Expanded ENG display.",r:"TO 1C-17A-2 3-392 & 2-394"},
+  {s:"ALZ",q:"What are the thrust reverser assumptions?",a:"INOP: 3 fwd idle, 1 inop\nIDLE REV: 3 in Rev Idle, 1 inop\nMAX (NEAT): 2 in Max Reverse, 1 in Idle Rev, 1 inop\n4 ENGINE REVERSE (SPAM ONLY): 4 in Max Reverse\n\nNEAT Correction: Required for 2-engine max and beyond. Smooth engine cowl = NEAT. Smooth cowl makes engine more aerodynamic but makes TR slower to extend.",r:"TO 1C-17A-1-2"},
+  {s:"TOUCH & GO",q:"What are the minimum runway, weather, and RCR for touch-and-go ops?",a:"Runway: 7,000 ft. Weather: 300 ft ceiling, RVR 4000 (3/4 SM). RCR: 12 or higher. No standing water, slush, or snow.",r:"AFMAN11-2C-17V3 8.2"},
+  {s:"TOUCH & GO",q:"What is the maximum crosswind for touch-and-go operations?",a:"25 knots",r:"AFMAN11-2C-17V3 8.2"},
+  {s:"TOUCH & GO",q:"What are the 3-3 throttle techniques during a touch-and-go?",a:"Never less than MCT. If MCT line not displayed, advance to 1.3 EPR. Any doubt - advance to MAX. PM may make TRACKING call after PF calls FLAPS 1/2.",r:"3-3 5.5.5.6"},
+  {s:"TOUCH & GO",q:"When can you delay a REJECT call on a touch-and-go?",a:"Delay until runway remaining equals MC VBO landing distance. Associate REJECT with an external visual reference such as a runway remaining marker or taxiway.",r:"3-3 5.5.5.7"},
+  {s:"TOUCH & GO",q:"What is the latest point for a loadmaster to make the REJECT call during a touch-and-go?",a:"The FLAPS 1/2, THROTTLES call. After commit point, LMs should concisely verbalize the issue so pilots can make an informed decision.",r:"3-3 5.5.5.8"},
+  {s:"TOUCH & GO",q:"What are the stabilized approach criteria?",a:"Landing config, appropriate airspeed, sink rate no greater than 1,000 fpm, correct track, proper bank angle, power set to maintain profile. Minor corrections: +10/-5 kts, +/-15 deg bank, +/-300 FPM ROD.",r:"AFMAN 11-202V3 30.8 / TO 1C-17A-2 2-203"},
+  {s:"TOUCH & GO",q:"By what altitude must the aircraft be stabilized for instrument vs visual/ALZ approaches?",a:"Instrument: 300 ft AGL. Visual/ALZ: no later than 300 ft AGL - PF engages PACAH. If not stable at 300 ft, go-around.",r:"AFMAN 11-202V3 30.8"},
+  {s:"DEPARTURE",q:"What are the standard and alternate required climb gradients?",a:"Standard: 200 ft/nm. Alternate (40:1 OIS): 152 ft/nm.",r:"AFMAN11-202V3 5.15"},
+  {s:"DEPARTURE",q:"If a DP has an ATC crossing alt req associated with a distance, how do you verify climb capability?",a:"Convert it to a CLB RATE to ALT.",r:"C17 Departure Planning Step 5b"},
+  {s:"DEPARTURE",q:"What is a Special Departure Procedure (SDP)?",a:"An escape procedure for multi-engine aircraft where OEI climb rate would not otherwise meet the TERPS minimum climb gradient requirement.",r:"AFMAN11-202V3 AMC SUP 5.31"},
+  {s:"DEPARTURE",q:"If an SDP is available and authorized, why use it by default for OEI planning?",a:"Reduces engine wear by further derating thrust.",r:"C17 Departure Planning Page 1 bullet 3"},
+  {s:"DEPARTURE",q:"Who is the authority to use Tab 3 or Tab 4 if performance allows?",a:"The PIC.",r:"C17 Departure Planning Page 1 bullet 3"},
+  {s:"DEPARTURE",q:"For standard vs alternate profile departures, where do you reduce VVI and accelerate?",a:"Standard: 1,000 ft AFE. Alternate: ATC/Obstacle Climb Gradient Altitude.",r:"TO 1C-17A-1 Figure 2-7"},
+  {s:"DEPARTURE",q:"Does a tactical and acceleration profile departure guarantee any minimum climb capability?",a:"NO.",r:"TO 1C-17A-1 2-153 and 2-155"},
+  {s:"TACTICS",q:"What are the pros of flying the Duke Beam at 7500 MSL?",a:"Capitalizes on the protected airspace in the vicinity of the selected descent location.",r:"3-3 5.5.3.1.3.1.5"},
+  {s:"TACTICS",q:"What is the advantage of a High Steep Approach?",a:"Reduces time spent in the WEZ while maintaining a high-energy state.",r:"3-3 5.5.3.1.3.1.1"},
+  {s:"TACTICS",q:"What is the advantage of a Shallow Approach?",a:"Reduces time available for enemy detection. May be the only option when remaining clear of the radar WEZ is the primary concern.",r:"3-3 5.5.3.1.4"},
+  {s:"TACTICS",q:"What is the difference between Best Angle of Climb and Best Rate of Climb?",a:"Best Angle of Climb: Tactical departure. Best Rate of Climb: Acceleration departure.",r:"3-3"},
+  {s:"TACTICS",q:"What mission computer tools are used for tactical arrival planning?",a:"Bullseye, TAZ, Killbox, POSIT, BRAA",r:"3-3"},
+  {s:"GROUND OPS",q:"What is the required and desired combat offload distance?",a:"Required: 1,000 ft. Desired: 1,500 ft.",r:"AFTTP 3-3.C-17 pg 3-13"},
+  {s:"GROUND OPS",q:"What is the ERO fuel burn rate?",a:"100 lbs/minute",r:"AFMAN11-2C-17V3 Table 12.1"},
+  {s:"GROUND OPS",q:"What are the pros of an ERO?",a:"Minimizes ground times, allows for expeditious egress, reduces need for ground support equipment.",r:"TO 1C-17A-1 7-357"},
+  {s:"GROUND OPS",q:"What is the extended idle reverse thrust caution in hot weather?",a:"Extended idle reverse in high OAT can cause uncommanded thermal discharge of engine FIREX bottles. Heat from reverse exhaust transfers through the wing leading edge to FIREX bottles.",r:"TO 1C-17A-1 Table 7-5"},
+  {s:"GROUND OPS",q:"What is the difference between Parking MOG and Working MOG?",a:"Parking MOG: surveyed - room for parking and taxiing. Working MOG: adjusts parking MOG for support assets, ground hazards, and off-load methods.",r:"AFMAN11-2C-17V3"},
+  {s:"GROUND OPS",q:"When can planners exceed Working MOG and what must they do first?",a:"May exceed working MOG up to parking MOG. Must check with local C2 first - excess aircraft creates threat exposure and lengthy ground delays.",r:"AFMAN11-2C-17V3"}
+];
+
+var SECTIONS=["ALL","LIFE SUPPORT","WINDSHEAR","LOW-LEVEL","TIME CONTROL","A/R","ALZ","TOUCH & GO","DEPARTURE","TACTICS","GROUND OPS"];
+var mode="study",filter="ALL",masterDeck=[];
+var studyDeck=[],studyResults={},studyCur=0;
+var testRound=1,testStatus={},testQueue=[],testCur=0;
+var testRoundRight=0,testRoundWrong=0,testWrongThisRound=[],wrongCounts={};
+var testFlipped=false,isFlipped=false;
+
+function cardId(c){return c.s+"|"+c.q;}
+function buildMasterDeck(){masterDeck=filter==="ALL"?ALL.slice():ALL.filter(function(c){return c.s===filter;});}
+function shuffleArr(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+function showMnemonic(q){
+  var panel=document.getElementById("mnemonicPanel");
+  panel.style.display=(q===MNEM_Q)?"block":"none";
+}
+
+function setMode(m){
+  mode=m;
+  document.getElementById("mStudy").classList.toggle("on",m==="study");
+  document.getElementById("mTest").classList.toggle("on",m==="test");
+  document.getElementById("studyStats").classList.toggle("hidden",m!=="study");
+  document.getElementById("testStats").classList.toggle("hidden",m!=="test");
+  document.getElementById("scoreboard").classList.toggle("show",m==="test");
+  document.getElementById("queueInfo").classList.toggle("show",m==="test");
+  document.getElementById("shuffleBtn").classList.toggle("hidden",m==="test");
+  if(m==="study")initStudy();else initTest();
+}
+
+function initStudy(){
+  buildMasterDeck();studyDeck=masterDeck.slice();studyResults={};studyCur=0;
+  document.getElementById("prog").className="progfill study";
+  document.getElementById("studyDone").classList.remove("show");
+  document.getElementById("testDone").classList.remove("show");
+  document.getElementById("scene").style.display="";
+  document.getElementById("controls").style.display="";
+  document.getElementById("frontFace").classList.remove("test-mode");
+  document.getElementById("frontLabel").textContent="Question";
+  document.getElementById("flipHint").textContent="Click card or press Space to flip";
+  showStudyControls();renderStudyCard();renderStudyDots();updateStudyStats();
+}
+function showStudyControls(){
+  document.getElementById("prevBtn").classList.remove("hidden");
+  document.getElementById("nextBtn").classList.remove("hidden");
+  document.getElementById("knowBtn").classList.add("hidden");
+  document.getElementById("againBtn").classList.add("hidden");
+  document.getElementById("twrongBtn").classList.add("hidden");
+  document.getElementById("trightBtn").classList.add("hidden");
+}
+function renderStudyCard(){
+  if(!studyDeck.length)return;
+  var c=studyDeck[studyCur];
+  document.getElementById("ftag").textContent=c.s;
+  document.getElementById("btag").textContent=c.s;
+  document.getElementById("qtext").textContent=c.q;
+  document.getElementById("atext").textContent=c.a;
+  document.getElementById("rtext").textContent=c.r?"Ref: "+c.r:"";
+  document.getElementById("attemptBadge").className="attempt-badge";
+  showMnemonic(c.q);
+  isFlipped=false;
+  document.getElementById("inner").classList.remove("flipped");
+  document.getElementById("knowBtn").classList.add("hidden");
+  document.getElementById("againBtn").classList.add("hidden");
+}
+function updateStudyStats(){
+  var tot=studyDeck.length;
+  document.getElementById("cnum").textContent=Math.min(studyCur+1,tot);
+  document.getElementById("ctot").textContent=tot;
+  var kn=0,ag=0;Object.values(studyResults).forEach(function(v){if(v==="know")kn++;else ag++;});
+  document.getElementById("kct").textContent=kn;
+  document.getElementById("act").textContent=ag;
+  document.getElementById("prog").style.width=(tot>0?studyCur/tot*100:0)+"%";
+}
+function renderStudyDots(){
+  var el=document.getElementById("dots");el.innerHTML="";
+  studyDeck.forEach(function(_,i){
+    var d=document.createElement("div");
+    d.className="dot"+(i===studyCur?" cur":"")+(studyResults[i]==="know"?" know":"")+(studyResults[i]==="again"?" again":"");
+    d.onclick=(function(idx){return function(){studyCur=idx;renderStudyCard();updateStudyStats();renderStudyDots();};})(i);
+    el.appendChild(d);
+  });
+}
+function studyFlip(){isFlipped=!isFlipped;document.getElementById("inner").classList.toggle("flipped",isFlipped);document.getElementById("knowBtn").classList.toggle("hidden",!isFlipped);document.getElementById("againBtn").classList.toggle("hidden",!isFlipped);}
+function studyNext(){if(studyCur<studyDeck.length-1){studyCur++;renderStudyCard();updateStudyStats();renderStudyDots();}else showStudyDone();}
+function studyPrev(){if(studyCur>0){studyCur--;renderStudyCard();updateStudyStats();renderStudyDots();}}
+function studyKnow(){studyResults[studyCur]="know";renderStudyDots();updateStudyStats();studyNext();}
+function studyAgain(){studyResults[studyCur]="again";renderStudyDots();updateStudyStats();studyNext();}
+function showStudyDone(){
+  document.getElementById("scene").style.display="none";document.getElementById("controls").style.display="none";
+  var kn=Object.values(studyResults).filter(function(v){return v==="know";}).length;
+  var ag=Object.values(studyResults).filter(function(v){return v==="again";}).length;
+  document.getElementById("sd-know").textContent=kn;document.getElementById("sd-again").textContent=ag;
+  document.getElementById("sd-missed-btn").style.display=studyDeck.some(function(_,i){return studyResults[i]==="again";})?"":"none";
+  document.getElementById("studyDone").classList.add("show");document.getElementById("prog").style.width="100%";
+}
+function studyRestart(){studyResults={};studyCur=0;document.getElementById("studyDone").classList.remove("show");document.getElementById("scene").style.display="";document.getElementById("controls").style.display="";renderStudyCard();renderStudyDots();updateStudyStats();}
+function studyMissed(){var m=studyDeck.filter(function(_,i){return studyResults[i]==="again";});if(!m.length)return;studyDeck=m;studyResults={};studyCur=0;document.getElementById("studyDone").classList.remove("show");document.getElementById("scene").style.display="";document.getElementById("controls").style.display="";renderStudyCard();renderStudyDots();updateStudyStats();}
+
+function initTest(){
+  buildMasterDeck();testRound=1;testStatus={};wrongCounts={};
+  masterDeck.forEach(function(c){testStatus[cardId(c)]="unseen";wrongCounts[cardId(c)]=0;});
+  testQueue=shuffleArr(masterDeck.map(function(_,i){return i;}));
+  testCur=0;testRoundRight=0;testRoundWrong=0;testWrongThisRound=[];
+  document.getElementById("prog").className="progfill test";
+  document.getElementById("testDone").classList.remove("show");document.getElementById("studyDone").classList.remove("show");
+  document.getElementById("wrongReview").style.display="none";
+  document.getElementById("scene").style.display="";document.getElementById("controls").style.display="";
+  document.getElementById("frontFace").classList.add("test-mode");document.getElementById("frontLabel").textContent="Test Question";
+  document.getElementById("flipHint").textContent="Flip to reveal answer, then mark yourself";
+  showTestControls();renderTestCard();renderTestDots();updateTestStats();
+}
+function showTestControls(){
+  document.getElementById("prevBtn").classList.add("hidden");document.getElementById("nextBtn").classList.add("hidden");
+  document.getElementById("knowBtn").classList.add("hidden");document.getElementById("againBtn").classList.add("hidden");
+  document.getElementById("twrongBtn").classList.add("hidden");document.getElementById("trightBtn").classList.add("hidden");
+}
+function renderTestCard(){
+  if(!testQueue.length)return;
+  var c=masterDeck[testQueue[testCur]];var cid=cardId(c);
+  document.getElementById("ftag").textContent=c.s;document.getElementById("btag").textContent=c.s;
+  document.getElementById("qtext").textContent=c.q;document.getElementById("atext").textContent=c.a;
+  document.getElementById("rtext").textContent=c.r?"Ref: "+c.r:"";
+  showMnemonic(c.q);
+  testFlipped=false;document.getElementById("inner").classList.remove("flipped");
+  document.getElementById("twrongBtn").classList.add("hidden");document.getElementById("trightBtn").classList.add("hidden");
+  var wc=wrongCounts[cid]||0;var badge=document.getElementById("attemptBadge");
+  if(wc>0){badge.textContent=wc===1?"Wrong 1x":wc===2?"Wrong 2x":"Wrong "+wc+"x";badge.className="attempt-badge show w"+Math.min(wc,3);}
+  else{badge.className="attempt-badge";}
+}
+function testFlipFn(){testFlipped=!testFlipped;document.getElementById("inner").classList.toggle("flipped",testFlipped);document.getElementById("twrongBtn").classList.toggle("hidden",!testFlipped);document.getElementById("trightBtn").classList.toggle("hidden",!testFlipped);}
+function testMarkRight(){var idx=testQueue[testCur];testStatus[cardId(masterDeck[idx])]="right";testRoundRight++;testFlipped=false;advanceTest();}
+function testMarkWrong(){var idx=testQueue[testCur];var cid=cardId(masterDeck[idx]);testStatus[cid]="wrong";testRoundWrong++;wrongCounts[cid]=(wrongCounts[cid]||0)+1;testWrongThisRound.push(idx);testFlipped=false;advanceTest();}
+function advanceTest(){renderTestDots();updateTestStats();if(testCur<testQueue.length-1){testCur++;renderTestCard();}else showTestRoundDone();}
+function updateTestStats(){
+  var tot=masterDeck.length;
+  document.getElementById("cnum").textContent=Math.min(testCur+1,testQueue.length);
+  document.getElementById("ctot").textContent=testQueue.length;
+  document.getElementById("roundNum").textContent=testRound;
+  document.getElementById("prog").style.width=(testQueue.length>0?testCur/testQueue.length*100:0)+"%";
+  var mastered=0,wrong=0,unseen=0;
+  masterDeck.forEach(function(c){var st=testStatus[cardId(c)];if(st==="right")mastered++;else if(st==="wrong")wrong++;else unseen++;});
+  document.getElementById("sc-mastered").textContent=mastered;document.getElementById("sc-wrong").textContent=wrong;
+  document.getElementById("sc-unseen").textContent=unseen;document.getElementById("sc-total").textContent=tot;
+  document.getElementById("qp-wrong").textContent=testRoundWrong+" wrong";
+  document.getElementById("qp-unseen").textContent=(testQueue.length-testCur-1)+" remaining";
+  document.getElementById("qp-right").textContent=testRoundRight+" correct";
+}
+function renderTestDots(){
+  var el=document.getElementById("dots");el.innerHTML="";
+  testQueue.forEach(function(deckIdx,i){
+    var cid=cardId(masterDeck[deckIdx]);var st=testStatus[cid];
+    var cls="dot"+(i===testCur?" cur":st==="right"?" tright":st==="wrong"?" twrong":" tunseen");
+    var d=document.createElement("div");d.className=cls;el.appendChild(d);
+  });
+}
+function showTestRoundDone(){
+  document.getElementById("scene").style.display="none";document.getElementById("controls").style.display="none";
+  document.getElementById("prog").style.width="100%";
+  var wrongLeft=Object.values(testStatus).filter(function(v){return v==="wrong";}).length;
+  var mastered=Object.values(testStatus).filter(function(v){return v==="right";}).length;
+  var unseen=Object.values(testStatus).filter(function(v){return v==="unseen";}).length;
+  document.getElementById("td-right").textContent=testRoundRight;document.getElementById("td-wrong").textContent=testRoundWrong;
+  document.getElementById("td-mastered").textContent=mastered;document.getElementById("td-remaining").textContent=wrongLeft+unseen;
+  var btns=document.getElementById("tdBtns");btns.innerHTML="";
+  if(wrongLeft===0&&unseen===0){
+    document.getElementById("td-title").textContent="Perfect Score!";
+    document.getElementById("td-sub").textContent="All "+masterDeck.length+" cards mastered in "+testRound+" round"+(testRound>1?"s":"")+"!";
+    var b=document.createElement("button");b.className="btn bnext";b.textContent="Restart Test";b.onclick=initTest;btns.appendChild(b);
+  } else {
+    document.getElementById("td-title").textContent="Round "+testRound+" Complete";
+    var pct=Math.round(testRoundRight/testQueue.length*100);
+    document.getElementById("td-sub").textContent=pct+"% this round \u2014 "+(wrongLeft+unseen)+" card"+(wrongLeft+unseen!==1?"s":"")+" still need work.";
+    if(wrongLeft>0){var bw=document.createElement("button");bw.className="btn btest-wrong";bw.textContent="\u8635 Drill Wrong ("+wrongLeft+")";bw.onclick=startWrongOnlyRound;btns.appendChild(bw);}
+    if(unseen>0){var bu=document.createElement("button");bu.className="btn bblue";bu.textContent="\u25b6 Continue Unseen ("+unseen+")";bu.onclick=startUnseenRound;btns.appendChild(bu);}
+    if(wrongLeft>0||unseen>0){var ba=document.createElement("button");ba.className="btn bgreen";ba.textContent="\u25b6 All Remaining ("+(wrongLeft+unseen)+")";ba.onclick=startAllRemainingRound;btns.appendChild(ba);}
+    var br=document.createElement("button");br.className="btn bnext";br.textContent="\u8635 Full Restart";br.onclick=initTest;btns.appendChild(br);
+  }
+  if(testWrongThisRound.length>0){
+    var wr=document.getElementById("wrongReview");wr.style.display="block";
+    var wi=document.getElementById("wrongItems");wi.innerHTML="";
+    testWrongThisRound.forEach(function(idx){
+      var c=masterDeck[idx];var wc=wrongCounts[cardId(c)]||0;
+      var div=document.createElement("div");div.className="wl-item";
+      div.innerHTML='<div class="wl-q">'+c.q+'</div><div class="wl-a">'+c.a+'</div><div class="wl-tries">Missed '+wc+'x total</div>';
+      wi.appendChild(div);
+    });
+  } else {document.getElementById("wrongReview").style.display="none";}
+  document.getElementById("testDone").classList.add("show");
+}
+function startNextRound(indices){
+  testRound++;testQueue=shuffleArr(indices.slice());testCur=0;testRoundRight=0;testRoundWrong=0;testWrongThisRound=[];
+  document.getElementById("testDone").classList.remove("show");document.getElementById("wrongReview").style.display="none";
+  document.getElementById("scene").style.display="";document.getElementById("controls").style.display="";
+  renderTestCard();renderTestDots();updateTestStats();
+}
+function startWrongOnlyRound(){var idxs=[];masterDeck.forEach(function(c,i){if(testStatus[cardId(c)]==="wrong")idxs.push(i);});startNextRound(idxs);}
+function startUnseenRound(){var idxs=[];masterDeck.forEach(function(c,i){if(testStatus[cardId(c)]==="unseen")idxs.push(i);});startNextRound(idxs);}
+function startAllRemainingRound(){var idxs=[];masterDeck.forEach(function(c,i){var st=testStatus[cardId(c)];if(st==="wrong"||st==="unseen")idxs.push(i);});startNextRound(idxs);}
+
+function buildFilters(){
+  var el=document.getElementById("filters");
+  SECTIONS.forEach(function(s){
+    var b=document.createElement("button");b.className="fbtn"+(s==="ALL"?" on":"");b.textContent=s;
+    b.onclick=function(){document.querySelectorAll(".fbtn").forEach(function(x){x.classList.remove("on");});b.classList.add("on");filter=s;if(mode==="study")initStudy();else initTest();};
+    el.appendChild(b);
+  });
+}
+
+document.getElementById("scene").onclick=function(){if(mode==="study")studyFlip();else testFlipFn();};
+document.getElementById("prevBtn").onclick=studyPrev;
+document.getElementById("nextBtn").onclick=studyNext;
+document.getElementById("knowBtn").onclick=studyKnow;
+document.getElementById("againBtn").onclick=studyAgain;
+document.getElementById("twrongBtn").onclick=testMarkWrong;
+document.getElementById("trightBtn").onclick=testMarkRight;
+document.getElementById("shuffleBtn").onclick=function(){
+  if(mode==="study"){studyDeck=shuffleArr(studyDeck.slice());studyResults={};studyCur=0;
+  document.getElementById("studyDone").classList.remove("show");document.getElementById("scene").style.display="";document.getElementById("controls").style.display="";
+  renderStudyCard();renderStudyDots();updateStudyStats();}
+};
+document.addEventListener("keydown",function(e){
+  if(mode==="study"){
+    if(e.key===" "||e.key==="Enter"){e.preventDefault();studyFlip();}
+    if(e.key==="ArrowRight")studyNext();if(e.key==="ArrowLeft")studyPrev();
+    if(e.key==="1"&&isFlipped)studyKnow();if(e.key==="2"&&isFlipped)studyAgain();
+  } else {
+    if(e.key===" "||e.key==="Enter"){e.preventDefault();testFlipFn();}
+    if(e.key==="1"&&testFlipped)testMarkRight();if(e.key==="2"&&testFlipped)testMarkWrong();
+  }
+});
+
+buildFilters();
+initStudy();
+</script>
+</body>
+</html>

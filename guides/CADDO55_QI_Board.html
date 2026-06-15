@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CADDO 55 — QI Board</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f4f0;
+    color: #1a1a19;
+    padding: 20px;
+    font-size: 14px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── Print ── */
+  @media print {
+    body { background: #fff; padding: 10px; }
+    .no-print { display: none !important; }
+    .board { page-break-inside: avoid; }
+    .card { page-break-inside: avoid; break-inside: avoid; }
+  }
+
+  /* ── Print button ── */
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+  }
+  .btn-export {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 18px;
+    border-radius: 8px;
+    border: 1px solid #b0afa6;
+    background: #fff;
+    color: #1a1a19;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-export:hover { background: #eeedea; }
+  .btn-export.primary { background: #185FA5; color: #fff; border-color: #185FA5; }
+  .btn-export.primary:hover { background: #0C447C; }
+
+  /* ── Callsign bar ── */
+  .callsign-bar {
+    background: #fff;
+    border: 1px solid #d3d1c7;
+    border-radius: 12px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .callsign-left { display: flex; align-items: center; gap: 14px; }
+  .callsign-text { font-size: 22px; font-weight: 600; letter-spacing: 0.06em; color: #1a1a19; }
+  .badge-info {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: #E6F1FB;
+    color: #185FA5;
+  }
+  .crew-fields { display: flex; gap: 28px; font-size: 13px; color: #5f5e5a; flex-wrap: wrap; }
+  .crew-field-label { font-size: 10px; color: #888780; display: block; margin-bottom: 2px; }
+  .crew-underline { border-bottom: 1.5px solid #b4b2a9; min-width: 140px; display: inline-block; }
+
+  /* ── Board grid ── */
+  .board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .full-row { grid-column: 1 / -1; }
+  .two-col { grid-column: span 2; }
+
+  /* ── Cards ── */
+  .card {
+    background: #fff;
+    border: 0.5px solid #d3d1c7;
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+
+  .card-header {
+    font-size: 11px;
+    font-weight: 600;
+    color: #888780;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .card-header svg { flex-shrink: 0; }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a19;
+    margin: 10px 0 5px;
+    border-left: 3px solid #378ADD;
+    padding-left: 8px;
+  }
+  .section-title.teal  { border-color: #1D9E75; }
+  .section-title.pink  { border-color: #D4537E; }
+  .section-title.amber { border-color: #BA7517; }
+  .section-title.red   { border-color: #E24B4A; }
+  .section-title.green { border-color: #639922; }
+  .section-title.blue  { border-color: #378ADD; }
+
+  .item {
+    font-size: 12.5px;
+    color: #5f5e5a;
+    line-height: 1.65;
+    padding: 2px 0 2px 16px;
+    position: relative;
+  }
+  .item::before { content: '—'; position: absolute; left: 0; color: #b4b2a9; }
+
+  .sub-item {
+    font-size: 11.5px;
+    color: #888780;
+    padding: 1px 0 1px 28px;
+    position: relative;
+    line-height: 1.6;
+  }
+  .sub-item::before { content: '·'; position: absolute; left: 16px; }
+
+  .sep { border-top: 0.5px solid #d3d1c7; margin: 8px 0; }
+
+  /* ── Safety sup items ── */
+  .ss-item {
+    font-size: 12px;
+    color: #5f5e5a;
+    line-height: 1.55;
+    padding: 5px 0;
+    border-bottom: 0.5px solid #eeedea;
+  }
+  .ss-item:last-child { border-bottom: none; }
+  .ss-num { font-weight: 600; color: #BA7517; }
+
+  /* ── Deviation boxes ── */
+  .devbox { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 6px; }
+  .dev-item {
+    background: #f1efe8;
+    border-radius: 8px;
+    padding: 7px 8px;
+    font-size: 12px;
+    color: #1a1a19;
+    text-align: center;
+    font-weight: 500;
+  }
+  .dev-label { font-size: 10px; color: #888780; font-weight: 400; margin-bottom: 3px; }
+
+  /* ── Box setup steps ── */
+  .steps-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 6px; }
+  .step-item {
+    background: #f1efe8;
+    border-radius: 8px;
+    padding: 9px 10px;
+    font-size: 11.5px;
+    color: #1a1a19;
+    text-align: left;
+    line-height: 1.8;
+  }
+  .step-item .bullet-list { list-style: none; padding: 0; margin: 0; }
+  .step-item .bullet-list li::before { content: "• "; color: #888780; }
+  .step-label { font-size: 10px; color: #888780; margin-bottom: 4px; }
+
+  /* ── Icon SVGs (inline, no external dep) ── */
+  svg.icon { width: 15px; height: 15px; stroke: #888780; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ── Step sub-label (PF / PM / Memory items etc) ── */
+  .step-label-inline {
+    font-size: 11px;
+    font-weight: 600;
+    color: #fff;
+    background: #5f5e5a;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin: 6px 0 3px 16px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  /* ── Step row ── */
+  .step-row {
+    font-size: 12px;
+    color: #3a3a38;
+    line-height: 1.65;
+    padding: 3px 4px 3px 32px;
+    position: relative;
+    border-left: 2px solid #d3d1c7;
+    margin-left: 16px;
+  }
+  .step-row::before {
+    content: attr(data-num);
+    position: absolute;
+    left: -12px;
+    top: 4px;
+    width: 18px;
+    height: 18px;
+    background: var(--step-color, #378ADD);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 18px;
+    text-align: center;
+  }
+  .step-row.alpha::before {
+    background: var(--step-color, #888780);
+    content: attr(data-num);
+  }
+
+  /* ── Major item heading ── */
+  .item-heading {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a19;
+    background: #eeedea;
+    border-left: 3px solid #378ADD;
+    padding: 5px 8px 5px 10px;
+    margin: 8px 0 4px 0;
+    border-radius: 0 4px 4px 0;
+    position: relative;
+  }
+
+  /* ── Tabs ── */
+  .tab-bar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 0;
+    border-bottom: 1.5px solid #d3d1c7;
+    padding-bottom: 0;
+  }
+  .tab-btn {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 18px;
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    background: transparent;
+    color: #888780;
+    cursor: pointer;
+    position: relative;
+    bottom: -1.5px;
+  }
+  .tab-btn:hover { color: #1a1a19; background: #eeedea; }
+  .tab-btn.active {
+    background: #fff;
+    color: #1a1a19;
+    border-color: #d3d1c7;
+    border-bottom-color: #fff;
+  }
+  .tab-panel { display: none; padding-top: 14px; }
+  .tab-panel.active { display: block; }
+</style>
+</head>
+<body>
+
+<div class="toolbar no-print">
+  <button class="btn-export" onclick="window.print()">
+    <svg style="width:14px;height:14px;stroke:#1a1a19;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Print / Save PDF
+  </button>
+  <button class="btn-export primary" onclick="downloadHTML()">
+    <svg style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Download HTML
+  </button>
+</div>
+
+<!-- ── Callsign Bar ── -->
+<div class="callsign-bar">
+  <div class="callsign-left">
+    <svg style="width:26px;height:26px;stroke:#888780;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21 4 19.5 2.5c-1.5-1.5-3.5-1.5-5 0L11 6 2.8 6.2c-.6 0-1 .7-.7 1.2l1.8 3c.3.5 1 .6 1.5.2L8 9l2 2-5 5 3.5 1 1 3.5 5-5 .6 2.5c.1.4.5.7.9.7.3 0 .6-.1.8-.4l2-2.5c.3-.4.2-.9-.2-1.2z"/></svg>
+    <span class="callsign-text">CADDO 55</span>
+    <span class="badge-info">Qual Prep — 6 May 2026</span>
+  </div>
+  <div class="crew-fields">
+    <div><span class="crew-field-label">Left seat</span><span class="crew-underline" style="display:inline-flex;align-items:center;gap:6px;border-bottom:none;">
+  <svg width="28" height="28" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <!-- Outer ring -->
+    <circle cx="50" cy="50" r="46" fill="#CC0000" />
+    <!-- Inner black mask -->
+    <circle cx="50" cy="50" r="36" fill="#111111" />
+    <!-- Center vertical bar -->
+    <rect x="46" y="4" width="8" height="92" rx="4" fill="#CC0000" />
+    <!-- Left eye — slants up toward center -->
+    <ellipse cx="30" cy="52" rx="12" ry="8" fill="#ffffff" transform="rotate(20 30 52)" />
+    <ellipse cx="30" cy="52" rx="6" ry="4" fill="#111111" transform="rotate(20 30 52)" />
+    <!-- Right eye — slants up toward center -->
+    <ellipse cx="70" cy="52" rx="12" ry="8" fill="#ffffff" transform="rotate(-20 70 52)" />
+    <ellipse cx="70" cy="52" rx="6" ry="4" fill="#111111" transform="rotate(-20 70 52)" />
+  </svg>
+  <span style="border-bottom:1.5px solid #b4b2a9;min-width:60px;">&nbsp;DEAD&nbsp;</span>
+</span></div>
+    <div><span class="crew-field-label">Right seat</span><span class="crew-underline" style="display:inline-flex;align-items:center;gap:6px;border-bottom:none;">
+  <svg width="28" height="28" viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg">
+    <!-- Four-leaf clover: 4 heart-shaped lobes -->
+    <!-- Top lobe -->
+    <path d="M50 48 C50 48 36 36 36 24 C36 14 50 10 50 22 C50 10 64 14 64 24 C64 36 50 48 50 48Z" fill="#3A9E3A"/>
+    <!-- Bottom lobe -->
+    <path d="M50 52 C50 52 36 64 36 76 C36 86 50 90 50 78 C50 90 64 86 64 76 C64 64 50 52 50 52Z" fill="#3A9E3A"/>
+    <!-- Left lobe -->
+    <path d="M48 50 C48 50 36 36 24 36 C14 36 10 50 22 50 C10 50 14 64 24 64 C36 64 48 50 48 50Z" fill="#3A9E3A"/>
+    <!-- Right lobe -->
+    <path d="M52 50 C52 50 64 36 76 36 C86 36 90 50 78 50 C90 50 86 64 76 64 C64 64 52 50 52 50Z" fill="#3A9E3A"/>
+    <!-- Stem -->
+    <path d="M50 80 Q46 95 42 105" stroke="#3A9E3A" stroke-width="4" fill="none" stroke-linecap="round"/>
+  </svg>
+  <span style="border-bottom:1.5px solid #b4b2a9;min-width:60px;">&nbsp;DUFF&nbsp;</span>
+</span></div>
+    <div><span class="crew-field-label">SOE brief / box</span><span class="crew-underline">&nbsp;0700&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+  </div>
+</div>
+
+<!-- ── Tab Bar ── -->
+<div class="tab-bar no-print">
+  <button class="tab-btn active" onclick="switchTab('main', this)">
+    <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px;margin-right:5px" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    Brief
+  </button>
+  <button class="tab-btn" onclick="switchTab('lifesupport', this)">
+    <svg style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px;margin-right:5px" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    GK
+  </button>
+</div>
+
+<!-- ── Tab 1: Main Board ── -->
+<div class="tab-panel active" id="tab-main">
+<div class="board">
+
+  <!-- Safety Supplements -->
+  <div class="card">
+    <div class="card-header">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Safety supplements
+    </div>
+    <div class="ss-item"><span class="ss-num">SS-325</span> — MGPS date anomaly → manually enter date during IRU initialization</div>
+    <div class="ss-item"><span class="ss-num">SS-324</span> — NLG steering actuator → depressurize hyd sys before inserting / removing NG pins</div>
+    <div class="ss-item"><span class="ss-num">OP SUP 1S-323</span> — Landing w/ 1–2 engines inop → step 5 response "3/4 Flaps"</div>
+    <div class="ss-item"><span class="ss-num">SS-322</span> — Revised gear down/locked indications → always pin the gear</div>
+    <div class="sep"></div>
+    <div class="card-header" style="margin-top:4px">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      FCIF / SII
+    </div>
+    <div class="item">FCIF 26-19B — MAF Enroute CPDLC participation guidance (update)</div>
+    <div class="item">SII: none active</div>
+  </div>
+
+
+    <!-- Emergency Checklists — col 1 row 2 -->
+  <div class="card">
+    <div class="card-header">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      Emergency checklists
+    </div>
+    <div style="background:#f1efe8;border-radius:8px;padding:7px 10px;font-size:12px;color:#5f5e5a;margin-bottom:8px;">
+      BOLDFACE retired — QRG 4-component system
+    </div>
+    <div class="item">QRC Procedures List</div>
+    <div class="item">Memory Items List → situational actions (MATL)</div>
+    <div class="item">Ground Evac Checklists</div>
+    <div class="item">QRI → find emergency procedures / bypass directly</div>
+    <div class="sep" style="margin-top:10px"></div>
+    <div class="card-header" style="margin-top:6px">
+      <svg class="icon" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      Memory items (QRC listed)
+    </div>
+    <div class="item" style="font-size:12px;">▸ Loss of Pressurization — Oxygen: "On, 100%" (All)</div>
+    <div class="item" style="font-size:12px;">▸ Smoke, Fire, or Fumes — Oxygen: "On, 100%" (All)</div>
+    <div class="item" style="font-size:12px;">▸ Pitch Runaway Recovery — "Pitch Authority" and/or "Stabilizer Motion"</div>
+    <div class="sub-item" style="font-size:11.5px; padding-left:32px;">• Stab Trim Handles — Split Beyond Detent and Hold</div>
+    <div class="sub-item" style="font-size:11.5px; padding-left:32px;">• Aircraft Control — Maintain</div>
+  </div>
+
+  <div class="card" style="grid-row: span 2;">
+    <div class="card-header">
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
+      Profile
+    </div>
+
+    <div class="section-title green">Initial Departure 36L</div>
+    <div class="item">Accel Alt: SDP</div>
+    <div class="item">ROCKN3 to 4K</div>
+    <div class="item">Alt profile (Flaps Up 1K)</div>
+    <div class="item">SDP div point</div>
+
+    <div class="section-title blue">RNAV GPS A → 36R</div>
+    <div class="item">Circle East / Right base</div>
+    <div class="item">Cat D — 165 kts, 2.3 NM (Neg C: 3.7 today)</div>
+    <div class="item">Local climb out</div>
+    <div class="item">Nav Sensors RNP 0.3</div>
+
+
+    <div class="section-title pink" style="margin-top:12px">CAT II ILS Z 36L</div>
+    <div class="item">Accel Alt 3800 (MSA)</div>
+    <div class="item">FD, HUD or PFD, NAV display ×2, no "No CAT II" msgs</div>
+    <div class="item">Restrictions: 10 kt XW · RVR 1200 min</div>
+    <div class="item">Established within full-scale deflection</div>
+    <div class="item">RAD ALT comparison</div>
+    <div class="item">CAT II switch</div>
+    <div class="item">Rdr Trim after Throttle</div>
+    <div class="item">Light type briefed</div>
+
+    <div class="section-title teal" style="margin-top:12px">LOC 36L (Non Std Config)</div>
+    <div class="item">Accel Alt: SDP</div>
+    <div class="item">Spd Hold</div>
+    <div class="item">Established within full-scale deflection</div>
+
+
+  </div>
+
+  <!-- Emergency & IFR — removed from here, now inside Approach Briefs card above -->
+  <!-- Box Setup — full row -->
+  <div class="card full-row">
+    <div class="card-header">
+      <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      Box setup sequence
+    </div>
+    <div class="steps-grid">
+      <div class="step-item"><div class="step-label">Step 1</div><ul class="bullet-list"><li>Ldg TOLD 36R</li><li>2NM FAF</li><li>Copy SEC</li><li>SDP Div Pt</li></ul></div>
+      <div class="step-item"><div class="step-label">Step 2</div><ul class="bullet-list"><li>Load SID 36L</li><li>Load T/O TOLD 36L</li><li>Verify Perf Factors</li></ul></div>
+      <div class="step-item"><div class="step-label">Step 3</div><ul class="bullet-list"><li>Load RNAV GPS A</li><li>Set MDA/Radar Mins</li><li>Set AFCS/P ID Switch</li></ul></div>
+      <div class="step-item"><div class="step-label">Step 4</div><ul class="bullet-list"></ul></div>
+      <div class="step-item"><div class="step-label">Key Points</div><ul class="bullet-list"><li>3800 ft OEI · 10 units rudder trim / 3 units roll trim into good engine · AP only until clean</li></ul></div>
+    </div>
+  </div>
+
+</div><!-- /board -->
+</div><!-- /tab-main -->
+
+<!-- ── Tab 2: Life Support ── -->
+<div class="tab-panel" id="tab-lifesupport">
+<div class="board">
+
+  <!-- Row 1: Memory Maneuver + RNAV GK + Life Support col 1 -->
+
+  <!-- Memory Maneuver Items -->
+  <div class="card two-col">
+    <div class="card-header">
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Memory maneuver items (NOT on QRC)
+    </div>
+    <div class="item-heading" style="border-left-color:#185FA5; background: #185FA518;">Breakaway</div>
+    <div class="step-label-inline">PF</div>
+    <div class="step-row alpha" data-num="a" style="border-left-color:#185FA533;" data-color="#185FA5">Press AP/A/R disconnect (control stick)</div>
+    <div class="step-row alpha" data-num="b" style="border-left-color:#185FA533;" data-color="#185FA5">Press ATS/A/R disconnect (throttles)</div>
+    <div class="step-row alpha" data-num="c" style="border-left-color:#185FA533;" data-color="#185FA5">Retard throttles toward idle</div>
+    <div class="step-row alpha" data-num="d" style="border-left-color:#185FA533;" data-color="#185FA5">Extend speedbrakes</div>
+    <div class="step-row alpha" data-num="e" style="border-left-color:#185FA533;" data-color="#185FA5">Establish positive ROD, drop aft until tanker in sight</div>
+    <div class="step-row alpha" data-num="f" style="border-left-color:#185FA533;" data-color="#185FA5">Maintain visual contact with other aircraft</div>
+    <div class="step-label-inline">PM</div>
+    <div class="step-row alpha" data-num="a" style="border-left-color:#185FA533;" data-color="#185FA5">Press AP/A/R disconnect (control stick)</div>
+    <div class="step-row alpha" data-num="b" style="border-left-color:#185FA533;" data-color="#185FA5">Maintain visual contact with the tanker until clear</div>
+    <div class="step-row alpha" data-num="c" style="border-left-color:#185FA533;" data-color="#185FA5">If visual is lost, attempt to establish radar contact with tanker</div>
+    <div class="step-row alpha" data-num="d" style="border-left-color:#185FA533;" data-color="#185FA5">Turn on rotating beacon lights when clear</div>
+    <div class="item-heading" style="border-left-color:#1D9E75; background: #1D9E7518;">Emergency Descent</div>
+    <div class="step-label-inline">Memory items</div>
+    <div class="step-row" data-num="1" style="border-left-color:#1D9E7533;" data-color="#1D9E75">Autothrottles — Off (PF)</div>
+    <div class="step-row" data-num="2" style="border-left-color:#1D9E7533;" data-color="#1D9E75">Throttles — IDLE or IDLE REV (PF)</div>
+    <div class="step-row" data-num="3" style="border-left-color:#1D9E7533;" data-color="#1D9E75">Speedbrakes — Deployed (As Required) (PF)</div>
+    <div class="step-row" data-num="4" style="border-left-color:#1D9E7533;" data-color="#1D9E75">Airspeed — As Required (PF)</div>
+    <div class="step-row" data-num="5" style="border-left-color:#1D9E7533;" data-color="#1D9E75">Bank — As Required (PF)</div>
+    <div class="step-label-inline">Non-maneuver items</div>
+    <div class="step-row" data-num="6" style="border-left-color:#1D9E7533;" data-color="#1D9E75">IFF — EMERG (As Required)</div>
+    <div class="step-row" data-num="7" style="border-left-color:#1D9E7533;" data-color="#1D9E75">ATC — Notified</div>
+    <div style="font-size:11px;color:#888780;font-style:italic;padding:4px 4px 4px 16px;">Refer to: Loss of Pressurization · Smoke, Fire, or Fumes</div>
+    <div class="item-heading" style="border-left-color:#BA7517; background: #BA751718;">Eng Failure T/O-Climb Profile</div>
+    <div class="step-row" data-num="1" style="border-left-color:#BA751733;" data-color="#BA7517">Rotate 12–15 degrees</div>
+    <div class="step-row" data-num="2" style="border-left-color:#BA751733;" data-color="#BA7517">Positive Rate — Gear Up</div>
+    <div class="step-row" data-num="3" style="border-left-color:#BA751733;" data-color="#BA7517">Follow flight director (MAX as required)</div>
+    <div class="step-row" data-num="4" style="border-left-color:#BA751733;" data-color="#BA7517">Climb at current config (No slower than VMCO)</div>
+    <div class="step-row" data-num="5" style="border-left-color:#BA751733;" data-color="#BA7517">Level off / accel at 3-eng accel alt</div>
+    <div class="item-heading" style="border-left-color:#D4537E; background: #D4537E18;">GPWS/TAWS: Terrain Warning Maneuver</div>
+    <div class="step-label-inline">To Immediately Change Flight Path — PF</div>
+    <div class="step-row" data-num="1" style="border-left-color:#D4537E33;" data-color="#D4537E">Throttles — MAX/TOGA</div>
+    <div class="step-row" data-num="2" style="border-left-color:#D4537E33;" data-color="#D4537E">Disengage AP/ATS</div>
+    <div class="step-row" data-num="3" style="border-left-color:#D4537E33;" data-color="#D4537E">Roll wings level, rotate to 15° pitch (disregard F/D)</div>
+    <div class="step-row" data-num="4" style="border-left-color:#D4537E33;" data-color="#D4537E">Maintain config unless flaps beyond ½, then retract to ½</div>
+    <div class="step-row" data-num="5" style="border-left-color:#D4537E33;" data-color="#D4537E">If terrain remains threat, increase pitch to ALS/stick shaker/CAWS onset</div>
+    <div class="step-row" data-num="6" style="border-left-color:#D4537E33;" data-color="#D4537E">Maintain pitch until clear of terrain</div>
+    <div class="step-label-inline">To Immediately Change Flight Path — PM</div>
+    <div class="step-row" data-num="1" style="border-left-color:#D4537E33;" data-color="#D4537E">Verify maximum thrust</div>
+    <div class="step-row" data-num="2" style="border-left-color:#D4537E33;" data-color="#D4537E">Verify speedbrakes retracted</div>
+    <div class="step-row" data-num="3" style="border-left-color:#D4537E33;" data-color="#D4537E">Call out any omissions to required actions</div>
+    <div class="step-row" data-num="4" style="border-left-color:#D4537E33;" data-color="#D4537E">Monitor vertical speed and radar altimeter</div>
+    <div class="step-row" data-num="5" style="border-left-color:#D4537E33;" data-color="#D4537E">Call out any trend toward terrain contact</div>
+    <div class="step-label-inline">To Verify Aircraft Clear of Terrain</div>
+    <div class="step-row" data-num="1" style="border-left-color:#D4537E33;" data-color="#D4537E">Monitor radar altimeter for sustained/increasing terrain separation</div>
+    <div class="step-row" data-num="2" style="border-left-color:#D4537E33;" data-color="#D4537E">Monitor TAWS display for increasing terrain separation</div>
+    <div class="step-row" data-num="3" style="border-left-color:#D4537E33;" data-color="#D4537E">Slowly decrease pitch attitude and accelerate</div>
+    <div class="item-heading" style="border-left-color:#7B5EA7; background: #7B5EA718;">"OVERSPEED" Warning Response</div>
+    <div class="sub-item">Correct Overspeed Condition</div>
+    <div class="item-heading" style="border-left-color:#E24B4A; background: #E24B4A18;">Rejected Takeoff</div>
+    <div class="step-row" data-num="1" style="border-left-color:#E24B4A33;" data-color="#E24B4A">Throttles — REV IDLE (PF)</div>
+    <div class="step-row" data-num="2" style="border-left-color:#E24B4A33;" data-color="#E24B4A">Brakes — As Required</div>
+    <div class="step-row" data-num="3" style="border-left-color:#E24B4A33;" data-color="#E24B4A">Symmetrical Reverse Thrust — MAX (As Required)</div>
+    <div class="step-row" data-num="4" style="border-left-color:#E24B4A33;" data-color="#E24B4A">Throttles — As Required</div>
+    <div class="step-row" data-num="5" style="border-left-color:#E24B4A33;" data-color="#E24B4A">Brakes Peak Temps — Check</div>
+    <div class="item-heading" style="border-left-color:#2E8B57; background: #2E8B5718;">"STALL" Warning / ALS Response</div>
+    <div class="sub-item">Correct Stall Condition</div>
+    <div class="item-heading" style="border-left-color:#C0622A; background: #C0622A18;">TCAS Resolution Advisory Response</div>
+    <div class="step-row" data-num="1" style="border-left-color:#C0622A33;" data-color="#C0622A">Press AP disconnect if TCAS guidance not already being provided</div>
+    <div class="step-row" data-num="2" style="border-left-color:#C0622A33;" data-color="#C0622A">Ensure TCAS is in the FMAs</div>
+    <div class="step-row" data-num="3" style="border-left-color:#C0622A33;" data-color="#C0622A">Follow TCAS FD guidance and/or control vertical speed to avoid red bands on TCAS display</div>
+    <div class="item-heading" style="border-left-color:#3A7CA5; background: #3A7CA518;">"WINDSHEAR" Warning Response</div>
+    <div class="sub-item">Execute Windshear Recovery Procedure</div>
+  </div>
+
+  <!-- Life Support col 1 -->
+  <div class="card">
+    <div class="card-header">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Life support
+    </div>
+    <div class="section-title teal">Oxygen</div>
+    <div class="item">25 / 75 / 75 Normal · PX 285–430</div>
+    <div class="section-title blue" style="margin-top:10px">Walk-around O₂ bottles — 10</div>
+    <div class="item">Cockpit (2) · Crew rest (1) · Lav (1) · Fwd LM (1) · Cargo (5)</div>
+    <div class="section-title pink" style="margin-top:10px">First aid kits — 6</div>
+    <div class="item">Cockpit (2) · Cargo (4)</div>
+    <div class="section-title red" style="margin-top:10px">Fire extinguishers — 9</div>
+    <div class="item">2 Cockpit (L &amp; R) · 1 Crew rest · 6 Cargo</div>
+    <div class="section-title amber" style="margin-top:10px">Smoke detectors — 22</div>
+    <div class="item">Cargo (14) · IRUs (4) · Avionics rack (2) · Crew rest (1) · Lav (1)</div>
+    <div class="section-title red" style="margin-top:10px">Emergency exits — 8</div>
+    <div class="sub-item">Cockpit windows (2) · Mx/Ditching hatch (1) · Crew door (1) · Fwd emer escape hatch (1) · Troop doors (2) · Cargo ramp (1)</div>
+    <div class="section-title teal" style="margin-top:10px">Ropes (10)</div>
+    <div class="sub-item">Cockpit windows (2) · Mx/Ditching hatch (1) · Fwd emer escape hatch (1) · Troop doors (2) · FEDS (4)</div>
+    <div class="section-title teal" style="margin-top:10px">EEBDs (6)</div>
+    <div class="sub-item">Crew rest (2) · Cargo (4)</div>
+    <div class="section-title amber" style="margin-top:10px">Crash axes</div>
+    <div class="item">Right EPC (crew rest) · Cargo compartment</div>
+    <div class="section-title amber" style="margin-top:10px">EPOS</div>
+    <div class="item">As required</div>
+  </div>
+
+
+  <!-- Row 2: Wind Shear | IFR Departure | RNAV GK -->
+
+  <!-- RNAV GK -->
+  <div class="card">
+    <div class="card-header">
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
+      RNAV GK
+    </div>
+    <div class="item">1x operational MC, FD, MSN LDI at both stations</div>
+    <div class="item">Retrieve from DB; pts may be deleted, alt/spd adjusted</div>
+    <div class="item">Keyed MGPS can be used</div>
+    <div class="item">RAIM check — sapt.faa.gov (baro-aided)</div>
+  </div>
+
+  <!-- Row 2: Wind Shear | IFR Departure | (empty fills naturally) -->
+
+  <!-- Wind Shear -->
+  <div class="card">
+    <div class="card-header">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Wind shear
+    </div>
+    <div class="section-title red">Departure — prior to GO</div>
+    <div class="item">Reject takeoff</div>
+    <div class="section-title red" style="margin-top:8px">Departure — after GO</div>
+    <div class="item">MAX power</div>
+    <div class="item">Delay rotation up to NLT 1,000 ft</div>
+    <div class="item">Pitch +1 to +2 FPV (400–500 FPM)</div>
+    <div class="item">Up to 15° pitch — disregard F/D</div>
+    <div class="item">Sink below 200 ft → rotate to stick shaker</div>
+    <div class="item">Raise gear NET 1,000 ft</div>
+    <div class="item">Maintain flaps ½ &amp; index until clear + VMFR</div>
+    <div class="sep"></div>
+    <div class="section-title red">Approach</div>
+    <div class="item">MAX power · press TOGA · flaps ½ · hand fly</div>
+    <div class="item">Pitch +1 to +2 FPV (400–500 FPM)</div>
+    <div class="item">Up to 15° pitch · sink below 200 ft → stick shaker</div>
+    <div class="item">Raise gear NET 1,000 ft · maintain flaps ½ until clear</div>
+  </div>
+
+  <!-- IFR Departure -->
+  <div class="card">
+    <div class="card-header">
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      IFR departure — DOOMS DAy
+    </div>
+    <div class="item"><strong style="font-weight:500;color:#1a1a19">D</strong>iverse departure</div>
+    <div class="item"><strong style="font-weight:500;color:#1a1a19">O</strong>mnidirectional</div>
+    <div class="item">ODP</div>
+    <div class="sub-item">Non-std TO mins</div>
+    <div class="sub-item">Specific routing</div>
+    <div class="sub-item">VCOA</div>
+    <div class="sub-item">RTRL</div>
+    <div class="item"><strong style="font-weight:500;color:#1a1a19">M</strong>AJCOM procedure</div>
+    <div class="item"><strong style="font-weight:500;color:#1a1a19">S</strong>ID</div>
+    <div class="item"><strong style="font-weight:500;color:#1a1a19">D</strong>iverse vector area</div>
+    <div class="item"><strong style="font-weight:500;color:#1a1a19">A</strong>TC departure instructions (specific)</div>
+  </div>
+
+</div><!-- /board -->
+</div><!-- /tab-lifesupport -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.step-row[data-color]').forEach(function(el) {
+    el.style.setProperty('--step-color', el.getAttribute('data-color'));
+  });
+});
+</script>
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+function downloadHTML() {
+  const clone = document.documentElement.cloneNode(true);
+  clone.querySelectorAll('.no-print').forEach(el => el.remove());
+  clone.querySelectorAll('.tab-panel').forEach(p => p.classList.add('active'));
+  const blob = new Blob(['<!DOCTYPE html>' + clone.outerHTML], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'CADDO55_QI_Board.html';
+  a.click();
+}
+</script>
+
+</body>
+</html>
