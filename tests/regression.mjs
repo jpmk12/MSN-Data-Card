@@ -515,7 +515,7 @@ fs.writeFileSync(downloadOut, html);
 const dlPage = await ctx.newPage();
 await dlPage.goto('file://' + downloadOut, { waitUntil: 'networkidle' });
 const dlBtns = await dlPage.$$eval('.toolbar button', els => els.map(e => e.textContent.trim()));
-eq('Downloaded copy retains toolbar', dlBtns, ['Print / Save PDF', 'Download HTML', 'Save Card', 'Load Card', 'Import', 'Reset']);
+eq('Downloaded copy retains toolbar', dlBtns, ['Print / Save PDF', 'Print Tab', 'Download HTML', 'Save Card', 'Load Card', 'Import', 'Reset']);
 await dlPage.close();
 fs.unlinkSync(downloadOut);
 
@@ -790,6 +790,22 @@ ok('Print: each tab panel breaks to a new page',
 await page.emulateMedia({ media: 'screen' });
 ok('Print: headers hidden on screen',
    await page.$$eval('.print-tab-header', els => els.every(e => getComputedStyle(e).display === 'none')));
+
+// ── 26f-2. "Print Tab" prints only the active tab ──────────────────
+await clickTab('GK');
+await page.waitForTimeout(120);
+await page.emulateMedia({ media: 'print' });
+await page.evaluate(() => document.body.classList.add('print-active-only'));
+await page.waitForTimeout(80);
+ok('Print Tab: active tab (GK) stays visible',
+   await page.evaluate(() => getComputedStyle(document.getElementById('tab-lifesupport')).display !== 'none'));
+ok('Print Tab: other tabs hidden',
+   await page.evaluate(() => getComputedStyle(document.getElementById('tab-main')).display === 'none'));
+ok('Print Tab: active tab has no leading page break',
+   await page.evaluate(() => getComputedStyle(document.getElementById('tab-lifesupport')).breakBefore === 'avoid'));
+await page.evaluate(() => document.body.classList.remove('print-active-only'));
+await page.emulateMedia({ media: 'screen' });
+await clickTab('Brief');
 
 // ── 26g. Versioned defaults banner (Apply keeps user content) ──────
 await page.evaluate(() => {

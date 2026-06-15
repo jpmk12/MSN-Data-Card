@@ -35,6 +35,9 @@
     /* Per-tab page header (callsign · flight · tab) for loose-page ID. */
     .print-tab-header { display: block !important; }
     * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    /* "Print Tab": only the active tab, starting on page 1. */
+    body.print-active-only .tab-panel:not(.active) { display: none !important; }
+    body.print-active-only .tab-panel.active { break-before: avoid; page-break-before: avoid; }
   }
   .print-tab-header {
     display: none;
@@ -453,6 +456,10 @@
   <button class="btn-export" onclick="window.print()">
     <svg style="width:14px;height:14px;stroke:#1a1a19;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
     Print / Save PDF
+  </button>
+  <button class="btn-export" onclick="printActiveTab()" aria-label="Print only the current tab">
+    <svg style="width:14px;height:14px;stroke:#1a1a19;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="8" y="14" width="8" height="6"/></svg>
+    Print Tab
   </button>
   <button class="btn-export primary" onclick="downloadHTML()">
     <svg style="width:14px;height:14px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -4859,6 +4866,17 @@ function _mdcPrintHeaders() {
   });
 }
 window.addEventListener('beforeprint', _mdcPrintHeaders);
+// Print only the currently-visible tab (the toolbar's "Print Tab").
+function printActiveTab() {
+  document.body.classList.add('print-active-only');
+  var cleanup = function() {
+    document.body.classList.remove('print-active-only');
+    window.removeEventListener('afterprint', cleanup);
+  };
+  window.addEventListener('afterprint', cleanup);
+  window.print();
+  setTimeout(cleanup, 1000);   // fallback if afterprint doesn't fire
+}
 // ─── Save / Load the full filled-in card as a JSON file ────────────
 // Unlike "Download HTML" (the whole app) this is just the editable state,
 // so a pilot can back up / share a completed card independent of browser
