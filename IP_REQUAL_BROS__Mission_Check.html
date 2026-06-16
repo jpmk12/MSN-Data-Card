@@ -824,9 +824,9 @@
           style="font-family:inherit;font-size:11px;font-weight:700;color:#fff;background:#185FA5;border:none;border-radius:999px;padding:3px 24px 3px 11px;letter-spacing:0.04em;cursor:pointer;outline:none;-webkit-appearance:none;-moz-appearance:none;appearance:none;">
           <option value="IR-193">IR-193</option>
           <option value="VR-106">VR-106</option>
-          <option value="IR-155">IR-155</option>
+          <option value="IR-155" selected>IR-155</option>
           <option value="IR-154">IR-154</option>
-          <option value="NA" selected>NA</option>
+          <option value="NA">NA</option>
         </select>
         <svg style="position:absolute;right:8px;width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </span>
@@ -1162,9 +1162,9 @@
           style="font-family:inherit;font-size:11px;font-weight:700;color:#fff;background:#185FA5;border:none;border-radius:999px;padding:4px 26px 4px 12px;letter-spacing:0.04em;cursor:pointer;outline:none;-webkit-appearance:none;-moz-appearance:none;appearance:none;">
           <option value="IR-193">IR-193</option>
           <option value="VR-106">VR-106</option>
-          <option value="IR-155">IR-155</option>
+          <option value="IR-155" selected>IR-155</option>
           <option value="IR-154">IR-154</option>
-          <option value="NA" selected>NA</option>
+          <option value="NA">NA</option>
         </select>
         <svg style="position:absolute;right:9px;width:11px;height:11px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
       </span>
@@ -4340,7 +4340,7 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 // Bump whenever the baked-in defaults change. A saved card built on an
 // older version is offered an "Apply latest brief data" banner that
 // refreshes the canonical fields while keeping the pilot's edits.
-var MDC_DEFAULTS_VERSION = 1;
+var MDC_DEFAULTS_VERSION = 2;
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {

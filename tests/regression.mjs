@@ -159,10 +159,14 @@ ok('AR197L shows the Air Refueling table again',
 // ── 7. SCLZ/STLZ TOT auto-derive + Slow 1 / Slow 2 offsets ───────────
 // SCLZ TOT = LL Entry + 14, STLZ TOT = LL Entry + 31 (auto-calculated,
 // read-only). Default LL Entry is blank → SCLZ/STLZ blank.
-// LL route defaults to NA (Low Level Info hidden); switch to IR-154 for
-// the IR-154-specific checks below.
-eq('LL route default NA', await page.$eval('#ll-route-select', e => e.value), 'NA');
-ok('NA hides Low Level Info table by default',
+// LL route defaults to IR-155 (Low Level Info shown). NA still hides the
+// table; switch to IR-154 for the IR-154-specific checks below.
+eq('LL route default IR-155', await page.$eval('#ll-route-select', e => e.value), 'IR-155');
+ok('IR-155 shows Low Level Info table by default',
+   await page.evaluate(() => getComputedStyle(document.getElementById('ll-info-table')).display !== 'none'));
+await page.selectOption('#ll-route-select', 'NA');
+await page.waitForTimeout(120);
+ok('NA hides Low Level Info table',
    await page.evaluate(() => getComputedStyle(document.getElementById('ll-info-table')).display === 'none'));
 await page.selectOption('#ll-route-select', 'IR-154');
 await page.waitForTimeout(120);
@@ -439,8 +443,12 @@ eq('Reset: Slow 2 offset default', await page.$eval('#ll-slow2-offset', e => e.v
 
 // ── 17. Route Data SVGs + dynamic titles ────────────────────────────
 await clickTab('Low Level');
-// After Reset the route defaults to NA (no route data shown); pick IR-154.
-eq('Route Data default NA', await page.$eval('#route-select', e => e.value), 'NA');
+// After Reset the route defaults to IR-155 (route data shown). NA shows no
+// route SVG; then walk through the other routes.
+eq('Route Data default IR-155', await page.$eval('#route-select', e => e.value), 'IR-155');
+ok('IR-155 shows a route SVG by default', await page.evaluate(() => document.querySelector('#route-svg svg') !== null));
+await page.selectOption('#route-select', 'NA');
+await page.waitForTimeout(150);
 ok('NA shows no route SVG', await page.evaluate(() => document.querySelector('#route-svg svg') === null));
 await page.selectOption('#route-select', 'IR-154');
 await page.waitForTimeout(150);
