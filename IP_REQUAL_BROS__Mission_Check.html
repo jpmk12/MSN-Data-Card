@@ -656,7 +656,7 @@
 
     <!-- EDIT THE DEFAULT ROUTE HERE: change the value="..." below (comma-separated waypoints) -->
     <input id="rof-input" type="text"
-      value="KLTS OKKIE_.CDS LBB360030 AR197 LBB322047 CDS ZOCKS KLTS"
+      value="KLTS ROCKN3.BFV MMB213050 AR312 PUB183022 AR312 MMB213050 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS"
       oninput="renderRoute()"
       aria-label="Flight plan waypoints, comma separated"
       style="width:100%;box-sizing:border-box;font-family:inherit;font-size:12px;color:#1a1a19;border:1px solid #d3d1c7;border-radius:8px;background:#fff;padding:8px 10px;outline:none;margin-bottom:4px;" />
@@ -730,24 +730,24 @@
 
       <!-- Manual type-in rows -->
       <div style="font-size:11px;color:#888780;padding:3px 0;">Low Level Entry</div>
-      <input id="soe-llentry" type="text" maxlength="4" placeholder="——" value=""
+      <input id="soe-llentry" type="text" maxlength="4" placeholder="——" value="0410"
         aria-label="Low Level Entry time in HHMM"
         style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;"
         oninput="syncLowLevel()" />
 
       <div style="font-size:11px;color:#888780;padding:3px 0;">LL Exit</div>
-      <input id="soe-llexit" type="text" maxlength="4" placeholder="——" value=""
+      <input id="soe-llexit" type="text" maxlength="4" placeholder="——" value="0454"
         aria-label="Low Level Exit time in HHMM"
         style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;" />
 
       <div style="font-size:11px;color:#888780;padding:3px 0;">ARCT</div>
-      <input id="soe-arct" type="text" maxlength="4" placeholder="——" value="0335"
+      <input id="soe-arct" type="text" maxlength="4" placeholder="——" value="0205"
         aria-label="ARCT time in HHMM"
         style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;"
         oninput="syncARCT()" />
 
       <div style="font-size:11px;color:#888780;padding:3px 0;">AREX</div>
-      <input id="soe-arex" type="text" maxlength="4" placeholder="——" value="0510"
+      <input id="soe-arex" type="text" maxlength="4" placeholder="——" value="0340"
         aria-label="AR Exit time in HHMM"
         style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;" />
 
@@ -835,10 +835,10 @@
       <tbody>
         <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;width:42%;border-bottom:0.5px solid #d3d1c7;">LL Entry</td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-entry">—</span></td></tr>
         <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">Entry Pt</td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-entry-pt">A</span></td></tr>
-        <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;"><span style="display:inline-flex;align-items:center;gap:6px;">Slow 1<select id="ll-slow-offset" onchange="syncLowLevel()" aria-label="SCLZ TOT offset to subtract" style="font-family:inherit;font-size:10.5px;font-weight:600;color:#5f5e5a;background:transparent;border:none;border-bottom:1px solid #b4b2a9;cursor:pointer;outline:none;padding:0 2px;"><option value="30">&minus;0:30</option><option value="60">&minus;1:00</option><option value="80">&minus;1:20</option><option value="100">&minus;1:40</option><option value="120" selected>&minus;2:00</option><option value="150">&minus;2:30</option><option value="180">&minus;3:00</option></select></span></td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-slow" style="font-size:14px;font-weight:700;color:#E24B4A;letter-spacing:0.02em;">—</span></td></tr>
-        <tr id="ll-sclz-row" style="background:#f9f8f5;display:none;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">SCLZ TOT</td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><input id="soe-lztime" type="text" maxlength="4" value="1914" aria-label="SCLZ TOT in HHMM (auto-calculated: LL Entry + 14)" aria-readonly="true" readonly tabindex="-1" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#1a1a19;border:none;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;cursor:default;" /></td></tr>
-        <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;"><span style="display:inline-flex;align-items:center;gap:6px;">Slow 2<select id="ll-slow2-offset" onchange="syncLowLevel()" aria-label="STLZ TOT offset to subtract" style="font-family:inherit;font-size:10.5px;font-weight:600;color:#5f5e5a;background:transparent;border:none;border-bottom:1px solid #b4b2a9;cursor:pointer;outline:none;padding:0 2px;"><option value="30">&minus;0:30</option><option value="60">&minus;1:00</option><option value="80">&minus;1:20</option><option value="100">&minus;1:40</option><option value="120" selected>&minus;2:00</option><option value="150">&minus;2:30</option><option value="180">&minus;3:00</option></select></span></td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-slow2" style="font-size:14px;font-weight:700;color:#E24B4A;letter-spacing:0.02em;">—</span></td></tr>
-        <tr id="ll-stlz-row" style="display:none;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">STLZ TOT</td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><input id="soe-lz2tot" type="text" maxlength="4" value="1931" aria-label="STLZ TOT in HHMM (auto-calculated: LL Entry + 31)" aria-readonly="true" readonly tabindex="-1" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#1a1a19;border:none;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;cursor:default;" /></td></tr>
+        <tr id="ll-slow1-row" style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;"><span style="display:inline-flex;align-items:center;gap:6px;">Slow 1<select id="ll-slow-offset" onchange="syncLowLevel()" aria-label="Slow 1 offset to subtract" style="font-family:inherit;font-size:10.5px;font-weight:600;color:#5f5e5a;background:transparent;border:none;border-bottom:1px solid #b4b2a9;cursor:pointer;outline:none;padding:0 2px;"><option value="30">&minus;0:30</option><option value="60">&minus;1:00</option><option value="80">&minus;1:20</option><option value="100">&minus;1:40</option><option value="120" selected>&minus;2:00</option><option value="150">&minus;2:30</option><option value="180">&minus;3:00</option></select></span></td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-slow" style="font-size:14px;font-weight:700;color:#E24B4A;letter-spacing:0.02em;">—</span></td></tr>
+        <tr id="ll-sclz-row" style="background:#f9f8f5;display:none;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;"><span id="ll-lz1-label">GDLZ TOT</span></td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><input id="soe-lztime" type="text" maxlength="4" value="0429" aria-label="GDLZ TOT in HHMM" oninput="onLZEdit()" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;" /></td></tr>
+        <tr id="ll-slow2-row"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;"><span style="display:inline-flex;align-items:center;gap:6px;">Slow 2<select id="ll-slow2-offset" onchange="syncLowLevel()" aria-label="Slow 2 offset to subtract" style="font-family:inherit;font-size:10.5px;font-weight:600;color:#5f5e5a;background:transparent;border:none;border-bottom:1px solid #b4b2a9;cursor:pointer;outline:none;padding:0 2px;"><option value="30">&minus;0:30</option><option value="60">&minus;1:00</option><option value="80">&minus;1:20</option><option value="100">&minus;1:40</option><option value="120" selected>&minus;2:00</option><option value="150">&minus;2:30</option><option value="180">&minus;3:00</option></select></span></td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ll-slow2" style="font-size:14px;font-weight:700;color:#E24B4A;letter-spacing:0.02em;">—</span></td></tr>
+        <tr id="ll-stlz-row" style="display:none;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;"><span id="ll-lz2-label">SMLZ TOT</span></td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><input id="soe-lz2tot" type="text" maxlength="4" value="0446" aria-label="SMLZ TOT in HHMM" oninput="onLZEdit()" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;" /></td></tr>
         <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;">Exit Pt</td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;"><span id="ll-exit-pt">J</span></td></tr>
       </tbody>
     </table>
@@ -860,11 +860,11 @@
     </div>
     <table id="ar-info-table" style="width:100%;border-collapse:collapse;font-size:11.5px;margin-top:4px;">
       <tbody>
-        <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;width:42%;border-bottom:0.5px solid #d3d1c7;">Tanker</td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><input id="ar-tanker" type="text" value="DASH 95" placeholder="DASH 85" aria-label="Tanker call sign" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#5f5e5a;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;outline:none;padding:2px 0;width:100%;" /></td></tr>
+        <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;width:42%;border-bottom:0.5px solid #d3d1c7;">Tanker</td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><input id="ar-tanker" type="text" value="NITRO 73" placeholder="DASH 85" aria-label="Tanker call sign" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#5f5e5a;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;outline:none;padding:2px 0;width:100%;" /></td></tr>
         <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">TNKR Type</td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><select id="ar-tnkr-type" aria-label="Tanker aircraft type" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#5f5e5a;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;outline:none;padding:2px 0;width:100%;cursor:pointer;"><option value="KC-135">KC-135</option><option value="KC-46" selected>KC-46</option></select></td></tr>
         <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">Type</td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><select id="ar-type-select" aria-label="Air refueling track type" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#5f5e5a;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;outline:none;padding:2px 0;width:100%;cursor:pointer;"><option value="G (Enroute)" selected>G (Enroute)</option><option value="D (Pt Parallel)">D (Pt Parallel)</option><option value="A (Anchor)">A (Anchor)</option></select></td></tr>
         <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">ARCT</td><td style="padding:5px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="artrack-arct" style="color:#5f5e5a;"><span style="border-bottom:1.5px solid #b4b2a9;padding:0 26px;">&nbsp;</span></span></td></tr>
-        <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">AR SPD</td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><select id="ar-spd-select" aria-label="Air refueling speed" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#5f5e5a;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;outline:none;padding:2px 0;width:auto;max-width:100%;cursor:pointer;"><option value="265 (KC-135)">265 (KC-135)</option><option value="275 (KC-46)" selected>275 (KC-46)</option></select></td></tr>
+        <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">AR SPD</td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><select id="ar-spd-select" aria-label="Air refueling speed" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#5f5e5a;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;outline:none;padding:2px 0;width:auto;max-width:100%;cursor:pointer;"><option value="265 (KC-135)" selected>265 (KC-135)</option><option value="275 (KC-46)">275 (KC-46)</option></select></td></tr>
         <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">Freqs</td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ar-freqs">—</span></td></tr>
         <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">TACAN</td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ar-tacan">—</span></td></tr>
         <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;">BLOCK</td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;"><span id="ar-block">—</span></td></tr>
@@ -3227,14 +3227,60 @@ function setLLRoute() {
   var x = document.getElementById('ll-exit-pt');
   if (e) e.textContent = preset.entry;
   if (x) x.textContent = preset.exit;
-  // SCLZ TOT / STLZ TOT rows are IR-154-only.
-  var show = sel.value === 'IR-154';
-  var sclzRow = document.getElementById('ll-sclz-row');
-  var stlzRow = document.getElementById('ll-stlz-row');
-  if (sclzRow) sclzRow.style.display = show ? '' : 'none';
-  if (stlzRow) stlzRow.style.display = show ? '' : 'none';
+  // Per-route LZ TOT rows + the Slow 1 / Slow 2 rows that depend on them.
+  // Shown only for routes with an LZ config; labels / editability are set
+  // from that config.
+  var cfg = LL_LZ_CONFIG[sel.value];
+  ['ll-slow1-row', 'll-sclz-row', 'll-slow2-row', 'll-stlz-row'].forEach(function(id) {
+    var row = document.getElementById(id);
+    if (row) row.style.display = cfg ? '' : 'none';
+  });
+  if (cfg) {
+    _applyLZSlot('soe-lztime', 'll-lz1-label', cfg.lz1, sel.value, 'lz1');
+    _applyLZSlot('soe-lz2tot', 'll-lz2-label', cfg.lz2, sel.value, 'lz2');
+  }
+  // Only editable-LZ routes own the inputs for persistence purposes.
+  _llLzRoute = (cfg && LL_LZ_STATE[sel.value]) ? sel.value : null;
   // The Low Level Entry checklist on the LL tab follows this dropdown.
   if (typeof renderLLEntry === 'function') renderLLEntry();
+  if (typeof syncLowLevel === 'function') syncLowLevel();
+}
+// Configure one LZ TOT slot for the selected route: set its label and either
+// make it read-only (auto-derived from LL Entry) or editable (seeded from the
+// route's remembered value / default).
+function _applyLZSlot(inputId, labelId, slot, route, key) {
+  var label = document.getElementById(labelId);
+  if (label) label.textContent = slot.label;
+  var input = document.getElementById(inputId);
+  if (!input) return;
+  if (slot.derive != null) {
+    input.readOnly = true;
+    input.tabIndex = -1;
+    input.style.cursor = 'default';
+    input.style.borderBottom = 'none';
+    input.setAttribute('aria-readonly', 'true');
+    input.setAttribute('aria-label', slot.label + ' (auto-calculated from LL Entry)');
+  } else {
+    input.readOnly = false;
+    input.removeAttribute('tabindex');
+    input.style.cursor = '';
+    input.style.borderBottom = '1.5px solid #b4b2a9';
+    input.removeAttribute('aria-readonly');
+    input.setAttribute('aria-label', slot.label + ' in HHMM');
+    var st = LL_LZ_STATE[route];
+    input.value = (st && st[key] != null) ? st[key] : (slot.value || '');
+  }
+}
+// An editable LZ TOT was changed: remember it per route, recompute Slow, save.
+function onLZEdit() {
+  if (_llLzRoute && LL_LZ_STATE[_llLzRoute]) {
+    var v1 = document.getElementById('soe-lztime');
+    var v2 = document.getElementById('soe-lz2tot');
+    if (v1) LL_LZ_STATE[_llLzRoute].lz1 = v1.value;
+    if (v2) LL_LZ_STATE[_llLzRoute].lz2 = v2.value;
+  }
+  if (typeof syncLowLevel === 'function') syncLowLevel();
+  if (typeof mdcPersist === 'function') mdcPersist();
 }
 // Keep the two low-level route dropdowns (Brief-tab "Low Level Info"
 // #ll-route-select and LL-tab "Route Data" #route-select) in sync.
@@ -3334,6 +3380,33 @@ function llEntryDefaultFor(route) {
   return (LL_ENTRY_ROUTE_TOP[route] || []).concat(LL_ENTRY_COMMON);
 }
 var LL_ENTRY_STATE = {};
+// ─── Per-route Low Level LZ TOT rows (below Slow 1 / Slow 2) ───
+// Each route names its two landing-zone TOTs and either auto-derives the
+// time from LL Entry (+N minutes, read-only) or seeds an editable default
+// the crew can adjust. Slow 1 / Slow 2 always equal that TOT minus the
+// adjacent offset, for whichever route is selected. Routes without an entry
+// here hide the LZ + Slow rows entirely.
+var LL_LZ_CONFIG = {
+  'IR-154': { lz1: { label: 'SCLZ TOT', derive: 14 }, lz2: { label: 'STLZ TOT', derive: 31 } },
+  'IR-155': { lz1: { label: 'GDLZ TOT', value: '0429' }, lz2: { label: 'SMLZ TOT', value: '0446' } }
+};
+// Editable LZ TOT values remembered per route (derive-mode routes recompute,
+// so only routes with seeded values keep state here).
+var LL_LZ_STATE = {};
+// The editable-LZ route currently bound to the soe-lztime / soe-lz2tot
+// inputs. Persistence reads this (not the live dropdown) so a capture-phase
+// save mid-switch can't write one route's value into another's memory.
+var _llLzRoute = null;
+function _initLLLzState() {
+  LL_LZ_STATE = {};
+  Object.keys(LL_LZ_CONFIG).forEach(function(r) {
+    var c = LL_LZ_CONFIG[r];
+    if (c.lz1.value != null || c.lz2.value != null) {
+      LL_LZ_STATE[r] = { lz1: c.lz1.value || '', lz2: c.lz2.value || '' };
+    }
+  });
+}
+_initLLLzState();
 // The route whose items are currently rendered in #ll-entry-list. Gather
 // must attribute edits to THIS route, not the dropdown's live value — on a
 // route change the dropdown updates before the list re-renders.
@@ -3400,15 +3473,14 @@ function syncLowLevel() {
     var h = parseInt(p.slice(0, 2), 10), m = parseInt(p.slice(2, 4), 10);
     if (h < 24 && m < 60) base = h * 60 + m;
   }
-  // SCLZ TOT = LL Entry + 14, STLZ TOT = LL Entry + 31 (auto-calculated).
+  // LZ TOTs: derive-mode slots (e.g. IR-154 SCLZ/STLZ) follow LL Entry;
+  // editable slots (e.g. IR-155 GDLZ/SMLZ) keep their entered value.
+  var cfg = LL_LZ_CONFIG[_currentLLRoute()];
   var sclz = document.getElementById('soe-lztime');
   var stlz = document.getElementById('soe-lz2tot');
-  if (base !== null) {
-    if (sclz) sclz.value = pad4(base + 14);
-    if (stlz) stlz.value = pad4(base + 31);
-  } else {
-    if (sclz) sclz.value = '';
-    if (stlz) stlz.value = '';
+  if (cfg) {
+    if (cfg.lz1.derive != null && sclz) sclz.value = (base !== null) ? pad4(base + cfg.lz1.derive) : '';
+    if (cfg.lz2.derive != null && stlz) stlz.value = (base !== null) ? pad4(base + cfg.lz2.derive) : '';
   }
   _computeSlow('soe-lztime', 'll-slow-offset',  'll-slow');
   _computeSlow('soe-lz2tot', 'll-slow2-offset', 'll-slow2');
@@ -4340,7 +4412,7 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 // Bump whenever the baked-in defaults change. A saved card built on an
 // older version is offered an "Apply latest brief data" banner that
 // refreshes the canonical fields while keeping the pilot's edits.
-var MDC_DEFAULTS_VERSION = 3;
+var MDC_DEFAULTS_VERSION = 4;
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {
@@ -4421,6 +4493,17 @@ function mdcGatherState() {
   state.llEntry = {};
   Object.keys(LL_ENTRY_STATE).forEach(function(r) {
     state.llEntry[r] = (LL_ENTRY_STATE[r] || []).filter(_llHasText);
+  });
+  // Per-route editable LZ TOTs (capture the route currently bound to the
+  // inputs, not the live dropdown, to avoid cross-route pollution).
+  if (_llLzRoute && LL_LZ_STATE[_llLzRoute]) {
+    var _v1 = document.getElementById('soe-lztime'), _v2 = document.getElementById('soe-lz2tot');
+    if (_v1) LL_LZ_STATE[_llLzRoute].lz1 = _v1.value;
+    if (_v2) LL_LZ_STATE[_llLzRoute].lz2 = _v2.value;
+  }
+  state.llLz = {};
+  Object.keys(LL_LZ_STATE).forEach(function(r) {
+    state.llLz[r] = { lz1: LL_LZ_STATE[r].lz1, lz2: LL_LZ_STATE[r].lz2 };
   });
   state.defaultsVersion = MDC_DEFAULTS_VERSION;
   return state;
@@ -4552,6 +4635,15 @@ function mdcRestore() {
   if (state.llEntry && typeof state.llEntry === 'object') {
     Object.keys(state.llEntry).forEach(function(r) {
       if (Array.isArray(state.llEntry[r])) LL_ENTRY_STATE[r] = state.llEntry[r].slice();
+    });
+  }
+  // Per-route editable LZ TOTs (applied below by setLLRoute()).
+  if (state.llLz && typeof state.llLz === 'object') {
+    Object.keys(state.llLz).forEach(function(r) {
+      if (LL_LZ_STATE[r] && state.llLz[r]) {
+        if (typeof state.llLz[r].lz1 === 'string') LL_LZ_STATE[r].lz1 = state.llLz[r].lz1;
+        if (typeof state.llLz[r].lz2 === 'string') LL_LZ_STATE[r].lz2 = state.llLz[r].lz2;
+      }
     });
   }
   // Keep the two low-level route dropdowns in sync (Low Level Info wins),
@@ -4757,6 +4849,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // defaults, while leaving the pilot's authored content alone (the dynamic
 // lists have no id, so they're untouched; checkboxes/progress are kept).
 function applyLatestDefaults() {
+  _initLLLzState();   // restore editable LZ TOTs to their seeded defaults
   document.querySelectorAll('input[id], select[id], textarea[id]').forEach(function(el) {
     if (el.type === 'checkbox' || el.type === 'radio' || el.type === 'file') return;
     if (el.tagName === 'SELECT') {

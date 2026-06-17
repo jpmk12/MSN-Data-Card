@@ -80,12 +80,12 @@ eq('Student 2 default DUFF',     await page.$eval('#hdr-student2', e => e.value)
 
 // ── 3. SOE defaults / calc ──────────────────────────────────────────
 eq('Takeoff default 0135',         await page.$eval('#soe-takeoff', e => e.value), '0135');
-eq('Low Level Entry default blank', await page.$eval('#soe-llentry', e => e.value), '');
-eq('SCLZ TOT blank (LL Entry blank)', await page.$eval('#soe-lztime',  e => e.value), '');
-eq('LL Exit default blank',        await page.$eval('#soe-llexit',  e => e.value), '');
-eq('STLZ TOT blank (LL Entry blank)', await page.$eval('#soe-lz2tot',  e => e.value), '');
-eq('ARCT default 0335',            await page.$eval('#soe-arct',    e => e.value), '0335');
-eq('AREX default 0510',            await page.$eval('#soe-arex',    e => e.value), '0510');
+eq('Low Level Entry default 0410', await page.$eval('#soe-llentry', e => e.value), '0410');
+eq('GDLZ TOT default 0429 (IR-155)', await page.$eval('#soe-lztime',  e => e.value), '0429');
+eq('LL Exit default 0454',         await page.$eval('#soe-llexit',  e => e.value), '0454');
+eq('SMLZ TOT default 0446 (IR-155)', await page.$eval('#soe-lz2tot',  e => e.value), '0446');
+eq('ARCT default 0205',            await page.$eval('#soe-arct',    e => e.value), '0205');
+eq('AREX default 0340',            await page.$eval('#soe-arex',    e => e.value), '0340');
 const cells = await page.$$eval('#tab-main table tr', rows =>
   rows.map(r => [...r.querySelectorAll('td')].map(t => t.textContent.trim())));
 // 0135 takeoff (Z, CDT −5): Alert −3:45 = 2150/1650, Show −3:30 = 2205/1705, Land +6 = 0735/0235
@@ -94,7 +94,7 @@ ok('SOE Show is takeoff − 3:30 (2205)',  cells.some(r => r.includes('2205') &&
 ok('SOE Land row +6 from 0135 (0735)',   cells.some(r => r.includes('0735') && r.includes('0235')));
 
 // ── 4. Route of Flight defaults + MOTA picker ───────────────────────
-const rofDefault = 'KLTS OKKIE_.CDS LBB360030 AR197 LBB322047 CDS ZOCKS KLTS';
+const rofDefault = 'KLTS ROCKN3.BFV MMB213050 AR312 PUB183022 AR312 MMB213050 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS';
 eq('Route of Flight default', await page.$eval('#rof-input', e => e.value), rofDefault);
 await page.selectOption('#rof-preset', 'MOTA4');
 await page.click('button[onclick="applyRoutePreset(\'insert\')"]');
@@ -138,9 +138,9 @@ eq('AR Track default AR312L', await page.$eval('#ar-track-select', e => e.value)
 eq('AR312L freqs populate',   await page.$eval('#ar-freqs', e => e.textContent), '291.900 | 260.200');
 eq('AR312L TACAN populate',   await page.$eval('#ar-tacan', e => e.textContent), '51 / 114');
 eq('AR312L BLOCK populate',   await page.$eval('#ar-block', e => e.textContent), 'FL200-220');
-eq('Tanker default DASH 95',  await page.$eval('#ar-tanker', e => e.value), 'DASH 95');
+eq('Tanker default NITRO 73',  await page.$eval('#ar-tanker', e => e.value), 'NITRO 73');
 eq('RZ Type default G (Enroute)', await page.$eval('#ar-type-select', e => e.value), 'G (Enroute)');
-eq('AR SPD default 275 (KC-46)', await page.$eval('#ar-spd-select', e => e.value), '275 (KC-46)');
+eq('AR SPD default 265 (KC-135)', await page.$eval('#ar-spd-select', e => e.value), '265 (KC-135)');
 eq('TNKR Type default KC-46', await page.$eval('#ar-tnkr-type', e => e.value), 'KC-46');
 // Brief-tab section renames.
 const briefText = await page.$eval('#tab-main', e => e.textContent);
@@ -156,9 +156,9 @@ await page.waitForTimeout(100);
 ok('AR312L shows the Air Refueling table again',
    await page.evaluate(() => getComputedStyle(document.getElementById('ar-info-table')).display !== 'none'));
 
-// ── 7. SCLZ/STLZ TOT auto-derive + Slow 1 / Slow 2 offsets ───────────
-// SCLZ TOT = LL Entry + 14, STLZ TOT = LL Entry + 31 (auto-calculated,
-// read-only). Default LL Entry is blank → SCLZ/STLZ blank.
+// ── 7. IR-154 SCLZ/STLZ TOT auto-derive + Slow 1 / Slow 2 offsets ────
+// On IR-154 the two LZ TOTs auto-derive (read-only): SCLZ = LL Entry + 14,
+// STLZ = LL Entry + 31. (IR-155 instead uses editable GDLZ/SMLZ — see §8.)
 // LL route defaults to IR-155 (Low Level Info shown). NA still hides the
 // table; switch to IR-154 for the IR-154-specific checks below.
 eq('LL route default IR-155', await page.$eval('#ll-route-select', e => e.value), 'IR-155');
@@ -209,10 +209,37 @@ await page.selectOption('#ll-route-select', 'IR-155');
 await page.waitForTimeout(100);
 eq('IR-155 Entry A after switch', await page.$eval('#ll-entry-pt', e => e.textContent), 'A');
 eq('IR-155 Exit N after switch',  await page.$eval('#ll-exit-pt',  e => e.textContent), 'N');
-ok('SCLZ TOT row hidden for IR-155',
-   await page.evaluate(() => getComputedStyle(document.getElementById('ll-sclz-row')).display === 'none'));
-ok('STLZ TOT row hidden for IR-155',
-   await page.evaluate(() => getComputedStyle(document.getElementById('ll-stlz-row')).display === 'none'));
+ok('LZ row 1 visible for IR-155',
+   await page.evaluate(() => getComputedStyle(document.getElementById('ll-sclz-row')).display !== 'none'));
+ok('LZ row 2 visible for IR-155',
+   await page.evaluate(() => getComputedStyle(document.getElementById('ll-stlz-row')).display !== 'none'));
+eq('IR-155 LZ1 label GDLZ TOT', await page.$eval('#ll-lz1-label', e => e.textContent), 'GDLZ TOT');
+eq('IR-155 LZ2 label SMLZ TOT', await page.$eval('#ll-lz2-label', e => e.textContent), 'SMLZ TOT');
+eq('IR-155 GDLZ TOT editable default 0429', await page.$eval('#soe-lztime', e => e.value), '0429');
+eq('IR-155 SMLZ TOT editable default 0446', await page.$eval('#soe-lz2tot', e => e.value), '0446');
+ok('IR-155 GDLZ TOT is editable (not read-only)', await page.$eval('#soe-lztime', e => !e.readOnly));
+// Slow 1/Slow 2 compute from the entered LZ TOT minus the adjacent offset.
+// (§7 left the offsets at −3:00 / −1:40; reset both to the −2:00 default.)
+await page.selectOption('#ll-slow-offset', '120');
+await page.selectOption('#ll-slow2-offset', '120');
+await page.waitForTimeout(120);
+eq('IR-155 Slow 1 = GDLZ 0429 − 2:00', await page.$eval('#ll-slow', e => e.textContent), '04:27:00');
+eq('IR-155 Slow 2 = SMLZ 0446 − 2:00', await page.$eval('#ll-slow2', e => e.textContent), '04:44:00');
+// Editing GDLZ recomputes Slow 1 and is remembered across a route switch.
+await page.fill('#soe-lztime', '0431');
+await page.waitForTimeout(120);
+eq('IR-155 Slow 1 recomputes after edit', await page.$eval('#ll-slow', e => e.textContent), '04:29:00');
+await page.selectOption('#ll-route-select', 'IR-154');
+await page.waitForTimeout(120);
+eq('IR-154 SCLZ stays auto-derived (1900+14)', await page.$eval('#soe-lztime', e => e.value), '1914');
+await page.selectOption('#ll-route-select', 'IR-155');
+await page.waitForTimeout(120);
+eq('IR-155 remembers edited GDLZ 0431', await page.$eval('#soe-lztime', e => e.value), '0431');
+await page.fill('#soe-lztime', '0429');   // restore default for later sections
+// Restore the §7 offsets (−3:00 / −1:40) so the §14 persistence check holds.
+await page.selectOption('#ll-slow-offset', '180');
+await page.selectOption('#ll-slow2-offset', '100');
+await page.waitForTimeout(120);
 await page.selectOption('#ll-route-select', 'IR-193');
 await page.waitForTimeout(100);
 eq('IR-193 Entry placeholder —', await page.$eval('#ll-entry-pt', e => e.textContent), '—');
@@ -429,12 +456,12 @@ eq('Dedupe + drop unknown', dedup, ['DUKE TAC 6500', 'STR IN', 'DUKE BEAM']);
 await page.click('button[onclick="resetCard()"]');
 await page.waitForTimeout(700);
 eq('Reset: Callsign default', await page.$eval('#hdr-callsign', e => e.value), 'NOGS 34');
-eq('Reset: ARCT back to default 0335', await page.$eval('#soe-arct',    e => e.value), '0335');
-eq('Reset: AREX back to default 0510', await page.$eval('#soe-arex',    e => e.value), '0510');
-eq('Reset: LL Entry back to blank',    await page.$eval('#soe-llentry', e => e.value), '');
-eq('Reset: SCLZ TOT back to blank',    await page.$eval('#soe-lztime',  e => e.value), '');
-eq('Reset: LL Exit back to blank',     await page.$eval('#soe-llexit',  e => e.value), '');
-eq('Reset: STLZ TOT back to blank',    await page.$eval('#soe-lz2tot',  e => e.value), '');
+eq('Reset: ARCT back to default 0205', await page.$eval('#soe-arct',    e => e.value), '0205');
+eq('Reset: AREX back to default 0340', await page.$eval('#soe-arex',    e => e.value), '0340');
+eq('Reset: LL Entry back to 0410',     await page.$eval('#soe-llentry', e => e.value), '0410');
+eq('Reset: GDLZ TOT back to 0429',     await page.$eval('#soe-lztime',  e => e.value), '0429');
+eq('Reset: LL Exit back to 0454',      await page.$eval('#soe-llexit',  e => e.value), '0454');
+eq('Reset: SMLZ TOT back to 0446',     await page.$eval('#soe-lz2tot',  e => e.value), '0446');
 eq('Reset: Takeoff back to 0135',      await page.$eval('#soe-takeoff', e => e.value), '0135');
 const patReset = await page.$$eval('#pattern-list [data-preset]', els => els.map(e => e.getAttribute('data-preset')));
 eq('Reset: Pattern 4 defaults', patReset, ['DUKE TAC 6500', 'DUKE BEAM', 'DUKE ACCEL 6500', 'STR IN']);

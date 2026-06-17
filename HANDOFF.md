@@ -120,16 +120,25 @@ PDF/schedule import is ever wanted again, recover it from git history
 ## Current defaults (IPRQ FLT 3)
 
 - Header badge `IPRQ FLT 3` (editable `#hdr-flt`), callsign `NOGS 34`, students `DEAD` / `DUFF`
-- SOE: Takeoff `0135`, LL Entry **blank**, LL Exit **blank**, ARCT `0335`, AREX `0510`
+- SOE: Takeoff `0135`, LL Entry `0410`, LL Exit `0454`, ARCT `0205`, AREX `0340`
 - **Low Level** card (titled "Low Level"; was "Low Level Info"): route
   **defaults to `IR-155`** (both synced route dropdowns) — so `#ll-info-table`
-  is shown on a fresh card (Entry Pt `A`, Exit Pt `J`). Selecting `NA` hides
-  the table and empties the LL-tab Low Level Entry list. SCLZ TOT / STLZ TOT
-  derive from LL Entry (blank by default), Slow 1/Slow 2 default offset
-  `−2:00` (value 120).
+  is shown on a fresh card (Entry Pt `A`, Exit Pt `N`). Selecting `NA` hides
+  the table and empties the LL-tab Low Level Entry list. Slow 1/Slow 2 default
+  offset `−2:00` (value 120).
+  - **Per-route LZ TOT rows** (`LL_LZ_CONFIG`): each route names its two LZ
+    TOTs (rows below Slow 1 / Slow 2) and either *auto-derives* the time from
+    LL Entry (`derive: N` minutes, read-only) or seeds an *editable* default
+    (`value: 'HHMM'`). Slow 1/Slow 2 always = that TOT − the adjacent offset.
+    Routes with no config hide the LZ + Slow rows.
+    - `IR-154`: `SCLZ TOT` = LL Entry + 14, `STLZ TOT` = LL Entry + 31 (derived, read-only).
+    - `IR-155`: `GDLZ TOT` `0429`, `SMLZ TOT` `0446` (editable defaults).
+    - Editable values are remembered per route in `LL_LZ_STATE` (persisted as
+      `state.llLz`); `_llLzRoute` tracks which route owns the inputs so a
+      capture-phase save mid-switch can't pollute another route's memory.
 - **Air Refueling** card (titled "Air Refueling"; was "AR Info"): track
-  `AR312L`, Tanker `DASH 95`, TNKR Type `KC-46`, RZ Type `G (Enroute)`,
-  AR SPD `275 (KC-46)`. The track dropdown also has an **`NA`** option —
+  `AR312L`, Tanker `NITRO 73`, TNKR Type `KC-46`, RZ Type `G (Enroute)`,
+  AR SPD `265 (KC-135)`. The track dropdown also has an **`NA`** option —
   when selected `#ar-info-table` is hidden (handled in `setARTrack`).
 - Pattern Work: DUKE TAC 6500, DUKE BEAM, DUKE ACCEL 6500, STR IN
 - Ground Ops: Backing, Star Turn
@@ -142,7 +151,7 @@ PDF/schedule import is ever wanted again, recover it from git history
 - EFB: Baseline `26-04 (23 Apr 26)`, iOS `26.5 CAO 27 May 26`,
   Pub Sync `26 May 2026`, FLIP `06-11-2026 thru 07-08-2026`
 - Route of Flight:
-  `KLTS OKKIE_.CDS LBB360030 AR197 LBB322047 CDS ZOCKS KLTS`
+  `KLTS ROCKN3.BFV MMB213050 AR312 PUB183022 AR312 MMB213050 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS`
 
 ## Low level X Check (LL tab) — editable + route-aware
 
