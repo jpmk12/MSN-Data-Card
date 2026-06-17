@@ -117,9 +117,9 @@ was removed — it only served one base's workflow. The legacy
 PDF/schedule import is ever wanted again, recover it from git history
 (pre-removal tip).
 
-## Current defaults (IPRQ FLT 3)
+## Current defaults (Rec Ride)
 
-- Header badge `IPRQ FLT 3` (editable `#hdr-flt`), callsign `NOGS 34`, students `DEAD` / `DUFF`
+- Header badge `Rec Ride` (editable `#hdr-flt`), callsign `NOGS 34`, students `DEAD` / `DUFF`
 - SOE: Takeoff `0135`, LL Entry `0410`, LL Exit `0454`, ARCT `0205`, AREX `0340`
 - **Low Level** card (titled "Low Level"; was "Low Level Info"): route
   **defaults to `IR-155`** (both synced route dropdowns) — so `#ll-info-table`
@@ -137,7 +137,7 @@ PDF/schedule import is ever wanted again, recover it from git history
       `state.llLz`); `_llLzRoute` tracks which route owns the inputs so a
       capture-phase save mid-switch can't pollute another route's memory.
 - **Air Refueling** card (titled "Air Refueling"; was "AR Info"): track
-  `AR312L`, Tanker `NITRO 73`, TNKR Type `KC-46`, RZ Type `G (Enroute)`,
+  `AR312L`, Tanker `NITRO 73`, TNKR Type `KC-135`, RZ Type `G (Enroute)`,
   AR SPD `265 (KC-135)`. The track dropdown also has an **`NA`** option —
   when selected `#ar-info-table` is hidden (handled in `setARTrack`).
 - Pattern Work: DUKE TAC 6500, DUKE BEAM, DUKE ACCEL 6500, STR IN

@@ -63,7 +63,7 @@ eq('Title is IPRQ-BROS-MDC', await page.title(), 'IPRQ-BROS-MDC');
 
 // ── 2. Header default values ────────────────────────────────────────
 eq('Callsign default NOGS 34',  await page.$eval('#hdr-callsign', e => e.value), 'NOGS 34');
-eq('Header badge IPRQ FLT 3', await page.$eval('#hdr-flt', e => e.value), 'IPRQ FLT 3');
+eq('Header badge Rec Ride', await page.$eval('#hdr-flt', e => e.value), 'Rec Ride');
 eq('Header badge is an editable input',
    await page.$eval('#hdr-flt', e => e.tagName + (e.readOnly ? ':ro' : '')), 'INPUT');
 // Badge auto-grows with its text (size attribute tracks content length).
@@ -74,7 +74,7 @@ const fltGrow = await page.$eval('#hdr-flt', e => {
   return { grew: e.getBoundingClientRect().width > before, size: e.size };
 });
 ok('Header badge auto-grows with content', fltGrow.grew && fltGrow.size > 12);
-await page.$eval('#hdr-flt', e => { e.value = 'IPRQ FLT 3'; e.dispatchEvent(new Event('input', { bubbles: true })); });
+await page.$eval('#hdr-flt', e => { e.value = 'Rec Ride'; e.dispatchEvent(new Event('input', { bubbles: true })); });
 eq('Student 1 default DEAD',     await page.$eval('#hdr-student1', e => e.value), 'DEAD');
 eq('Student 2 default DUFF',     await page.$eval('#hdr-student2', e => e.value), 'DUFF');
 
@@ -141,7 +141,7 @@ eq('AR312L BLOCK populate',   await page.$eval('#ar-block', e => e.textContent),
 eq('Tanker default NITRO 73',  await page.$eval('#ar-tanker', e => e.value), 'NITRO 73');
 eq('RZ Type default G (Enroute)', await page.$eval('#ar-type-select', e => e.value), 'G (Enroute)');
 eq('AR SPD default 265 (KC-135)', await page.$eval('#ar-spd-select', e => e.value), '265 (KC-135)');
-eq('TNKR Type default KC-46', await page.$eval('#ar-tnkr-type', e => e.value), 'KC-46');
+eq('TNKR Type default KC-135', await page.$eval('#ar-tnkr-type', e => e.value), 'KC-135');
 // Brief-tab section renames.
 const briefText = await page.$eval('#tab-main', e => e.textContent);
 ok('Section renamed to "Air Refueling"', briefText.includes('Air Refueling') && !briefText.includes('AR Info'));
@@ -288,9 +288,11 @@ await page.waitForTimeout(120);
 eq('LL Entry IR-155 route + common items',
    await page.$$eval('#ll-entry-list .ll-input', els => els.map(e => e.value)), [
   'A - B -> 1.5NM wide',
+  'GDLZ -> Climb to 3700',
   'Reporting Point G -> Amarillo: 319.15',
   'Overfly G to avoid T25 town of Goodnight',
   'Remain east of center @ I -> Avoid Claude wind farm',
+  'SMLZ -> Climb to 5K',
   'Hack / Squawk / Talk',
   'Speed Limits',
   'Set Escape freq',
@@ -381,12 +383,12 @@ eq('MIN FLAP Emphasis default note',
 eq('Pattern-delay default note',
    noteDefaults.find(v => v.startsWith('1+30')),
    '1+30 pattern delay -> ~0315z departure for AR');
-eq('DEAD note covers engine start / 1st pattern work / ground ops',
+eq('DEAD note covers back half AR / front half LL / patterns',
    noteDefaults.find(v => v.startsWith('DEAD:')),
-   'DEAD: engine start, 1st pattern work ⇄ back half AR, arrival, ground ops ⇄');
-eq('DUFF note covers 2nd pattern work / AR entry / ground ops',
+   'DEAD: , back half AR, front half LL ⇄ patterns/ground ops, 2nd pattern work,');
+eq('DUFF note covers engine start / AR entry / back half LL',
    noteDefaults.find(v => v.startsWith('DUFF:')),
-   'DUFF: 2nd pattern work, AR entry ⇄ ground ops, shutdown');
+   'DUFF: engine start, AR entry ⇄ back half LL, arrival ⇄ patterns/ground ops');
 await page.click('button[onclick="addNote()"]');
 const lastNote = await page.$('#notes-list [data-note-row]:last-of-type .note-input');
 await lastNote.fill('Weather check\nLine 2');
