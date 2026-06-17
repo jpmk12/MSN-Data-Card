@@ -200,11 +200,9 @@ ok('STLZ TOT row visible for IR-154',
 eq('LL entry fix A = 1900', await page.$eval('#ll-fix-a', e => e.textContent), '1900');
 eq('LL entry fix F = 1919', await page.$eval('#ll-fix-f', e => e.textContent), '1919');
 eq('LL entry fix J = 1934', await page.$eval('#ll-fix-j', e => e.textContent), '1934');
-ok('LL Entry lists Lubbock App / Abq Center freqs',
+ok('LL Entry lists the IR-154 deconfliction note',
    (await page.$$eval('#ll-entry-list .ll-input', els => els.map(e => e.value)))
-     .some(v => v.includes('Entry: Lubbock App: 119.2') &&
-                v.includes('Pt J: Abq Center: 127.85') &&
-                v.includes('285.475')));
+     .some(v => v.includes('Maintain 4500-10,000 between A and B')));
 await page.selectOption('#ll-route-select', 'IR-155');
 await page.waitForTimeout(100);
 eq('IR-155 Entry A after switch', await page.$eval('#ll-entry-pt', e => e.textContent), 'A');
@@ -274,23 +272,25 @@ await page.evaluate(() => document.querySelector('.ll-list[data-ll-key="combatEn
 await page.waitForTimeout(80);
 eq('Indent toggle restores top-level',
    await page.$eval('.ll-list[data-ll-key="combatEntry"] .ll-item-row', r => r.getAttribute('data-sub')), '0');
-// LL Entry default for IR-154 (route currently IR-154): IR-154 top item + common 3-6
+// LL Entry default for IR-154 (route currently IR-154): IR-154 top item + common
 eq('LL Entry IR-154 default list',
    await page.$$eval('#ll-entry-list .ll-input', els => els.map(e => e.value)), [
   'Maintain 4500-10,000 between A and B to deconflict with VR-1116',
-  'Entry: Lubbock App: 119.2 | Pt J: Abq Center: 127.85 | 285.475',
   'Hack / Squawk / Talk',
   'Speed Limits',
   'Set Escape freq',
 ]);
 ok('LL Entry fix line visible for IR-154',
    await page.evaluate(() => getComputedStyle(document.getElementById('ll-entry-fixes')).display !== 'none'));
-// Switch to IR-155 → only common items 3-6, fix line hidden
+// Switch to IR-155 → IR-155 route items + common, fix line hidden
 await page.selectOption('#ll-route-select', 'IR-155');
 await page.waitForTimeout(120);
-eq('LL Entry IR-155 shows only common items',
+eq('LL Entry IR-155 route + common items',
    await page.$$eval('#ll-entry-list .ll-input', els => els.map(e => e.value)), [
-  'Entry: Lubbock App: 119.2 | Pt J: Abq Center: 127.85 | 285.475',
+  'A - B -> 1.5NM wide',
+  'Reporting Point G -> Amarillo: 319.15',
+  'Overfly G to avoid T25 town of Goodnight',
+  'Remain east of center @ I -> Avoid Claude wind farm',
   'Hack / Squawk / Talk',
   'Speed Limits',
   'Set Escape freq',
@@ -330,7 +330,7 @@ await page.waitForTimeout(100);
 eq('Low Level Info follows Route Data dropdown',
    await page.$eval('#ll-route-select', e => e.value), 'IR-154');
 eq('LL Entry re-renders to IR-154 after Route Data switch',
-   (await page.$$eval('#ll-entry-list .ll-input', els => els.length)), 5);
+   (await page.$$eval('#ll-entry-list .ll-input', els => els.length)), 4);
 // NA route: Low Level Info data hidden, dropdowns synced, LL Entry empty.
 await page.selectOption('#ll-route-select', 'NA');
 await page.waitForTimeout(100);

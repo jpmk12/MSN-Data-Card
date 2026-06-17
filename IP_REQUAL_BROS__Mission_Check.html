@@ -3367,13 +3367,18 @@ function addLLItem(key, value) {
 }
 // Low Level Entry — per-route, with a locked IR-154 fix line.
 var LL_ENTRY_COMMON = [
-  'Entry: Lubbock App: 119.2 | Pt J: Abq Center: 127.85 | 285.475',
   'Hack / Squawk / Talk',
   'Speed Limits',
   'Set Escape freq'
 ];
 var LL_ENTRY_ROUTE_TOP = {
-  'IR-154': ['Maintain 4500-10,000 between A and B to deconflict with VR-1116']
+  'IR-154': ['Maintain 4500-10,000 between A and B to deconflict with VR-1116'],
+  'IR-155': [
+    'A - B -> 1.5NM wide',
+    'Reporting Point G -> Amarillo: 319.15',
+    'Overfly G to avoid T25 town of Goodnight',
+    'Remain east of center @ I -> Avoid Claude wind farm'
+  ]
 };
 function llEntryDefaultFor(route) {
   if (route === 'NA') return [];
