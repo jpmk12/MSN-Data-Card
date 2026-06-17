@@ -103,7 +103,7 @@ await page.selectOption('#soe-land-offset', '300');
 await page.waitForTimeout(100);
 
 // ── 4. Route of Flight defaults + MOTA picker ───────────────────────
-const rofDefault = 'KLTS ROCKN3.BFV MMB213050 AR312 PUB183022 AR312 MMB213050 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS';
+const rofDefault = 'KLTS ROCKN3.BFV MMB213050 AR312 PUB183022 AR312 MMB213050 JUNVA LBB098038 IR155 LBB043027 CINAV CDS ZOCKS KLTS';
 eq('Route of Flight default', await page.$eval('#rof-input', e => e.value), rofDefault);
 await page.selectOption('#rof-preset', 'MOTA4');
 await page.click('button[onclick="applyRoutePreset(\'insert\')"]');
