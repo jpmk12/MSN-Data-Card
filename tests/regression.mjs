@@ -88,10 +88,19 @@ eq('ARCT default 0205',            await page.$eval('#soe-arct',    e => e.value
 eq('AREX default 0340',            await page.$eval('#soe-arex',    e => e.value), '0340');
 const cells = await page.$$eval('#tab-main table tr', rows =>
   rows.map(r => [...r.querySelectorAll('td')].map(t => t.textContent.trim())));
-// 0135 takeoff (Z, CDT −5): Alert −3:45 = 2150/1650, Show −3:30 = 2205/1705, Land +6 = 0735/0235
+// 0135 takeoff (Z, CDT −5): Alert −3:45 = 2150/1650, Show −3:30 = 2205/1705,
+// Land defaults to +5:00 = 0635/0135.
 ok('SOE Alert back-calcs from 0135',     cells.some(r => r.includes('2150') && r.includes('1650')));
 ok('SOE Show is takeoff − 3:30 (2205)',  cells.some(r => r.includes('2205') && r.includes('1705')));
-ok('SOE Land row +6 from 0135 (0735)',   cells.some(r => r.includes('0735') && r.includes('0235')));
+eq('Land offset default +5:00', await page.$eval('#soe-land-offset', e => e.value), '300');
+ok('SOE Land row +5:00 from 0135 (0635)', cells.some(r => r.includes('0635') && r.includes('0135')));
+// Land offset is configurable: switch to +6:00 → 0735/0235.
+await page.selectOption('#soe-land-offset', '360');
+await page.waitForTimeout(100);
+eq('Land recomputes at +6:00 (0735)', await page.$eval('#soe-land', e => e.textContent), '0735');
+eq('Land local recomputes at +6:00 (0235)', await page.$eval('#soe-land-l', e => e.textContent), '0235');
+await page.selectOption('#soe-land-offset', '300');
+await page.waitForTimeout(100);
 
 // ── 4. Route of Flight defaults + MOTA picker ───────────────────────
 const rofDefault = 'KLTS ROCKN3.BFV MMB213050 AR312 PUB183022 AR312 MMB213050 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS';
@@ -318,6 +327,17 @@ await page.selectOption('#ll-route-select', 'IR-155');
 await page.waitForTimeout(100);
 eq('IR-155 edit remembered per route',
    (await page.$$eval('#ll-entry-list .ll-input', els => els.map(e => e.value)))[0], 'EDITED 155');
+// Scenario Objectives are route-dependent (mirrors Low Level Entry).
+eq('Scenario Objectives IR-155 default',
+   await page.$$eval('.ll-list[data-ll-key="scenarioObjectives"] .ll-input', els => els.map(e => e.value)),
+   ['VIRUS 295/100', 'VIRUS 276/95', 'VIRUS 295/86', 'VIRUS 289/11', 'VIRUS 272/72']);
+await page.selectOption('#ll-route-select', 'IR-154');
+await page.waitForTimeout(100);
+eq('Scenario Objectives IR-154 default',
+   await page.$$eval('.ll-list[data-ll-key="scenarioObjectives"] .ll-input', els => els.map(e => e.value)),
+   ['HTLZ: VIRUS 299/65 | VIRUS 326/68', 'STLZ: VIRUS 243/48 | VIRUS 232/72']);
+await page.selectOption('#ll-route-select', 'IR-155');
+await page.waitForTimeout(100);
 // Add then remove on a generic section (evaluate-click; LL tab hidden).
 await page.selectOption('#ll-route-select', 'IR-154');
 await page.waitForTimeout(100);
@@ -411,7 +431,7 @@ const box = await page.evaluate(() => ({
   kp: [...document.querySelectorAll('#box-keypoints-list input')].map(i => i.value),
 }));
 eq('Box Step 1 defaults', box.s1, ['TAC Pts in SEC', 'Build FLT plan', 'Fix times']);
-eq('Box Step 2 defaults', box.s2, ['LZ Ldg/TO Told', 'Add BULL', 'Build Orbit at FLOYD']);
+eq('Box Step 2 defaults', box.s2, ['LZ Ldg/TO Told', 'Add BULL', 'Build Orbit at FLOYD (1.3 legs)']);
 eq('Box Step 3 empty by default', box.s3, []);
 eq('Box Notes has 2 defaults', box.kp, [
   "1 min per 10,000' or 6 sec per 1,000' when TOC or BOD is prior to a waypoint",

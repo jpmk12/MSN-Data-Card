@@ -88,6 +88,7 @@ excluded from gather/restore.
 | `#notes-list`               | `addNote(v)`       | `state.notes`        |
 | `.ll-list[data-ll-key=…]` (LL tab "Low level X Check" sections) | `addLLItem(key, v)` | `state.llItems[key]` |
 | `#ll-entry-list` (Low Level Entry, per-route) | `addLLEntryRow(v)` / `renderLLEntry()` | `state.llEntry[route]` |
+| `.ll-list[data-ll-key="scenarioObjectives"]` (Scenario Objectives, **per-route** — excluded from the generic `llItems` path) | `addScenarioObjRow(v)` / `renderScenarioObj()` | `state.scenarioObj[route]` |
 
 Each helper creates a row with an `×` button. Pattern Work also has a
 delegated `click` handler on `#pattern-list` as a defense if the
@@ -120,7 +121,12 @@ PDF/schedule import is ever wanted again, recover it from git history
 ## Current defaults (Rec Ride)
 
 - Header badge `Rec Ride` (editable `#hdr-flt`), callsign `NOGS 34`, students `DEAD` / `DUFF`
-- SOE: Takeoff `0135`, LL Entry `0410`, LL Exit `0454`, ARCT `0205`, AREX `0340`
+- SOE: Takeoff `0135`, LL Entry `0410`, LL Exit `0454`, ARCT `0205`, AREX `0340`.
+  Land time is `Takeoff + N` where N is the `#soe-land-offset` dropdown
+  (1–6 h, default **+5:00**); `soeCalc()` reads it for the Land row.
+- **Scenario Objectives** (LL tab) is route-dependent (`SCENARIO_OBJ_DEFAULTS`):
+  IR-154 → HTLZ/STLZ VIRUS lines; IR-155 → five VIRUS lines (295/100, 276/95,
+  295/86, 289/11, 272/72). Edits remembered per route, persisted via `state.scenarioObj`.
 - **Low Level** card (titled "Low Level"; was "Low Level Info"): route
   **defaults to `IR-155`** (both synced route dropdowns) — so `#ll-info-table`
   is shown on a fresh card (Entry Pt `A`, Exit Pt `N`). Selecting `NA` hides
