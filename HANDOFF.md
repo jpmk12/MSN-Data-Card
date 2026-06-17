@@ -140,9 +140,12 @@ PDF/schedule import is ever wanted again, recover it from git history
   `AR312L`, Tanker `NITRO 73`, TNKR Type `KC-135`, RZ Type `G (Enroute)`,
   AR SPD `265 (KC-135)`. The track dropdown also has an **`NA`** option —
   when selected `#ar-info-table` is hidden (handled in `setARTrack`).
+  **AR SPD is derived from TNKR Type** (`syncARSpeed()`): KC-135 → `265`,
+  KC-46 → `275`. `#ar-spd-select` is display-only (`pointer-events:none`);
+  it re-derives on TNKR change, init, restore, and Apply.
 - Pattern Work: DUKE TAC 6500, DUKE BEAM, DUKE ACCEL 6500, STR IN
 - Ground Ops: Backing, Star Turn
-- Briefings / Notes: two pre-loaded (DUFF / DEAD assignments)
+- Briefings / Notes: 3 pre-loaded (DEAD / DUFF seat-swap plan, MIN FLAP Emphasis)
 - Box Setup Sequence: Step 1 (3), Step 2 (3), Step 3 (empty),
   Box Notes (2)
 - Safety Supplements Active: `1SS-326 -> MGPS & P-RAIM Induce Date Reversion`

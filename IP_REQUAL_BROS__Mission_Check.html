@@ -861,10 +861,10 @@
     <table id="ar-info-table" style="width:100%;border-collapse:collapse;font-size:11.5px;margin-top:4px;">
       <tbody>
         <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;width:42%;border-bottom:0.5px solid #d3d1c7;">Tanker</td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><input id="ar-tanker" type="text" value="NITRO 73" placeholder="DASH 85" aria-label="Tanker call sign" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#5f5e5a;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;outline:none;padding:2px 0;width:100%;" /></td></tr>
-        <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">TNKR Type</td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><select id="ar-tnkr-type" aria-label="Tanker aircraft type" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#5f5e5a;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;outline:none;padding:2px 0;width:100%;cursor:pointer;"><option value="KC-135" selected>KC-135</option><option value="KC-46">KC-46</option></select></td></tr>
+        <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">TNKR Type</td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><select id="ar-tnkr-type" onchange="syncARSpeed()" aria-label="Tanker aircraft type" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#5f5e5a;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;outline:none;padding:2px 0;width:100%;cursor:pointer;"><option value="KC-135" selected>KC-135</option><option value="KC-46">KC-46</option></select></td></tr>
         <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">Type</td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><select id="ar-type-select" aria-label="Air refueling track type" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#5f5e5a;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;outline:none;padding:2px 0;width:100%;cursor:pointer;"><option value="G (Enroute)" selected>G (Enroute)</option><option value="D (Pt Parallel)">D (Pt Parallel)</option><option value="A (Anchor)">A (Anchor)</option></select></td></tr>
         <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">ARCT</td><td style="padding:5px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="artrack-arct" style="color:#5f5e5a;"><span style="border-bottom:1.5px solid #b4b2a9;padding:0 26px;">&nbsp;</span></span></td></tr>
-        <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">AR SPD</td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><select id="ar-spd-select" aria-label="Air refueling speed" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#5f5e5a;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;outline:none;padding:2px 0;width:auto;max-width:100%;cursor:pointer;"><option value="265 (KC-135)" selected>265 (KC-135)</option><option value="275 (KC-46)">275 (KC-46)</option></select></td></tr>
+        <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">AR SPD</td><td style="padding:3px 8px;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><select id="ar-spd-select" aria-label="Air refueling speed (set by tanker type)" aria-readonly="true" tabindex="-1" style="font-family:inherit;font-size:11.5px;font-weight:600;color:#5f5e5a;border:none;background:transparent;outline:none;padding:2px 0;width:auto;max-width:100%;cursor:default;pointer-events:none;-webkit-appearance:none;-moz-appearance:none;appearance:none;"><option value="265 (KC-135)" selected>265 (KC-135)</option><option value="275 (KC-46)">275 (KC-46)</option></select></td></tr>
         <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">Freqs</td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ar-freqs">—</span></td></tr>
         <tr><td style="padding:5px 8px;font-weight:700;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">TACAN</td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;"><span id="ar-tacan">—</span></td></tr>
         <tr style="background:#f9f8f5;"><td style="padding:5px 8px;font-weight:700;color:#1a1a19;">BLOCK</td><td style="padding:5px 8px;color:#5f5e5a;border-left:0.5px solid #d3d1c7;"><span id="ar-block">—</span></td></tr>
@@ -3670,6 +3670,14 @@ function setARTrack() {
   if (rfEl) rfEl.textContent = data ? data.freqs : '—';
   if (rtEl) rtEl.textContent = data ? data.tacan : '—';
 }
+// AR SPD is determined by the tanker type: KC-135 -> 265, KC-46 -> 275.
+function syncARSpeed() {
+  var tnkr = document.getElementById('ar-tnkr-type');
+  var spd = document.getElementById('ar-spd-select');
+  if (!tnkr || !spd) return;
+  spd.value = (tnkr.value === 'KC-46') ? '275 (KC-46)' : '265 (KC-135)';
+  if (typeof mdcPersist === 'function') mdcPersist();
+}
 
 // ── Route Data sets ──
 // To add a route: add a key here and a matching <option> in the #route-select dropdown.
@@ -4419,7 +4427,7 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 // Bump whenever the baked-in defaults change. A saved card built on an
 // older version is offered an "Apply latest brief data" banner that
 // refreshes the canonical fields while keeping the pilot's edits.
-var MDC_DEFAULTS_VERSION = 5;
+var MDC_DEFAULTS_VERSION = 6;
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {
@@ -4666,6 +4674,7 @@ function mdcRestore() {
   if (typeof syncARCT === 'function') syncARCT();
   if (typeof syncLowLevel === 'function') syncLowLevel();
   if (typeof setARTrack === 'function') setARTrack();
+  if (typeof syncARSpeed === 'function') syncARSpeed();
   if (typeof renderRouteData === 'function') renderRouteData();
   if (typeof renderRoute === 'function') renderRoute();
 }
@@ -4683,6 +4692,7 @@ document.addEventListener('DOMContentLoaded', function() {
   calcTR();
   calcDec();
   setARTrack();
+  syncARSpeed();
   setLLRoute();
   // Pre-load default Pattern Work entries
   ['DUKE TAC 6500', 'DUKE BEAM', 'DUKE ACCEL 6500', 'STR IN'].forEach(function(v) {
@@ -4716,8 +4726,7 @@ document.addEventListener('DOMContentLoaded', function() {
   [
     'DEAD: , back half AR, front half LL ⇄ patterns/ground ops, 2nd pattern work,',
     'DUFF: engine start, AR entry ⇄ back half LL, arrival ⇄ patterns/ground ops',
-    'MIN FLAP Emphasis: selected OFF when: EOCS REQUIRED YES // CG < 28% or > 39% // Crosswind > 25 kts',
-    '1+30 pattern delay -> ~0315z departure for AR'
+    'MIN FLAP Emphasis: selected OFF when: EOCS REQUIRED YES // CG < 28% or > 39% // Crosswind > 25 kts'
   ].forEach(function(v) { addNote(v); });
   // Pre-load default editable Low level X Check sections.
   var LL_DEFAULTS = {
@@ -4866,7 +4875,7 @@ function applyLatestDefaults() {
       el.value = el.defaultValue;
     }
   });
-  [soeCalc, syncARCT, syncLowLevel, setARTrack, renderRouteData, renderRoute, setLLRoute, renderLLEntry]
+  [soeCalc, syncARCT, syncLowLevel, setARTrack, syncARSpeed, renderRouteData, renderRoute, setLLRoute, renderLLEntry]
     .forEach(function(fn) { if (typeof fn === 'function') { try { fn(); } catch (e) { /* ignore */ } } });
   if (typeof autoSizeFlt === 'function') { autoSizeFlt(document.getElementById('hdr-flt')); autoSizeFlt(document.getElementById('hdr-callsign')); }
   _mdcDefaultsOutdated = false;
