@@ -62,7 +62,7 @@ await freshLoad();
 eq('Title is IPRQ-BROS-MDC', await page.title(), 'IPRQ-BROS-MDC');
 
 // ── 2. Header default values ────────────────────────────────────────
-eq('Callsign default NOGS 96',  await page.$eval('#hdr-callsign', e => e.value), 'NOGS 96');
+eq('Callsign default NOGS 34',  await page.$eval('#hdr-callsign', e => e.value), 'NOGS 34');
 eq('Header badge IPRQ FLT 3', await page.$eval('#hdr-flt', e => e.value), 'IPRQ FLT 3');
 eq('Header badge is an editable input',
    await page.$eval('#hdr-flt', e => e.tagName + (e.readOnly ? ':ro' : '')), 'INPUT');
@@ -79,7 +79,7 @@ eq('Student 1 default DEAD',     await page.$eval('#hdr-student1', e => e.value)
 eq('Student 2 default DUFF',     await page.$eval('#hdr-student2', e => e.value), 'DUFF');
 
 // ── 3. SOE defaults / calc ──────────────────────────────────────────
-eq('Takeoff default 0130',         await page.$eval('#soe-takeoff', e => e.value), '0130');
+eq('Takeoff default 0135',         await page.$eval('#soe-takeoff', e => e.value), '0135');
 eq('Low Level Entry default blank', await page.$eval('#soe-llentry', e => e.value), '');
 eq('SCLZ TOT blank (LL Entry blank)', await page.$eval('#soe-lztime',  e => e.value), '');
 eq('LL Exit default blank',        await page.$eval('#soe-llexit',  e => e.value), '');
@@ -88,10 +88,10 @@ eq('ARCT default 0335',            await page.$eval('#soe-arct',    e => e.value
 eq('AREX default 0510',            await page.$eval('#soe-arex',    e => e.value), '0510');
 const cells = await page.$$eval('#tab-main table tr', rows =>
   rows.map(r => [...r.querySelectorAll('td')].map(t => t.textContent.trim())));
-// 0130 takeoff (Z, CDT −5): Alert −3:45 = 2145/1645, Show −3:30 = 2200/1700, Land +6 = 0730/0230
-ok('SOE Alert back-calcs from 0130',     cells.some(r => r.includes('2145') && r.includes('1645')));
-ok('SOE Show is takeoff − 3:30 (2200)',  cells.some(r => r.includes('2200') && r.includes('1700')));
-ok('SOE Land row +6 from 0130 (0730)',   cells.some(r => r.includes('0730') && r.includes('0230')));
+// 0135 takeoff (Z, CDT −5): Alert −3:45 = 2150/1650, Show −3:30 = 2205/1705, Land +6 = 0735/0235
+ok('SOE Alert back-calcs from 0135',     cells.some(r => r.includes('2150') && r.includes('1650')));
+ok('SOE Show is takeoff − 3:30 (2205)',  cells.some(r => r.includes('2205') && r.includes('1705')));
+ok('SOE Land row +6 from 0135 (0735)',   cells.some(r => r.includes('0735') && r.includes('0235')));
 
 // ── 4. Route of Flight defaults + MOTA picker ───────────────────────
 const rofDefault = 'KLTS OKKIE_.CDS LBB360030 AR197 LBB322047 CDS ZOCKS KLTS';
@@ -134,12 +134,12 @@ eq('Three Rs ARCT-30 suffix', await page.$eval('#three-rs-suffix', e => e.textCo
 eq('Three Cs ARCT-15 suffix', await page.$eval('#three-cs-suffix', e => e.textContent), ': 1515');
 
 // ── 6b. AR Info default track ───────────────────────────────────────
-eq('AR Track default AR197L', await page.$eval('#ar-track-select', e => e.value), 'AR197L');
-eq('AR197L freqs populate',   await page.$eval('#ar-freqs', e => e.textContent), '264.900 | 236.650');
-eq('AR197L TACAN populate',   await page.$eval('#ar-tacan', e => e.textContent), '62 / 125');
-eq('AR197L BLOCK populate',   await page.$eval('#ar-block', e => e.textContent), 'FL190-220');
+eq('AR Track default AR312L', await page.$eval('#ar-track-select', e => e.value), 'AR312L');
+eq('AR312L freqs populate',   await page.$eval('#ar-freqs', e => e.textContent), '291.900 | 260.200');
+eq('AR312L TACAN populate',   await page.$eval('#ar-tacan', e => e.textContent), '51 / 114');
+eq('AR312L BLOCK populate',   await page.$eval('#ar-block', e => e.textContent), 'FL200-220');
 eq('Tanker default DASH 95',  await page.$eval('#ar-tanker', e => e.value), 'DASH 95');
-eq('RZ Type default D (Pt Parallel)', await page.$eval('#ar-type-select', e => e.value), 'D (Pt Parallel)');
+eq('RZ Type default G (Enroute)', await page.$eval('#ar-type-select', e => e.value), 'G (Enroute)');
 eq('AR SPD default 275 (KC-46)', await page.$eval('#ar-spd-select', e => e.value), '275 (KC-46)');
 eq('TNKR Type default KC-46', await page.$eval('#ar-tnkr-type', e => e.value), 'KC-46');
 // Brief-tab section renames.
@@ -151,9 +151,9 @@ await page.selectOption('#ar-track-select', 'NA');
 await page.waitForTimeout(100);
 ok('NA hides the Air Refueling table',
    await page.evaluate(() => getComputedStyle(document.getElementById('ar-info-table')).display === 'none'));
-await page.selectOption('#ar-track-select', 'AR197L');
+await page.selectOption('#ar-track-select', 'AR312L');
 await page.waitForTimeout(100);
-ok('AR197L shows the Air Refueling table again',
+ok('AR312L shows the Air Refueling table again',
    await page.evaluate(() => getComputedStyle(document.getElementById('ar-info-table')).display !== 'none'));
 
 // ── 7. SCLZ/STLZ TOT auto-derive + Slow 1 / Slow 2 offsets ───────────
@@ -428,14 +428,14 @@ eq('Dedupe + drop unknown', dedup, ['DUKE TAC 6500', 'STR IN', 'DUKE BEAM']);
 // ── 16. Reset ───────────────────────────────────────────────────────
 await page.click('button[onclick="resetCard()"]');
 await page.waitForTimeout(700);
-eq('Reset: Callsign default', await page.$eval('#hdr-callsign', e => e.value), 'NOGS 96');
+eq('Reset: Callsign default', await page.$eval('#hdr-callsign', e => e.value), 'NOGS 34');
 eq('Reset: ARCT back to default 0335', await page.$eval('#soe-arct',    e => e.value), '0335');
 eq('Reset: AREX back to default 0510', await page.$eval('#soe-arex',    e => e.value), '0510');
 eq('Reset: LL Entry back to blank',    await page.$eval('#soe-llentry', e => e.value), '');
 eq('Reset: SCLZ TOT back to blank',    await page.$eval('#soe-lztime',  e => e.value), '');
 eq('Reset: LL Exit back to blank',     await page.$eval('#soe-llexit',  e => e.value), '');
 eq('Reset: STLZ TOT back to blank',    await page.$eval('#soe-lz2tot',  e => e.value), '');
-eq('Reset: Takeoff back to 0130',      await page.$eval('#soe-takeoff', e => e.value), '0130');
+eq('Reset: Takeoff back to 0135',      await page.$eval('#soe-takeoff', e => e.value), '0135');
 const patReset = await page.$$eval('#pattern-list [data-preset]', els => els.map(e => e.getAttribute('data-preset')));
 eq('Reset: Pattern 4 defaults', patReset, ['DUKE TAC 6500', 'DUKE BEAM', 'DUKE ACCEL 6500', 'STR IN']);
 eq('Reset: Slow 1 offset default', await page.$eval('#ll-slow-offset',  e => e.value), '120');
@@ -645,7 +645,7 @@ await page.fill('#hdr-callsign', 'UNDOTEST 1');
 await page.waitForTimeout(200);
 await page.click('button[onclick="resetCard()"]');
 await page.waitForTimeout(700);
-eq('Reset cleared the callsign to default', await page.$eval('#hdr-callsign', e => e.value), 'NOGS 96');
+eq('Reset cleared the callsign to default', await page.$eval('#hdr-callsign', e => e.value), 'NOGS 34');
 ok('Undo bar appears after Reset',
    await page.evaluate(() => !!document.querySelector('button') &&
      [...document.querySelectorAll('button')].some(b => b.textContent.trim() === 'Undo')));
@@ -701,7 +701,7 @@ eq('Outdated card loads its saved callsign', await page.$eval('#hdr-callsign', e
 await page.evaluate(() =>
   [...document.querySelectorAll('#mdc-defaults-banner button')].find(b => b.textContent.trim() === 'Apply').click());
 await page.waitForTimeout(300);
-eq('Apply resets callsign to the current default', await page.$eval('#hdr-callsign', e => e.value), 'NOGS 96');
+eq('Apply resets callsign to the current default', await page.$eval('#hdr-callsign', e => e.value), 'NOGS 34');
 ok('Apply preserves the user note',
    (await page.$$eval('#notes-list .note-input', els => els.map(e => e.value))).includes('MY CUSTOM NOTE'));
 ok('Banner removed after Apply', await page.evaluate(() => !document.getElementById('mdc-defaults-banner')));
