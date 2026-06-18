@@ -174,7 +174,7 @@ ok('AR312L shows the Air Refueling table again',
 
 // ── 7. IR-154 SCLZ/STLZ TOT auto-derive + Slow 1 / Slow 2 offsets ────
 // On IR-154 the two LZ TOTs auto-derive (read-only): SCLZ = LL Entry + 14,
-// STLZ = LL Entry + 31. (IR-155 instead uses editable GDLZ/SMLZ — see §8.)
+// STLZ = LL Entry + 31. (IR-155 GDLZ/SMLZ derive +19 / +36 — see §8.)
 // LL route defaults to IR-155 (Low Level Info shown). NA still hides the
 // table; switch to IR-154 for the IR-154-specific checks below.
 eq('LL route default IR-155', await page.$eval('#ll-route-select', e => e.value), 'IR-155');
@@ -229,27 +229,31 @@ ok('LZ row 2 visible for IR-155',
    await page.evaluate(() => getComputedStyle(document.getElementById('ll-stlz-row')).display !== 'none'));
 eq('IR-155 LZ1 label GDLZ TOT', await page.$eval('#ll-lz1-label', e => e.textContent), 'GDLZ TOT');
 eq('IR-155 LZ2 label SMLZ TOT', await page.$eval('#ll-lz2-label', e => e.textContent), 'SMLZ TOT');
-eq('IR-155 GDLZ TOT editable default 0429', await page.$eval('#soe-lztime', e => e.value), '0429');
-eq('IR-155 SMLZ TOT editable default 0446', await page.$eval('#soe-lz2tot', e => e.value), '0446');
-ok('IR-155 GDLZ TOT is editable (not read-only)', await page.$eval('#soe-lztime', e => !e.readOnly));
-// Slow 1/Slow 2 compute from the entered LZ TOT minus the adjacent offset.
+// IR-155 GDLZ/SMLZ derive from LL Entry (read-only): +19 / +36. LL Entry is 1900.
+eq('IR-155 GDLZ TOT = LL Entry + 19 (1919)', await page.$eval('#soe-lztime', e => e.value), '1919');
+eq('IR-155 SMLZ TOT = LL Entry + 36 (1936)', await page.$eval('#soe-lz2tot', e => e.value), '1936');
+ok('IR-155 GDLZ TOT is read-only (derived)', await page.$eval('#soe-lztime', e => e.readOnly));
+// IR-155 entry fix line: Entry to K = +39 (1939), Entry to N = +44 (1944).
+ok('IR-155 entry fix line visible',
+   await page.evaluate(() => getComputedStyle(document.getElementById('ll-entry-fixes-155')).display !== 'none'));
+ok('IR-154 entry fix line hidden on IR-155',
+   await page.evaluate(() => getComputedStyle(document.getElementById('ll-entry-fixes')).display === 'none'));
+eq('IR-155 Entry to K = LL Entry + 39 (1939)', await page.$eval('#ll-fix-k', e => e.textContent), '1939');
+eq('IR-155 Entry to N = LL Entry + 44 (1944)', await page.$eval('#ll-fix-n', e => e.textContent), '1944');
+// Slow 1/Slow 2 compute from the derived LZ TOT minus the adjacent offset.
 // (§7 left the offsets at −3:00 / −1:40; reset both to the −2:00 default.)
 await page.selectOption('#ll-slow-offset', '120');
 await page.selectOption('#ll-slow2-offset', '120');
 await page.waitForTimeout(120);
-eq('IR-155 Slow 1 = GDLZ 0429 − 2:00', await page.$eval('#ll-slow', e => e.textContent), '04:27:00');
-eq('IR-155 Slow 2 = SMLZ 0446 − 2:00', await page.$eval('#ll-slow2', e => e.textContent), '04:44:00');
-// Editing GDLZ recomputes Slow 1 and is remembered across a route switch.
-await page.fill('#soe-lztime', '0431');
+eq('IR-155 Slow 1 = GDLZ 1919 − 2:00', await page.$eval('#ll-slow', e => e.textContent), '19:17:00');
+eq('IR-155 Slow 2 = SMLZ 1936 − 2:00', await page.$eval('#ll-slow2', e => e.textContent), '19:34:00');
+// GDLZ / Entry-to-K track LL Entry edits.
+await page.fill('#soe-llentry', '2000');
 await page.waitForTimeout(120);
-eq('IR-155 Slow 1 recomputes after edit', await page.$eval('#ll-slow', e => e.textContent), '04:29:00');
-await page.selectOption('#ll-route-select', 'IR-154');
+eq('IR-155 GDLZ re-derives to 2019', await page.$eval('#soe-lztime', e => e.value), '2019');
+eq('IR-155 Entry to K re-derives to 2039', await page.$eval('#ll-fix-k', e => e.textContent), '2039');
+await page.fill('#soe-llentry', '1900');   // restore for later sections
 await page.waitForTimeout(120);
-eq('IR-154 SCLZ stays auto-derived (1900+14)', await page.$eval('#soe-lztime', e => e.value), '1914');
-await page.selectOption('#ll-route-select', 'IR-155');
-await page.waitForTimeout(120);
-eq('IR-155 remembers edited GDLZ 0431', await page.$eval('#soe-lztime', e => e.value), '0431');
-await page.fill('#soe-lztime', '0429');   // restore default for later sections
 // Restore the §7 offsets (−3:00 / −1:40) so the §14 persistence check holds.
 await page.selectOption('#ll-slow-offset', '180');
 await page.selectOption('#ll-slow2-offset', '100');

@@ -1134,6 +1134,7 @@
     <button type="button" class="ll-add-btn" onclick="addLLItem('approach')" aria-label="Add Approach Check item">+ item</button>
     <label class="section-title teal banded chk-title" style="margin-top:8px"><span class="chk-text">Low Level Entry</span><input type="checkbox" class="chk-input"></label>
     <div class="item" id="ll-entry-fixes" style="font-weight:600;color:#0C447C;">IR-154 &rarr; A: <span id="ll-fix-a">—</span> &#124; F: <span id="ll-fix-f">—</span> &#124; J: <span id="ll-fix-j">—</span></div>
+    <div class="item" id="ll-entry-fixes-155" style="font-weight:600;color:#0C447C;">Entry to K: <span id="ll-fix-k">—</span> &#124;&#124; Entry to N: <span id="ll-fix-n">—</span></div>
     <div class="ll-list" id="ll-entry-list"></div>
     <button type="button" class="ll-add-btn" onclick="addLLEntryRow('')" aria-label="Add Low Level Entry item">+ item</button>
     <label class="section-title red banded chk-title" style="margin-top:8px"><span class="chk-text">Scenario Objectives</span><input type="checkbox" class="chk-input"></label>
@@ -3398,7 +3399,7 @@ var LL_ENTRY_STATE = {};
 // here hide the LZ + Slow rows entirely.
 var LL_LZ_CONFIG = {
   'IR-154': { lz1: { label: 'SCLZ TOT', derive: 14 }, lz2: { label: 'STLZ TOT', derive: 31 } },
-  'IR-155': { lz1: { label: 'GDLZ TOT', value: '0429' }, lz2: { label: 'SMLZ TOT', value: '0446' } }
+  'IR-155': { lz1: { label: 'GDLZ TOT', derive: 19 }, lz2: { label: 'SMLZ TOT', derive: 36 } }
 };
 // Editable LZ TOT values remembered per route (derive-mode routes recompute,
 // so only routes with seeded values keep state here).
@@ -3453,6 +3454,8 @@ function renderLLEntry() {
   LL_ENTRY_STATE[route].forEach(function(v) { addLLEntryRow(v); });
   var fixes = document.getElementById('ll-entry-fixes');
   if (fixes) fixes.style.display = (route === 'IR-154') ? '' : 'none';
+  var fixes155 = document.getElementById('ll-entry-fixes-155');
+  if (fixes155) fixes155.style.display = (route === 'IR-155') ? '' : 'none';
   resizeLLInputs();
 }
 // ─── Route-dependent Scenario Objectives (Low Level tab) ───
@@ -3551,6 +3554,13 @@ function syncLowLevel() {
     } else {
       fa.textContent = '—'; ff.textContent = '—'; fj.textContent = '—';
     }
+  }
+  // IR-155 entry fixes: Entry to K = LL entry + 39, Entry to N = + 44.
+  var fk = document.getElementById('ll-fix-k');
+  var fn = document.getElementById('ll-fix-n');
+  if (fk && fn) {
+    fk.textContent = (base !== null) ? pad4(base + 39) : '—';
+    fn.textContent = (base !== null) ? pad4(base + 44) : '—';
   }
 }
 var ROUTE_PRESETS = {
@@ -4475,7 +4485,7 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 // Bump whenever the baked-in defaults change. A saved card built on an
 // older version is offered an "Apply latest brief data" banner that
 // refreshes the canonical fields while keeping the pilot's edits.
-var MDC_DEFAULTS_VERSION = 9;
+var MDC_DEFAULTS_VERSION = 10;
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {

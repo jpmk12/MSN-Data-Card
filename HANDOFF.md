@@ -138,10 +138,15 @@ PDF/schedule import is ever wanted again, recover it from git history
     (`value: 'HHMM'`). Slow 1/Slow 2 always = that TOT − the adjacent offset.
     Routes with no config hide the LZ + Slow rows.
     - `IR-154`: `SCLZ TOT` = LL Entry + 14, `STLZ TOT` = LL Entry + 31 (derived, read-only).
-    - `IR-155`: `GDLZ TOT` `0429`, `SMLZ TOT` `0446` (editable defaults).
-    - Editable values are remembered per route in `LL_LZ_STATE` (persisted as
-      `state.llLz`); `_llLzRoute` tracks which route owns the inputs so a
-      capture-phase save mid-switch can't pollute another route's memory.
+    - `IR-155`: `GDLZ TOT` = LL Entry + 19, `SMLZ TOT` = LL Entry + 36 (derived, read-only).
+    - Editable (`value`) slots are remembered per route in `LL_LZ_STATE`
+      (persisted as `state.llLz`); `_llLzRoute` tracks which route owns the
+      inputs so a capture-phase save mid-switch can't pollute another route's
+      memory. (No route currently uses `value` mode, but the path remains.)
+  - **Entry fix lines** (above the LL-tab Low Level Entry list, route-toggled
+    in `renderLLEntry`, computed in `syncLowLevel`): `#ll-entry-fixes` for
+    IR-154 (A / F = +19 / J = +34); `#ll-entry-fixes-155` for IR-155
+    (Entry to K = LL Entry + 39, Entry to N = + 44).
 - **Air Refueling** card (titled "Air Refueling"; was "AR Info"): track
   `AR312L`, Tanker `NITRO 73`, TNKR Type `KC-135`, RZ Type `G (Enroute)`,
   AR SPD `265 (KC-135)`. The track dropdown also has an **`NA`** option —
