@@ -274,6 +274,25 @@
   .item::before { content: '—'; position: absolute; left: 0; color: #b4b2a9; }
   .item input[type="text"] { max-width: 100%; box-sizing: border-box; }
 
+  /* Time Control — labelled rows of pills (Speeds / Altitude / Winds) */
+  .tc-row { display: flex; align-items: center; flex-wrap: wrap; gap: 7px;
+            padding: 9px 2px; border-top: 0.5px solid #e7e5dd; }
+  .tc-cat { display: inline-flex; align-items: center; color: #fff;
+            font-weight: 700; font-size: 11px; letter-spacing: 0.05em;
+            text-transform: uppercase; border-radius: 999px; padding: 4px 13px;
+            white-space: nowrap; }
+  .tc-arrow { width: 18px; height: 18px; flex-shrink: 0; fill: none;
+              stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .tc-pill { display: inline-flex; align-items: center; font-size: 11px;
+             font-weight: 600; border-radius: 999px; padding: 3px 11px;
+             border: 1px solid; white-space: nowrap; }
+  .tc-cat.c-spd { background: #185FA5; } .tc-arrow.c-spd { stroke: #185FA5; }
+  .tc-pill.c-spd { background: #E6F1FB; color: #0C447C; border-color: #B5D4F4; }
+  .tc-cat.c-alt { background: #1D9E75; } .tc-arrow.c-alt { stroke: #1D9E75; }
+  .tc-pill.c-alt { background: #E6F6F0; color: #136B4F; border-color: #B6E2D3; }
+  .tc-cat.c-wnd { background: #BA7517; } .tc-arrow.c-wnd { stroke: #BA7517; }
+  .tc-pill.c-wnd { background: #FBF0DD; color: #8A560F; border-color: #EAD3A6; }
+
   .sub-item {
     font-size: 11.5px;
     color: #888780;
@@ -1491,6 +1510,47 @@
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <div class="card full-row">
+    <div class="card-header">
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+      Time Control
+    </div>
+
+    <div class="section-title blue banded">Atmospheric Model</div>
+    <div class="item">Lateral and vertical performance for unsequenced legs or portions thereof are based on the atmospheric model</div>
+    <div class="item">MC assumes these conditions for 200 NM and &plusmn;4,000&prime; and is updated every 5 minutes</div>
+    <div class="item">In flight, the MC uses ADC and IRS data for temp, temp dev, px altitude, heading, ground speed and wind</div>
+
+    <div class="section-title green banded" style="margin-top:10px">Control Inputs</div>
+    <div class="tc-row" style="border-top:none">
+      <span class="tc-cat c-spd">Speeds</span>
+      <svg class="tc-arrow c-spd" viewBox="0 0 24 24"><line x1="4" y1="12" x2="16" y2="12"/><polyline points="12 6 18 12 12 18"/></svg>
+      <span class="tc-pill c-spd">MC Limits</span>
+      <span class="tc-pill c-spd">Speed Limit</span>
+      <span class="tc-pill c-spd">MAX Speed</span>
+      <span class="tc-pill c-spd">At Speed</span>
+      <span class="tc-pill c-spd">Speed f/Time</span>
+      <span class="tc-pill c-spd">Speed</span>
+      <span class="tc-pill c-spd">Tech</span>
+    </div>
+    <div class="tc-row">
+      <span class="tc-cat c-alt">Altitude</span>
+      <svg class="tc-arrow c-alt" viewBox="0 0 24 24"><line x1="4" y1="12" x2="16" y2="12"/><polyline points="12 6 18 12 12 18"/></svg>
+      <span class="tc-pill c-alt">AT / AT ABOVE / AT BELOW Altitude</span>
+      <span class="tc-pill c-alt">Cruise FL</span>
+      <span class="tc-pill c-alt">Route Data</span>
+      <span class="tc-pill c-alt">Basic Altitude Profile</span>
+    </div>
+    <div class="tc-row">
+      <span class="tc-cat c-wnd">Winds</span>
+      <svg class="tc-arrow c-wnd" viewBox="0 0 24 24"><line x1="4" y1="12" x2="16" y2="12"/><polyline points="12 6 18 12 12 18"/></svg>
+      <span class="tc-pill c-wnd">Spot Winds</span>
+      <span class="tc-pill c-wnd">Climb/Descent Winds</span>
+      <span class="tc-pill c-wnd">Wind Factors</span>
+      <span class="tc-pill c-wnd">Calm Winds</span>
+    </div>
   </div>
 
 </div><!-- /board -->

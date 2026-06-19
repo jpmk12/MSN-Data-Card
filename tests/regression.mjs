@@ -353,6 +353,14 @@ await page.evaluate(() => document.querySelector('.ll-list[data-ll-key="descent"
 await page.waitForTimeout(100);
 eq('Descent remove clears the row',
    (await page.$$eval('.ll-list[data-ll-key="descent"] .ll-input', els => els.length)), 0);
+// Time Control reference card (Low Level tab GK reference).
+eq('Time Control card present',
+   await page.evaluate(() => [...document.querySelectorAll('#tab-llgk .card-header')].some(h => h.textContent.includes('Time Control'))), true);
+eq('Time Control categories', await page.$$eval('#tab-llgk .tc-cat', els => els.map(e => e.textContent.trim())),
+   ['Speeds', 'Altitude', 'Winds']);
+eq('Time Control has 15 pills', await page.$$eval('#tab-llgk .tc-pill', els => els.length), 15);
+ok('Time Control lists the 5-minute MC update',
+   await page.evaluate(() => [...document.querySelectorAll('#tab-llgk .item')].some(i => i.textContent.includes('updated every 5 minutes'))));
 // The two low-level route dropdowns stay in sync, either direction.
 await page.selectOption('#ll-route-select', 'IR-155');
 await page.waitForTimeout(100);

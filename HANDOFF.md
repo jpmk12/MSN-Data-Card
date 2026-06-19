@@ -137,6 +137,11 @@ PDF/schedule import is ever wanted again, recover it from git history
 - **Scenario Objectives** (LL tab) is route-dependent (`SCENARIO_OBJ_DEFAULTS`):
   IR-154 → HTLZ/STLZ VIRUS lines; IR-155 → five VIRUS lines (295/100, 276/95,
   295/86, 289/11, 272/72). Edits remembered per route, persisted via `state.scenarioObj`.
+- **Time Control** card (static reference at the bottom of the LL tab's GK
+  reference section): an "Atmospheric Model" bullet list plus Speeds / Altitude
+  / Winds rows rendered as a colored category chip + arrow + pills. Styling is
+  the `.tc-row` / `.tc-cat` / `.tc-arrow` / `.tc-pill` classes with `.c-spd`
+  (blue), `.c-alt` (green), `.c-wnd` (amber) modifiers. No state/persistence.
 - **Low Level** card (titled "Low Level"; was "Low Level Info"): route
   **defaults to `IR-155`** (both synced route dropdowns) — so `#ll-info-table`
   is shown on a fresh card (Entry Pt `A`, Exit Pt `N`). Selecting `NA` hides
