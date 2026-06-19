@@ -11,9 +11,19 @@ tabs (Brief, AR, Low Level, Tactical, GK, Scenario) plus a sticky-ish toolbar.
 
 ```
 /IP_REQUAL_BROS__Mission_Check.html   ← the whole app (HTML + CSS + JS in one file)
+/icon.svg                             ← master app/favicon (embedded in the HTML as a data-URI)
 /tests/regression.mjs                 ← Playwright suite (110 checks)
 /.gitignore                           ← node_modules, tmp-downloaded.html
 ```
+
+**Favicon / branding:** part of the "DEAD" product family (Dashboard, MP
+planner, this data card). Shared cues: dark field, red gradient skull (the
+"DEAD" hero), reticle/range ring, green north tick. This app's unique mark is
+a **C-17 planform in the card blue `#185FA5`** with a `DEAD DC` banner. The
+master is `icon.svg`; it's embedded in the `<head>` as
+`<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,…">`
+(CSP-safe via `img-src 'self' data:`). To change the icon, edit `icon.svg`,
+re-base64 it, and replace the data-URI in the `<link rel="icon">` line.
 
 Branch: `claude/mission-data-card-jRcCY`. Every change has been
 committed and pushed to that branch.
