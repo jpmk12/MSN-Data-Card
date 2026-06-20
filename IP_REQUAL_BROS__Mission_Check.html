@@ -293,6 +293,10 @@
   .tc-cat.c-wnd { background: #BA7517; } .tc-arrow.c-wnd { stroke: #BA7517; }
   .tc-pill.c-wnd { background: #FBF0DD; color: #8A560F; border-color: #EAD3A6; }
 
+  /* SOE manual rows — calculated local time shown beside the Zulu input */
+  .soe-local { font-size: 11px; font-weight: 600; color: #1D9E75;
+               white-space: nowrap; letter-spacing: 0.02em; }
+
   .sub-item {
     font-size: 11.5px;
     color: #888780;
@@ -750,26 +754,40 @@
 
       <!-- Manual type-in rows -->
       <div style="font-size:11px;color:#888780;padding:3px 0;">Low Level Entry</div>
-      <input id="soe-llentry" type="text" maxlength="4" placeholder="——" value="0410"
-        aria-label="Low Level Entry time in HHMM"
-        style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;"
-        oninput="syncLowLevel()" />
+      <div style="display:flex;align-items:baseline;gap:8px;">
+        <input id="soe-llentry" type="text" maxlength="4" placeholder="——" value="0410"
+          aria-label="Low Level Entry time in HHMM"
+          style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;"
+          oninput="syncLowLevel();soeManualLocal()" />
+        <span id="soe-llentry-l" class="soe-local">—</span>
+      </div>
 
       <div style="font-size:11px;color:#888780;padding:3px 0;">LL Exit</div>
-      <input id="soe-llexit" type="text" maxlength="4" placeholder="——" value="0454"
-        aria-label="Low Level Exit time in HHMM"
-        style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;" />
+      <div style="display:flex;align-items:baseline;gap:8px;">
+        <input id="soe-llexit" type="text" maxlength="4" placeholder="——" value="0454"
+          aria-label="Low Level Exit time in HHMM"
+          style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;"
+          oninput="soeManualLocal()" />
+        <span id="soe-llexit-l" class="soe-local">—</span>
+      </div>
 
       <div style="font-size:11px;color:#888780;padding:3px 0;">ARCT</div>
-      <input id="soe-arct" type="text" maxlength="4" placeholder="——" value="0205"
-        aria-label="ARCT time in HHMM"
-        style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;"
-        oninput="syncARCT()" />
+      <div style="display:flex;align-items:baseline;gap:8px;">
+        <input id="soe-arct" type="text" maxlength="4" placeholder="——" value="0205"
+          aria-label="ARCT time in HHMM"
+          style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;"
+          oninput="syncARCT();soeManualLocal()" />
+        <span id="soe-arct-l" class="soe-local">—</span>
+      </div>
 
       <div style="font-size:11px;color:#888780;padding:3px 0;">AREX</div>
-      <input id="soe-arex" type="text" maxlength="4" placeholder="——" value="0340"
-        aria-label="AR Exit time in HHMM"
-        style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;" />
+      <div style="display:flex;align-items:baseline;gap:8px;">
+        <input id="soe-arex" type="text" maxlength="4" placeholder="——" value="0340"
+          aria-label="AR Exit time in HHMM"
+          style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;"
+          oninput="soeManualLocal()" />
+        <span id="soe-arex-l" class="soe-local">—</span>
+      </div>
 
     </div>
   </div>
@@ -3063,6 +3081,25 @@ function soeCalc() {
     document.getElementById(ids[i]).textContent = pad4(z);
     document.getElementById(lids[i]).textContent = pad4(z + ct*60);
   }
+  soeManualLocal();
+}
+// Manual SOE rows (LL Entry/Exit, ARCT, AREX) are entered in Zulu; show the
+// matching local time (Zulu + DST offset) beside each one.
+function soeManualLocal() {
+  var dstEl = document.getElementById('soe-dst');
+  if (!dstEl) return;
+  var ct = parseInt(dstEl.value, 10);
+  [['soe-llentry','soe-llentry-l'],['soe-llexit','soe-llexit-l'],
+   ['soe-arct','soe-arct-l'],['soe-arex','soe-arex-l']].forEach(function(p){
+    var el = document.getElementById(p[0]), out = document.getElementById(p[1]);
+    if (!el || !out) return;
+    var v = (el.value || '').trim();
+    if (!/^\d{3,4}$/.test(v)) { out.textContent = ''; return; }
+    var p4 = v.padStart(4, '0');
+    var hh = parseInt(p4.slice(0,2),10), mm = parseInt(p4.slice(2),10);
+    if (hh>23 || mm>59) { out.textContent = ''; return; }
+    out.textContent = pad4(hh*60 + mm + ct*60) + 'L';
+  });
 }
 function syncARCT() {
   var v = (document.getElementById('soe-arct').value || '').trim();
@@ -4804,6 +4841,7 @@ function mdcRestore() {
   if (typeof setLLRoute === 'function') setLLRoute();
   // Re-run downstream calculators / displays with the restored input values.
   if (typeof soeCalc === 'function') soeCalc();
+  if (typeof soeManualLocal === 'function') soeManualLocal();
   if (typeof syncARCT === 'function') syncARCT();
   if (typeof syncLowLevel === 'function') syncLowLevel();
   if (typeof setARTrack === 'function') setARTrack();
@@ -4813,6 +4851,7 @@ function mdcRestore() {
 }
 document.addEventListener('DOMContentLoaded', function() {
   soeCalc();
+  soeManualLocal();
   syncARCT();
   syncLowLevel();
   renderRoute();

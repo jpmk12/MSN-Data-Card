@@ -101,6 +101,18 @@ eq('Land recomputes at +6:00 (0735)', await page.$eval('#soe-land', e => e.textC
 eq('Land local recomputes at +6:00 (0235)', await page.$eval('#soe-land-l', e => e.textContent), '0235');
 await page.selectOption('#soe-land-offset', '300');
 await page.waitForTimeout(100);
+// Manual SOE rows show a calculated local time (Zulu + DST). CDT −5 default:
+// 0410→2310L, 0454→2354L, 0205→2105L, 0340→2240L.
+eq('LL Entry local (CDT) 2310L', await page.$eval('#soe-llentry-l', e => e.textContent), '2310L');
+eq('LL Exit local (CDT) 2354L',  await page.$eval('#soe-llexit-l',  e => e.textContent), '2354L');
+eq('ARCT local (CDT) 2105L',     await page.$eval('#soe-arct-l',    e => e.textContent), '2105L');
+eq('AREX local (CDT) 2240L',     await page.$eval('#soe-arex-l',    e => e.textContent), '2240L');
+// DST toggle to CST (−6) shifts the locals back one hour.
+await page.selectOption('#soe-dst', '-6');
+await page.waitForTimeout(100);
+eq('LL Entry local recomputes at CST (2210L)', await page.$eval('#soe-llentry-l', e => e.textContent), '2210L');
+await page.selectOption('#soe-dst', '-5');
+await page.waitForTimeout(100);
 
 // ── 4. Route of Flight defaults + MOTA picker ───────────────────────
 const rofDefault = 'KLTS ROCKN3.BFV MMB213050 AR312L PUB183022 AR312L MMB213050 JUNVA LBB098038 IR155 LBB043027 CINAV CDS ZOCKS KLTS';

@@ -134,6 +134,10 @@ PDF/schedule import is ever wanted again, recover it from git history
 - SOE: Takeoff `0135`, LL Entry `0410`, LL Exit `0454`, ARCT `0205`, AREX `0340`.
   Land time is `Takeoff + N` where N is the `#soe-land-offset` dropdown
   (1–6 h, default **+5:00**); `soeCalc()` reads it for the Land row.
+  The four manual rows (LL Entry/Exit, ARCT, AREX) are entered in Zulu and show
+  a calculated local time beside each (`#soe-<id>-l`, green `.soe-local`) via
+  `soeManualLocal()` = `Zulu + DST offset` (`#soe-dst`). Recomputes on input and
+  on DST change (called from `soeCalc()` + both init paths).
 - **Scenario Objectives** (LL tab) is route-dependent (`SCENARIO_OBJ_DEFAULTS`):
   IR-154 → HTLZ/STLZ VIRUS lines; IR-155 → five VIRUS lines (295/100, 276/95,
   295/86, 289/11, 272/72). Edits remembered per route, persisted via `state.scenarioObj`.
