@@ -69,12 +69,12 @@ init defaults don't clobber saved state. Any new dynamic list helper
 should respect this pattern — call `mdcPersist()` at the end and rely
 on the gate.
 
-**Last updated footer:** `mdcGatherState()` stamps `state.lastUpdated =
-Date.now()`. `mdcPersist()` writes it and refreshes the footer span
-`#mdc-last-updated` via `mdcSetFooter()` (`mdcFormatStamp()` → e.g.
-`21 Jun 2026 · 1432L`, local time, `L` suffix). `mdcRestore()` shows the
-stored stamp on load; a fresh card (or post-Reset) shows `—`. Load-from-file
-carries the saved file's stamp through the reload.
+**Last updated footer (master-file build stamp):** the footer span
+`#mdc-last-updated` shows `MDC_LAST_UPDATED` — a hardcoded constant near
+`MDC_DEFAULTS_VERSION` (format e.g. `21 Jun 2026 · 1437Z`, Zulu). It is set
+on `DOMContentLoaded` and is **not** tied to user edits or localStorage.
+**Bump `MDC_LAST_UPDATED` to the current `date -u "+%d %b %Y · %H%MZ"` on
+every push** so viewers can tell when the master file last changed.
 
 **Defaults versioning (`MDC_DEFAULTS_VERSION`):** saved cards stamp the
 version they were built on. When you change a baked-in default, **bump

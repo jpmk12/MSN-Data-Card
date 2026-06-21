@@ -491,9 +491,9 @@ ok('Persist: After Takeoff checkbox stays checked',
     const t = [...document.querySelectorAll('.chk-title')].find(x => x.textContent.includes('After Takeoff'));
     return t && t.querySelector('.chk-input').checked;
   }));
-// Footer "Last updated" stamp reflects the persisted edit time after reload.
-ok('Footer: Last updated stamp populated after edits',
-  /^\d{2} \w{3} \d{4} · \d{4}L$/.test(await page.$eval('#mdc-last-updated', e => e.textContent.trim())));
+// Footer shows the master-file build stamp (Zulu), unchanged by user edits.
+ok('Footer: master-file build stamp (Zulu)',
+  /^\d{2} \w{3} \d{4} · \d{4}Z$/.test(await page.$eval('#mdc-last-updated', e => e.textContent.trim())));
 
 // ── 15. Pattern dedupe / unknown drop ───────────────────────────────
 await page.evaluate(() => {

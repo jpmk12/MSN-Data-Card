@@ -4612,6 +4612,9 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 // older version is offered an "Apply latest brief data" banner that
 // refreshes the canonical fields while keeping the pilot's edits.
 var MDC_DEFAULTS_VERSION = 10;
+// Master-file build stamp — bump this to the current date/time (Zulu) on every
+// push so the footer tells viewers when the master file was last updated.
+var MDC_LAST_UPDATED = '21 Jun 2026 · 1439Z';
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {
@@ -4712,30 +4715,12 @@ function mdcGatherState() {
     state.llLz[r] = { lz1: LL_LZ_STATE[r].lz1, lz2: LL_LZ_STATE[r].lz2 };
   });
   state.defaultsVersion = MDC_DEFAULTS_VERSION;
-  state.lastUpdated = Date.now();
   return state;
-}
-// Footer "Last updated" stamp (local time, 'L' suffix to match the SOE rows).
-function mdcFormatStamp(ms) {
-  if (!ms) return '—';
-  var d = new Date(ms);
-  if (isNaN(d.getTime())) return '—';
-  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  var p2 = function (n) { return (n < 10 ? '0' : '') + n; };
-  return p2(d.getDate()) + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() +
-         ' · ' + p2(d.getHours()) + p2(d.getMinutes()) + 'L';
-}
-function mdcSetFooter(ms) {
-  var el = document.getElementById('mdc-last-updated');
-  if (el) el.textContent = mdcFormatStamp(ms);
 }
 function mdcPersist() {
   if (!_mdcReady) return; // suppress writes while init / restore is running
-  try {
-    var st = mdcGatherState();
-    localStorage.setItem(MDC_STORAGE_KEY, JSON.stringify(st));
-    mdcSetFooter(st.lastUpdated);
-  } catch (e) { /* quota or privacy mode — silently ignore */ }
+  try { localStorage.setItem(MDC_STORAGE_KEY, JSON.stringify(mdcGatherState())); }
+  catch (e) { /* quota or privacy mode — silently ignore */ }
 }
 function mdcRestore() {
   var raw;
@@ -4894,9 +4879,10 @@ function mdcRestore() {
   if (typeof syncARSpeed === 'function') syncARSpeed();
   if (typeof renderRouteData === 'function') renderRouteData();
   if (typeof renderRoute === 'function') renderRoute();
-  if (state.lastUpdated) mdcSetFooter(state.lastUpdated);
 }
 document.addEventListener('DOMContentLoaded', function() {
+  var _lu = document.getElementById('mdc-last-updated');
+  if (_lu) _lu.textContent = MDC_LAST_UPDATED;
   soeCalc();
   soeManualLocal();
   syncARCT();
