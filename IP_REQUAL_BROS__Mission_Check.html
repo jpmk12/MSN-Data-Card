@@ -527,6 +527,16 @@
   }
   .tab-panel { display: none; padding-top: 14px; }
   .tab-panel.active { display: block; }
+  .card-footer {
+    margin: 18px 0 4px;
+    padding-top: 10px;
+    border-top: 1px solid #d3d1c7;
+    text-align: center;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #888780;
+    letter-spacing: 0.04em;
+  }
 </style>
 </head>
 <body>
@@ -3056,6 +3066,12 @@
 </div><!-- /board -->
 </div><!-- /tab-scenario -->
 
+<!-- ── Footer ── -->
+<div class="card-footer">
+  <svg viewBox="0 0 24 24" style="width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px;margin-right:4px;"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+  Last updated <span id="mdc-last-updated">&mdash;</span>
+</div>
+
 <script>
 'use strict';
 document.addEventListener('DOMContentLoaded', function() {
@@ -4696,12 +4712,30 @@ function mdcGatherState() {
     state.llLz[r] = { lz1: LL_LZ_STATE[r].lz1, lz2: LL_LZ_STATE[r].lz2 };
   });
   state.defaultsVersion = MDC_DEFAULTS_VERSION;
+  state.lastUpdated = Date.now();
   return state;
+}
+// Footer "Last updated" stamp (local time, 'L' suffix to match the SOE rows).
+function mdcFormatStamp(ms) {
+  if (!ms) return '—';
+  var d = new Date(ms);
+  if (isNaN(d.getTime())) return '—';
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var p2 = function (n) { return (n < 10 ? '0' : '') + n; };
+  return p2(d.getDate()) + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() +
+         ' · ' + p2(d.getHours()) + p2(d.getMinutes()) + 'L';
+}
+function mdcSetFooter(ms) {
+  var el = document.getElementById('mdc-last-updated');
+  if (el) el.textContent = mdcFormatStamp(ms);
 }
 function mdcPersist() {
   if (!_mdcReady) return; // suppress writes while init / restore is running
-  try { localStorage.setItem(MDC_STORAGE_KEY, JSON.stringify(mdcGatherState())); }
-  catch (e) { /* quota or privacy mode — silently ignore */ }
+  try {
+    var st = mdcGatherState();
+    localStorage.setItem(MDC_STORAGE_KEY, JSON.stringify(st));
+    mdcSetFooter(st.lastUpdated);
+  } catch (e) { /* quota or privacy mode — silently ignore */ }
 }
 function mdcRestore() {
   var raw;
@@ -4860,6 +4894,7 @@ function mdcRestore() {
   if (typeof syncARSpeed === 'function') syncARSpeed();
   if (typeof renderRouteData === 'function') renderRouteData();
   if (typeof renderRoute === 'function') renderRoute();
+  if (state.lastUpdated) mdcSetFooter(state.lastUpdated);
 }
 document.addEventListener('DOMContentLoaded', function() {
   soeCalc();
