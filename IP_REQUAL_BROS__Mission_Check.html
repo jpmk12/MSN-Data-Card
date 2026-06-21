@@ -315,6 +315,21 @@
   .ll-item-row[data-sub="1"] { padding-left: 28px; }
   .ll-item-row[data-sub="1"]::before { content: '·'; left: 16px; top: 1px; }
   .ll-item-row[data-sub="1"] .ll-input { font-size: 11.5px; color: #888780; line-height: 1.6; }
+  /* Important LL-entry rows — highlighted callout with a star icon */
+  .ll-item-row[data-important="1"] {
+    align-items: center;
+    background: #FFF4D6;
+    border: 1px solid #ECCB7E;
+    border-left: 3px solid #E0A93B;
+    border-radius: 6px;
+    padding: 4px 8px;
+    margin: 4px 0;
+  }
+  .ll-item-row[data-important="1"]::before { content: none; }
+  .ll-item-row[data-important="1"] .ll-input {
+    font-weight: 700; color: #1a1a19; font-size: 13px; line-height: 1.5;
+  }
+  .ll-imp-icon { flex-shrink: 0; width: 15px; height: 15px; color: #D9911C; }
   .ll-input {
     flex: 1; min-width: 0; font-family: inherit; font-size: 12.5px;
     color: #5f5e5a; line-height: 1.65; background: transparent;
@@ -3430,14 +3445,27 @@ function syncLLRoute(source) {
 // A row value is either a plain string (top-level item) or
 // { text, sub:true } for an indented sub-item.
 function _llNormalize(value) {
-  if (value && typeof value === 'object') return { text: value.text || '', sub: !!value.sub };
-  return { text: value || '', sub: false };
+  if (value && typeof value === 'object') return { text: value.text || '', sub: !!value.sub, important: !!value.important };
+  return { text: value || '', sub: false, important: false };
 }
 function _makeLLRow(value, onChange) {
   var item = _llNormalize(value);
   var row = document.createElement('div');
   row.className = 'll-item-row';
   row.setAttribute('data-sub', item.sub ? '1' : '0');
+  if (item.important) {
+    row.setAttribute('data-important', '1');
+    var svgNS = 'http://www.w3.org/2000/svg';
+    var ic = document.createElementNS(svgNS, 'svg');
+    ic.setAttribute('viewBox', '0 0 24 24');
+    ic.setAttribute('class', 'll-imp-icon');
+    ic.setAttribute('aria-hidden', 'true');
+    var pth = document.createElementNS(svgNS, 'path');
+    pth.setAttribute('fill', 'currentColor');
+    pth.setAttribute('d', 'M12 2l2.9 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77 5.82 21l1.18-6.88-5-4.87 7.1-1.01z');
+    ic.appendChild(pth);
+    row.appendChild(ic);
+  }
   var ta = document.createElement('textarea');
   ta.className = 'll-input';
   ta.rows = 1;
@@ -3473,7 +3501,9 @@ function _makeLLRow(value, onChange) {
 function _llRowValue(row) {
   var ta = row.querySelector('.ll-input');
   var text = ta ? ta.value : '';
-  return (row.getAttribute('data-sub') === '1') ? { text: text, sub: true } : text;
+  var sub = row.getAttribute('data-sub') === '1';
+  if (row.getAttribute('data-important') === '1') return { text: text, sub: sub, important: true };
+  return sub ? { text: text, sub: true } : text;
 }
 function _llHasText(v) {
   var t = (typeof v === 'string') ? v : (v && v.text);
@@ -3503,11 +3533,11 @@ var LL_ENTRY_ROUTE_TOP = {
   'IR-154': ['Maintain 4500-10,000 between A and B to deconflict with VR-1116'],
   'IR-155': [
     'A - B -> 1.5NM wide',
-    'GDLZ -> Climb to 3700',
-    'Reporting Point G -> Amarillo: 319.15',
+    { text: 'GDLZ -> Climb to 3700', important: true },
+    { text: 'Reporting Point G -> Amarillo: 319.15', important: true },
     'Overfly G to avoid T25 town of Goodnight',
     'Remain east of center @ I -> Avoid Claude wind farm',
-    'SMLZ -> Climb to 5K'
+    { text: 'SMLZ -> Climb to 5K', important: true }
   ]
 };
 function llEntryDefaultFor(route) {
@@ -4614,7 +4644,7 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 var MDC_DEFAULTS_VERSION = 10;
 // Master-file build stamp — bump this to the current date/time (Zulu) on every
 // push so the footer tells viewers when the master file was last updated.
-var MDC_LAST_UPDATED = '21 Jun 2026 · 1439Z';
+var MDC_LAST_UPDATED = '21 Jun 2026 · 1958Z';
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {

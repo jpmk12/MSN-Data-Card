@@ -332,6 +332,12 @@ eq('LL Entry IR-155 route + common items',
 ]);
 ok('LL Entry fix line hidden for IR-155',
    await page.evaluate(() => getComputedStyle(document.getElementById('ll-entry-fixes')).display === 'none'));
+// The three critical IR-155 rows are flagged important (highlight + star icon).
+eq('LL Entry important rows (IR-155)',
+   await page.$$eval('#ll-entry-list .ll-item-row[data-important="1"] .ll-input', els => els.map(e => e.value)),
+   ['GDLZ -> Climb to 3700', 'Reporting Point G -> Amarillo: 319.15', 'SMLZ -> Climb to 5K']);
+eq('LL Entry important rows show a star icon',
+   await page.$$eval('#ll-entry-list .ll-item-row[data-important="1"] .ll-imp-icon', els => els.length), 3);
 // Edit an IR-155 item → per-route memory
 await page.$eval('#ll-entry-list .ll-input', el => { el.value = 'EDITED 155'; el.dispatchEvent(new Event('input', { bubbles: true })); });
 await page.waitForTimeout(100);
