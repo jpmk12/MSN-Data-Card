@@ -291,7 +291,7 @@ const raRows = await page.$$eval('.ll-list[data-ll-key="routeActivation"] .ll-it
   rows => rows.map(r => ({ text: r.querySelector('.ll-input').value, sub: r.getAttribute('data-sub') === '1' })));
 eq('Route Activation: Authentication is a top item', raRows[0], { text: 'Authentication', sub: false });
 eq('Route Activation: A-14-F is a sub-item', raRows[1], { text: 'A-14-F = Y', sub: true });
-eq('Route Activation: Verify GUARD is a top item', raRows[4], { text: 'Verify contract GUARD active', sub: false });
+eq('Route Activation: Verify contracts is a top item', raRows[4], { text: 'Verify contracts active', sub: false });
 eq('LZ Check-In: Clb left turn is a sub-item',
    (await page.$$eval('.ll-list[data-ll-key="lzCheckin"] .ll-item-row',
      rows => rows.map(r => r.getAttribute('data-sub') === '1'))), [false, false, true, true]);
