@@ -250,6 +250,7 @@ ok('IR-155 entry fix line visible',
    await page.evaluate(() => getComputedStyle(document.getElementById('ll-entry-fixes-155')).display !== 'none'));
 ok('IR-154 entry fix line hidden on IR-155',
    await page.evaluate(() => getComputedStyle(document.getElementById('ll-entry-fixes')).display === 'none'));
+eq('IR-155 A = LL Entry (1900)', await page.$eval('#ll-fix-a155', e => e.textContent), '1900');
 eq('IR-155 Entry to K = LL Entry + 39 (1939)', await page.$eval('#ll-fix-k', e => e.textContent), '1939');
 eq('IR-155 Entry to N = LL Entry + 44 (1944)', await page.$eval('#ll-fix-n', e => e.textContent), '1944');
 // Slow 1/Slow 2 compute from the derived LZ TOT minus the adjacent offset.
