@@ -715,11 +715,11 @@
       </select>
     </div>
 
-    <table style="width:100%;border-collapse:collapse;font-size:11.5px;margin-bottom:8px;">
+    <table style="width:100%;border-collapse:collapse;table-layout:fixed;font-size:11.5px;margin-bottom:8px;">
       <thead><tr>
-        <th style="padding:4px 6px;font-size:9.5px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1.5px solid #d3d1c7;text-align:left;">Event</th>
-        <th style="padding:4px 6px;font-size:9.5px;font-weight:700;color:#fff;background:#185FA5;border-bottom:1.5px solid #d3d1c7;text-align:center;">Zulu</th>
-        <th style="padding:4px 6px;font-size:9.5px;font-weight:700;color:#1a1a19;border-bottom:1.5px solid #d3d1c7;text-align:center;border-left:0.5px solid #d3d1c7;">Local</th>
+        <th style="width:44%;padding:4px 6px;font-size:9.5px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1.5px solid #d3d1c7;text-align:left;">Event</th>
+        <th style="width:28%;padding:4px 6px;font-size:9.5px;font-weight:700;color:#fff;background:#185FA5;border-bottom:1.5px solid #d3d1c7;text-align:center;">Zulu</th>
+        <th style="width:28%;padding:4px 6px;font-size:9.5px;font-weight:700;color:#1a1a19;border-bottom:1.5px solid #d3d1c7;text-align:center;border-left:0.5px solid #d3d1c7;">Local</th>
       </tr></thead>
       <tbody>
         <tr>
@@ -750,46 +750,56 @@
       </tbody>
     </table>
 
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;">
-
-      <!-- Manual type-in rows -->
-      <div style="font-size:11px;color:#888780;padding:3px 0;">Low Level Entry</div>
-      <div style="display:flex;align-items:baseline;gap:8px;">
-        <input id="soe-llentry" type="text" maxlength="4" placeholder="——" value="0410"
-          aria-label="Low Level Entry time in HHMM"
-          style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;"
-          oninput="syncLowLevel();soeManualLocal()" />
-        <span id="soe-llentry-l" class="soe-local">—</span>
-      </div>
-
-      <div style="font-size:11px;color:#888780;padding:3px 0;">LL Exit</div>
-      <div style="display:flex;align-items:baseline;gap:8px;">
-        <input id="soe-llexit" type="text" maxlength="4" placeholder="——" value="0454"
-          aria-label="Low Level Exit time in HHMM"
-          style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;"
-          oninput="soeManualLocal()" />
-        <span id="soe-llexit-l" class="soe-local">—</span>
-      </div>
-
-      <div style="font-size:11px;color:#888780;padding:3px 0;">ARCT</div>
-      <div style="display:flex;align-items:baseline;gap:8px;">
-        <input id="soe-arct" type="text" maxlength="4" placeholder="——" value="0205"
-          aria-label="ARCT time in HHMM"
-          style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;"
-          oninput="syncARCT();soeManualLocal()" />
-        <span id="soe-arct-l" class="soe-local">—</span>
-      </div>
-
-      <div style="font-size:11px;color:#888780;padding:3px 0;">AREX</div>
-      <div style="display:flex;align-items:baseline;gap:8px;">
-        <input id="soe-arex" type="text" maxlength="4" placeholder="——" value="0340"
-          aria-label="AR Exit time in HHMM"
-          style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:60px;outline:none;padding:2px 0;text-align:center;"
-          oninput="soeManualLocal()" />
-        <span id="soe-arex-l" class="soe-local">—</span>
-      </div>
-
-    </div>
+    <!-- Manual type-in rows (entered in Zulu; Local is calculated) -->
+    <table style="width:100%;border-collapse:collapse;table-layout:fixed;font-size:11.5px;">
+      <thead><tr>
+        <th style="width:44%;padding:4px 6px;font-size:9.5px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1.5px solid #d3d1c7;text-align:left;">Event</th>
+        <th style="width:28%;padding:4px 6px;font-size:9.5px;font-weight:700;color:#fff;background:#185FA5;border-bottom:1.5px solid #d3d1c7;text-align:center;">Zulu</th>
+        <th style="width:28%;padding:4px 6px;font-size:9.5px;font-weight:700;color:#1a1a19;border-bottom:1.5px solid #d3d1c7;text-align:center;border-left:0.5px solid #d3d1c7;">Local</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td style="padding:5px 6px;color:#5f5e5a;border-bottom:0.5px solid #d3d1c7;">LL Entry</td>
+          <td style="padding:5px 6px;text-align:center;border-bottom:0.5px solid #d3d1c7;">
+            <input id="soe-llentry" type="text" maxlength="4" placeholder="——" value="0410"
+              aria-label="LL Entry time in HHMM"
+              style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:52px;outline:none;padding:1px 0;text-align:center;"
+              oninput="syncLowLevel();soeManualLocal()" />
+          </td>
+          <td id="soe-llentry-l" class="soe-local" style="padding:5px 6px;text-align:center;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;">—</td>
+        </tr>
+        <tr>
+          <td style="padding:5px 6px;color:#5f5e5a;border-bottom:0.5px solid #d3d1c7;">LL Exit</td>
+          <td style="padding:5px 6px;text-align:center;border-bottom:0.5px solid #d3d1c7;">
+            <input id="soe-llexit" type="text" maxlength="4" placeholder="——" value="0454"
+              aria-label="LL Exit time in HHMM"
+              style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:52px;outline:none;padding:1px 0;text-align:center;"
+              oninput="soeManualLocal()" />
+          </td>
+          <td id="soe-llexit-l" class="soe-local" style="padding:5px 6px;text-align:center;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;">—</td>
+        </tr>
+        <tr>
+          <td style="padding:5px 6px;color:#5f5e5a;border-bottom:0.5px solid #d3d1c7;">ARCT</td>
+          <td style="padding:5px 6px;text-align:center;border-bottom:0.5px solid #d3d1c7;">
+            <input id="soe-arct" type="text" maxlength="4" placeholder="——" value="0205"
+              aria-label="ARCT time in HHMM"
+              style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:52px;outline:none;padding:1px 0;text-align:center;"
+              oninput="syncARCT();soeManualLocal()" />
+          </td>
+          <td id="soe-arct-l" class="soe-local" style="padding:5px 6px;text-align:center;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;">—</td>
+        </tr>
+        <tr>
+          <td style="padding:5px 6px;color:#5f5e5a;">AREX</td>
+          <td style="padding:5px 6px;text-align:center;">
+            <input id="soe-arex" type="text" maxlength="4" placeholder="——" value="0340"
+              aria-label="AREX time in HHMM"
+              style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;width:52px;outline:none;padding:1px 0;text-align:center;"
+              oninput="soeManualLocal()" />
+          </td>
+          <td id="soe-arex-l" class="soe-local" style="padding:5px 6px;text-align:center;border-left:0.5px solid #d3d1c7;">—</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <!-- Safety Supplements -->
