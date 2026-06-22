@@ -476,7 +476,7 @@ const box = await page.evaluate(() => ({
 }));
 eq('Box Step 1 defaults', box.s1, ['TAC Pts in SEC', 'Build FLT plan', 'Fix times']);
 eq('Box Step 2 defaults', box.s2, ['LZ Ldg/TO Told', 'Add BULL', 'Build Orbit at FLOYD (1.3 legs)']);
-eq('Box Step 3 empty by default', box.s3, []);
+eq('Box Step 3 default', box.s3, ['Set LL overfly points']);
 eq('Box Notes has 2 defaults', box.kp, [
   "1 min per 10,000' or 6 sec per 1,000' when TOC or BOD is prior to a waypoint",
   'Be 1 min late every 10K of climb / Be 1 min early every 10K of descent',

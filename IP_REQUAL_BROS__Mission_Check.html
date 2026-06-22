@@ -4667,7 +4667,7 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 var MDC_DEFAULTS_VERSION = 11;
 // Master-file build stamp — bump this to the current date/time (Zulu) on every
 // push so the footer tells viewers when the master file was last updated.
-var MDC_LAST_UPDATED = '22 Jun 2026 · 0353Z';
+var MDC_LAST_UPDATED = '22 Jun 2026 · 0355Z';
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {
@@ -4972,7 +4972,7 @@ document.addEventListener('DOMContentLoaded', function() {
   [
     { id: 'box-step1-list',     items: ['TAC Pts in SEC', 'Build FLT plan', 'Fix times'] },
     { id: 'box-step2-list',     items: ['LZ Ldg/TO Told', 'Add BULL', 'Build Orbit at FLOYD (1.3 legs)'] },
-    { id: 'box-step3-list',     items: [] },
+    { id: 'box-step3-list',     items: ['Set LL overfly points'] },
     { id: 'box-keypoints-list', items: ["1 min per 10,000' or 6 sec per 1,000' when TOC or BOD is prior to a waypoint", 'Be 1 min late every 10K of climb / Be 1 min early every 10K of descent'] }
   ].forEach(function(g) { g.items.forEach(function(v) { addBoxStep(g.id, v); }); });
   // Pre-load default Ground Ops entries

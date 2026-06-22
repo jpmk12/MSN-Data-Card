@@ -187,8 +187,8 @@ PDF/schedule import is ever wanted again, recover it from git history
 - Pattern Work: DUKE TAC 6500, DUKE BEAM, DUKE ACCEL 6500, STR IN
 - Ground Ops: Backing, Star Turn
 - Briefings / Notes: 3 pre-loaded (DEAD / DUFF seat-swap plan, MIN FLAP Emphasis)
-- Box Setup Sequence: Step 1 (3), Step 2 (3), Step 3 (empty),
-  Box Notes (2)
+- Box Setup Sequence: Step 1 (3), Step 2 (3), Step 3 (1: "Set LL overfly
+  points"), Box Notes (2)
 - Safety Supplements Active: `1SS-326 -> MGPS & P-RAIM Induce Date Reversion`
 - Safety Supplements Incorporated: SS-325, SS-324, OP SUP 1S-323, SS-322
 - FCIF: `26-22B - C-17 Pubs Release`; SII: `none active`
