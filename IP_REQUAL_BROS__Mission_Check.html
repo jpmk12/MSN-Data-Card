@@ -748,12 +748,12 @@
       </tr></thead>
       <tbody>
         <tr>
-          <td style="padding:5px 6px;color:#5f5e5a;border-bottom:0.5px solid #d3d1c7;">Alert <span id="soe-alert-label" style="font-size:9px;color:#b4b2a9;">−3:45</span></td>
+          <td style="padding:5px 6px;color:#5f5e5a;border-bottom:0.5px solid #d3d1c7;">Alert <select id="soe-alert-offset" onchange="soeCalc()" aria-label="Alert time: hours before takeoff" style="font-family:inherit;font-size:10px;font-weight:600;color:#185FA5;background:transparent;border:none;border-bottom:1px dotted #b4b2a9;cursor:pointer;outline:none;padding:0 1px;"><option value="-210">3+30</option><option value="-225">3+45</option><option value="-240" selected>4+00</option></select></td>
           <td id="soe-alert" style="padding:5px 6px;text-align:center;font-weight:600;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">—</td>
           <td id="soe-alert-l" style="padding:5px 6px;text-align:center;font-weight:600;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;">—</td>
         </tr>
         <tr>
-          <td style="padding:5px 6px;color:#5f5e5a;border-bottom:0.5px solid #d3d1c7;">Show <select id="soe-show-offset" onchange="soeCalc()" aria-label="Show time: hours before takeoff" style="font-family:inherit;font-size:10px;font-weight:600;color:#185FA5;background:transparent;border:none;border-bottom:1px dotted #b4b2a9;cursor:pointer;outline:none;padding:0 1px;"><option value="-210" selected>3+30</option><option value="-225">3+45</option><option value="-240">4+00</option></select></td>
+          <td style="padding:5px 6px;color:#5f5e5a;border-bottom:0.5px solid #d3d1c7;">Show <select id="soe-show-offset" onchange="soeCalc()" aria-label="Show time: hours before takeoff" style="font-family:inherit;font-size:10px;font-weight:600;color:#185FA5;background:transparent;border:none;border-bottom:1px dotted #b4b2a9;cursor:pointer;outline:none;padding:0 1px;"><option value="-210">3+30</option><option value="-225">3+45</option><option value="-240" selected>4+00</option></select></td>
           <td id="soe-show" style="padding:5px 6px;text-align:center;font-weight:600;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">—</td>
           <td id="soe-show-l" style="padding:5px 6px;text-align:center;font-weight:600;color:#5f5e5a;border-left:0.5px solid #d3d1c7;border-bottom:0.5px solid #d3d1c7;">—</td>
         </tr>
@@ -3116,15 +3116,12 @@ function soeCalc() {
   var toZ = (zone === 'CT') ? (entered - ct*60) : entered;
   var landEl = document.getElementById('soe-land-offset');
   var landOff = landEl ? (parseInt(landEl.value, 10) || 300) : 300;
-  // Show is selectable (−3:30 / −3:45 / −4:00); Alert keeps its 15-min lead.
+  // Alert and Show are independently selectable offsets prior to takeoff
+  // (3+30 / 3+45 / 4+00 = −210 / −225 / −240 min).
+  var alertEl = document.getElementById('soe-alert-offset');
+  var alertOff = alertEl ? (parseInt(alertEl.value, 10) || -240) : -240;
   var showEl = document.getElementById('soe-show-offset');
-  var showOff = showEl ? (parseInt(showEl.value, 10) || -210) : -210;
-  var alertOff = showOff - 15;
-  var alertLbl = document.getElementById('soe-alert-label');
-  if (alertLbl) {
-    var a = Math.abs(alertOff);
-    alertLbl.textContent = '−' + Math.floor(a/60) + ':' + (a%60 < 10 ? '0' : '') + (a%60);
-  }
+  var showOff = showEl ? (parseInt(showEl.value, 10) || -240) : -240;
   var offsets = [alertOff, showOff, -45, landOff, 0];
   for (var i=0;i<offsets.length;i++){
     var z = toZ + offsets[i];
@@ -4650,10 +4647,10 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 // Bump whenever the baked-in defaults change. A saved card built on an
 // older version is offered an "Apply latest brief data" banner that
 // refreshes the canonical fields while keeping the pilot's edits.
-var MDC_DEFAULTS_VERSION = 10;
+var MDC_DEFAULTS_VERSION = 11;
 // Master-file build stamp — bump this to the current date/time (Zulu) on every
 // push so the footer tells viewers when the master file was last updated.
-var MDC_LAST_UPDATED = '22 Jun 2026 · 0111Z';
+var MDC_LAST_UPDATED = '22 Jun 2026 · 0122Z';
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {

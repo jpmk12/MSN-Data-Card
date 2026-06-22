@@ -88,10 +88,9 @@ eq('ARCT default 0205',            await page.$eval('#soe-arct',    e => e.value
 eq('AREX default 0340',            await page.$eval('#soe-arex',    e => e.value), '0340');
 const cells = await page.$$eval('#tab-main table tr', rows =>
   rows.map(r => [...r.querySelectorAll('td')].map(t => t.textContent.trim())));
-// 0135 takeoff (Z, CDT −5): Alert −3:45 = 2150/1650, Show −3:30 = 2205/1705,
+// 0135 takeoff (Z, CDT −5): Alert & Show both default −4:00 = 2135/1635,
 // Land defaults to +5:00 = 0635/0135.
-ok('SOE Alert back-calcs from 0135',     cells.some(r => r.includes('2150') && r.includes('1650')));
-ok('SOE Show is takeoff − 3:30 (2205)',  cells.some(r => r.includes('2205') && r.includes('1705')));
+ok('SOE Alert back-calcs from 0135 (−4:00 = 2135)', cells.some(r => r.includes('2135') && r.includes('1635')));
 eq('Land offset default +5:00', await page.$eval('#soe-land-offset', e => e.value), '300');
 ok('SOE Land row +5:00 from 0135 (0635)', cells.some(r => r.includes('0635') && r.includes('0135')));
 // Land offset is configurable: switch to +6:00 → 0735/0235.
@@ -101,14 +100,19 @@ eq('Land recomputes at +6:00 (0735)', await page.$eval('#soe-land', e => e.textC
 eq('Land local recomputes at +6:00 (0235)', await page.$eval('#soe-land-l', e => e.textContent), '0235');
 await page.selectOption('#soe-land-offset', '300');
 await page.waitForTimeout(100);
-// Show offset is selectable (−3:30 default); Alert keeps a 15-min lead.
-eq('Show offset default −3:30', await page.$eval('#soe-show-offset', e => e.value), '-210');
-await page.selectOption('#soe-show-offset', '-240'); // 4+00 before takeoff
+// Alert and Show are independently selectable offsets prior to takeoff,
+// both defaulting to 4+00 (−240 min).
+eq('Show offset default 4+00', await page.$eval('#soe-show-offset', e => e.value), '-240');
+eq('Alert offset default 4+00', await page.$eval('#soe-alert-offset', e => e.value), '-240');
+await page.selectOption('#soe-show-offset', '-210'); // 3+30 before takeoff
 await page.waitForTimeout(100);
-eq('Show recomputes at −4:00 (2135)', await page.$eval('#soe-show', e => e.textContent), '2135');
-eq('Alert tracks Show at −4:15 (2120)', await page.$eval('#soe-alert', e => e.textContent), '2120');
-eq('Alert label updates to −4:15', await page.$eval('#soe-alert-label', e => e.textContent), '−4:15');
-await page.selectOption('#soe-show-offset', '-210');
+eq('Show recomputes at −3:30 (2205)', await page.$eval('#soe-show', e => e.textContent), '2205');
+eq('Alert unchanged by Show (still 2135)', await page.$eval('#soe-alert', e => e.textContent), '2135');
+await page.selectOption('#soe-alert-offset', '-210'); // 3+30 before takeoff
+await page.waitForTimeout(100);
+eq('Alert recomputes at −3:30 (2205)', await page.$eval('#soe-alert', e => e.textContent), '2205');
+await page.selectOption('#soe-show-offset', '-240');
+await page.selectOption('#soe-alert-offset', '-240');
 await page.waitForTimeout(100);
 // Manual SOE rows show a calculated local time (Zulu + DST). CDT −5 default:
 // 0410→2310L, 0454→2354L, 0205→2105L, 0340→2240L.
