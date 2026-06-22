@@ -141,6 +141,11 @@ PDF/schedule import is ever wanted again, recover it from git history
 - SOE: Takeoff `0135`, LL Entry `0410`, LL Exit `0454`, ARCT `0205`, AREX `0340`.
   Land time is `Takeoff + N` where N is the `#soe-land-offset` dropdown
   (1–6 h, default **+5:00**); `soeCalc()` reads it for the Land row.
+  **Show** is also a dropdown (`#soe-show-offset`: `3+30`/`3+45`/`4+00` =
+  −210/−225/−240 min, default −3:30). **Alert tracks Show** with a fixed
+  15-min lead (`alertOff = showOff − 15`); its reference label
+  (`#soe-alert-label`) updates dynamically so Alert always sits 15 min before
+  Show.
   The four manual rows (LL Entry/Exit, ARCT, AREX) are entered in Zulu and show
   a calculated local time beside each (`#soe-<id>-l`, green `.soe-local`) via
   `soeManualLocal()` = `Zulu + DST offset` (`#soe-dst`). Recomputes on input and

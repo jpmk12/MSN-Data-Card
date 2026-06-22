@@ -101,6 +101,15 @@ eq('Land recomputes at +6:00 (0735)', await page.$eval('#soe-land', e => e.textC
 eq('Land local recomputes at +6:00 (0235)', await page.$eval('#soe-land-l', e => e.textContent), '0235');
 await page.selectOption('#soe-land-offset', '300');
 await page.waitForTimeout(100);
+// Show offset is selectable (−3:30 default); Alert keeps a 15-min lead.
+eq('Show offset default −3:30', await page.$eval('#soe-show-offset', e => e.value), '-210');
+await page.selectOption('#soe-show-offset', '-240'); // 4+00 before takeoff
+await page.waitForTimeout(100);
+eq('Show recomputes at −4:00 (2135)', await page.$eval('#soe-show', e => e.textContent), '2135');
+eq('Alert tracks Show at −4:15 (2120)', await page.$eval('#soe-alert', e => e.textContent), '2120');
+eq('Alert label updates to −4:15', await page.$eval('#soe-alert-label', e => e.textContent), '−4:15');
+await page.selectOption('#soe-show-offset', '-210');
+await page.waitForTimeout(100);
 // Manual SOE rows show a calculated local time (Zulu + DST). CDT −5 default:
 // 0410→2310L, 0454→2354L, 0205→2105L, 0340→2240L.
 eq('LL Entry local (CDT) 2310L', await page.$eval('#soe-llentry-l', e => e.textContent), '2310L');
