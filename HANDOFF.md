@@ -216,7 +216,7 @@ top-level or `{ text, sub:true }` for a sub-item — see `_llNormalize` /
 **Important rows.** A row value of `{ text, important:true }` renders a
 highlighted callout (`data-important="1"`: amber box, bold text, gold star
 SVG `.ll-imp-icon`) — used for the three critical IR-155 Low Level Entry
-values (GDLZ climb 3700, Reporting Point G / Amarillo 319.15, SMLZ climb 5K).
+values (GDLZ Escape 3700, Reporting Point G / Amarillo 319.15, SMLZ Escape 5K).
 The flag round-trips through `_llNormalize` / `_makeLLRow` / `_llRowValue`,
 so important rows stay editable and persist. Old saved state (plain strings)
 restores un-highlighted — reset to pick up the flagged defaults. Defaults that ship nested: Route Activation

@@ -334,11 +334,11 @@ await page.waitForTimeout(120);
 eq('LL Entry IR-155 route + common items',
    await page.$$eval('#ll-entry-list .ll-input', els => els.map(e => e.value)), [
   'A - B -> 1.5NM wide',
-  'GDLZ -> Climb to 3700',
+  'GDLZ -> Escape to 3700',
   'Reporting Point G -> Amarillo: 319.15',
   'Overfly G to avoid T25 town of Goodnight',
   'Remain east of center @ I -> Avoid Claude wind farm',
-  'SMLZ -> Climb to 5K',
+  'SMLZ -> Escape to 5K',
   'Hack / Squawk / Talk',
   'Speed Limits',
   'Set Escape freq',
@@ -348,7 +348,7 @@ ok('LL Entry fix line hidden for IR-155',
 // The three critical IR-155 rows are flagged important (highlight + star icon).
 eq('LL Entry important rows (IR-155)',
    await page.$$eval('#ll-entry-list .ll-item-row[data-important="1"] .ll-input', els => els.map(e => e.value)),
-   ['GDLZ -> Climb to 3700', 'Reporting Point G -> Amarillo: 319.15', 'SMLZ -> Climb to 5K']);
+   ['GDLZ -> Escape to 3700', 'Reporting Point G -> Amarillo: 319.15', 'SMLZ -> Escape to 5K']);
 eq('LL Entry important rows show a star icon',
    await page.$$eval('#ll-entry-list .ll-item-row[data-important="1"] .ll-imp-icon', els => els.length), 3);
 // Edit an IR-155 item → per-route memory
@@ -572,6 +572,14 @@ const rows = await page.$$eval('#route-data-body tr', trs =>
   trs.map(t => [...t.querySelectorAll('td')].map(c => c.textContent.trim())));
 eq('IR-154 Turn Points row count', rows.length, 13);
 eq('IR-154 first turn row', rows[0], ['B1','122','3150M','3068M','3068M','3700M']);
+// IR-155 Turn Points (16 points B…N).
+await page.selectOption('#route-select', 'IR-155');
+await page.waitForTimeout(150);
+const rows155 = await page.$$eval('#route-data-body tr', trs =>
+  trs.map(t => [...t.querySelectorAll('td')].map(c => c.textContent.trim())));
+eq('IR-155 Turn Points row count', rows155.length, 16);
+eq('IR-155 first turn row', rows155[0], ['B','026','3998M','3812M','3547M','4400M']);
+eq('IR-155 last turn row', rows155[15], ['N','227','4276M','4276M','3813M','4800M']);
 
 // ── 18b. Route Information: Required Chart row ──────────────────────
 const reqChart = await page.evaluate(() => {

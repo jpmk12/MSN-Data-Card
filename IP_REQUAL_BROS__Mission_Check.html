@@ -3539,11 +3539,11 @@ var LL_ENTRY_ROUTE_TOP = {
   'IR-154': ['Maintain 4500-10,000 between A and B to deconflict with VR-1116'],
   'IR-155': [
     'A - B -> 1.5NM wide',
-    { text: 'GDLZ -> Climb to 3700', important: true },
+    { text: 'GDLZ -> Escape to 3700', important: true },
     { text: 'Reporting Point G -> Amarillo: 319.15', important: true },
     'Overfly G to avoid T25 town of Goodnight',
     'Remain east of center @ I -> Avoid Claude wind farm',
-    { text: 'SMLZ -> Climb to 5K', important: true }
+    { text: 'SMLZ -> Escape to 5K', important: true }
   ]
 };
 function llEntryDefaultFor(route) {
@@ -3975,7 +3975,24 @@ var TURN_DATA = {
     { pt: 'E1', hdg: '106', m: '3331M', n: '3052M', v: '3045M', i: '3900M' },
     { pt: 'HLZ', hdg: '093', m: '2912M', n: '2753M', v: '2753M', i: '3300M' }
   ],
-  'IR-155': [],
+  'IR-155': [
+    { pt: 'B',     hdg: '026', m: '3998M', n: '3812M', v: '3547M', i: '4400M' },
+    { pt: 'B2',    hdg: '054', m: '4043M', n: '4030M', v: '3564M', i: '4600M' },
+    { pt: 'C',     hdg: '041', m: '2996M', n: '2996M', v: '2967M', i: '3500M' },
+    { pt: 'D1',    hdg: '337', m: '2829M', n: '2763M', v: '2763M', i: '3400M' },
+    { pt: 'SLW',   hdg: '342', m: '3203M', n: '2944M', v: '2783M', i: '3800M' },
+    { pt: 'GDLZ',  hdg: '356', m: '3259M', n: '3259M', v: '3259M', i: '3800M' },
+    { pt: 'STSWP', hdg: '356', m: '3677M', n: '3596M', v: '3239M', i: '4200M' },
+    { pt: 'F',     hdg: '257', m: '3920M', n: '3920M', v: '3436M', i: '4500M' },
+    { pt: 'G',     hdg: '297', m: '4258M', n: '3813M', v: '3813M', i: '4500M' },
+    { pt: 'I1',    hdg: '163', m: '4392M', n: '4363M', v: '3898M', i: '4900M' },
+    { pt: 'I2',    hdg: '150', m: '4029M', n: '3813M', v: '3813M', i: '4600M' },
+    { pt: 'SMLZ',  hdg: '178', m: '3895M', n: '3895M', v: '3741M', i: '4400M' },
+    { pt: 'K',     hdg: '170', m: '4204M', n: '3816M', v: '3728M', i: '4700M' },
+    { pt: 'L',     hdg: '209', m: '4036M', n: '3672M', v: '3672M', i: '4600M' },
+    { pt: 'M',     hdg: '225', m: '4301M', n: '4191M', v: '3708M', i: '4700M' },
+    { pt: 'N',     hdg: '227', m: '4276M', n: '4276M', v: '3813M', i: '4800M' }
+  ],
   'IR-154': [
     { pt: 'B1',    hdg: '122', m: '3150M', n: '3068M', v: '3068M', i: '3700M' },
     { pt: 'B2',    hdg: '120', m: '3038M', n: '3038M', v: '2944M', i: '3600M' },
@@ -4650,7 +4667,7 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 var MDC_DEFAULTS_VERSION = 11;
 // Master-file build stamp — bump this to the current date/time (Zulu) on every
 // push so the footer tells viewers when the master file was last updated.
-var MDC_LAST_UPDATED = '22 Jun 2026 · 0122Z';
+var MDC_LAST_UPDATED = '22 Jun 2026 · 0353Z';
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {
