@@ -709,6 +709,21 @@ eq('Threat 3 row', threatRows[2],
 eq('Threat 4 row', threatRows[3],
    ['Threat 4', 'LBB/R066076', 'N 33 59 24.6', 'W 100 26 06.4']);
 
+// ── 25d. IR-155 Threat Plot card (Scenario tab, under Notional Weather) ──
+ok('IR-155 Threat Plot card title present',
+   /IR-155 Threat Plot/.test(await page.$eval('#ir155-threat-plot-card .card-header', e => e.textContent.replace(/\s+/g, ' ').trim())));
+ok('IR-155 Threat Plot sits right after Notional LZ Weather',
+   await page.evaluate(() => document.getElementById('notion-weather-card').nextElementSibling.id === 'ir155-threat-plot-card'));
+const threat155 = await page.$$eval('#ir155-threat-plot-card tbody .threat-row',
+  els => els.map(r => [...r.querySelectorAll('td')].map(t => t.textContent.trim())));
+eq('IR-155 Threat Plot has 6 rows', threat155.length, 6);
+eq('IR-155 BULL row', threat155[0],
+   ['BULL', 'LBB/R062129', 'N 34 17 43.0', 'W 099 32 37.8']);
+eq('IR-155 TH3 row', threat155[3],
+   ['TH3', 'LBB/R009090', 'N 35 07 00.2', 'W 101 18 13.6']);
+eq('IR-155 TH5 row', threat155[5],
+   ['TH5', 'LBB/R018089', 'N 35 00 36.5', 'W 101 03 02.0']);
+
 // ── 26. Ground Ops stale-state self-heal ───────────────────────────
 await page.evaluate(() => {
   localStorage.setItem('iprq-bros-mdc-v1', JSON.stringify({
