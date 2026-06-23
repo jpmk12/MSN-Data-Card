@@ -138,9 +138,9 @@ PDF/schedule import is ever wanted again, recover it from git history
 ## Current defaults (Check)
 
 - Header badge `Check` (editable `#hdr-flt`), callsign `CADDO 96`, students `DEAD` / `DUFF`
-- SOE: Takeoff `1514`, LL Entry `1855`, LL Exit `1939`, ARCT `1700`, AREX `1835`.
+- SOE: Takeoff `1415`, LL Entry `1855`, LL Exit `1939`, ARCT `1700`, AREX `1835`.
   Land time is `Takeoff + N` where N is the `#soe-land-offset` dropdown
-  (1–6 h, default **+5:00**); `soeCalc()` reads it for the Land row.
+  (1–6 h, default **+6:00**); `soeCalc()` reads it for the Land row.
   **Alert** (`#soe-alert-offset`) and **Show** (`#soe-show-offset`) are each
   independent dropdowns of offsets prior to takeoff — `3+30`/`3+45`/`4+00` =
   −210/−225/−240 min — defaults **Show `3+30`**, **Alert `3+45`**. `soeCalc()`

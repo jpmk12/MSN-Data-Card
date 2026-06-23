@@ -748,7 +748,7 @@
     <!-- Takeoff anchor input -->
     <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap;">
       <label for="soe-takeoff" style="font-size:11px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap;">Takeoff</label>
-      <input id="soe-takeoff" type="text" maxlength="4" placeholder="0900" value="1514"
+      <input id="soe-takeoff" type="text" maxlength="4" placeholder="0900" value="1415"
         aria-label="Takeoff time in HHMM format"
         style="font-family:inherit;font-size:15px;font-weight:600;color:#185FA5;border:none;border-bottom:2px solid #185FA5;background:transparent;width:54px;outline:none;text-align:center;padding:2px 0;"
         oninput="soeCalc()" />
@@ -792,7 +792,7 @@
           <td id="soe-to-l" style="padding:6px;text-align:center;font-weight:700;font-size:13px;color:#0C447C;border-left:0.5px solid #B5D4F4;">—</td>
         </tr>
         <tr>
-          <td style="padding:5px 6px;color:#5f5e5a;">Land <select id="soe-land-offset" onchange="soeCalc()" aria-label="Land time: hours after takeoff" style="font-family:inherit;font-size:10px;font-weight:600;color:#185FA5;background:transparent;border:none;border-bottom:1px dotted #b4b2a9;cursor:pointer;outline:none;padding:0 1px;"><option value="60">+1:00</option><option value="120">+2:00</option><option value="180">+3:00</option><option value="240">+4:00</option><option value="300" selected>+5:00</option><option value="360">+6:00</option></select></td>
+          <td style="padding:5px 6px;color:#5f5e5a;">Land <select id="soe-land-offset" onchange="soeCalc()" aria-label="Land time: hours after takeoff" style="font-family:inherit;font-size:10px;font-weight:600;color:#185FA5;background:transparent;border:none;border-bottom:1px dotted #b4b2a9;cursor:pointer;outline:none;padding:0 1px;"><option value="60">+1:00</option><option value="120">+2:00</option><option value="180">+3:00</option><option value="240">+4:00</option><option value="300">+5:00</option><option value="360" selected>+6:00</option></select></td>
           <td id="soe-land" style="padding:5px 6px;text-align:center;font-weight:600;color:#1a1a19;">—</td>
           <td id="soe-land-l" style="padding:5px 6px;text-align:center;font-weight:600;color:#5f5e5a;border-left:0.5px solid #d3d1c7;">—</td>
         </tr>
@@ -3143,7 +3143,7 @@ function soeCalc() {
   // Normalize the entered takeoff time to Zulu
   var toZ = (zone === 'CT') ? (entered - ct*60) : entered;
   var landEl = document.getElementById('soe-land-offset');
-  var landOff = landEl ? (parseInt(landEl.value, 10) || 300) : 300;
+  var landOff = landEl ? (parseInt(landEl.value, 10) || 360) : 360;
   // Alert and Show are independently selectable offsets prior to takeoff
   // (3+30 / 3+45 / 4+00 = −210 / −225 / −240 min).
   var alertEl = document.getElementById('soe-alert-offset');
@@ -4700,7 +4700,7 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 var MDC_DEFAULTS_VERSION = 13;
 // Master-file build stamp — bump this to the current date/time (Zulu) on every
 // push so the footer tells viewers when the master file was last updated.
-var MDC_LAST_UPDATED = '23 Jun 2026 · 2304Z';
+var MDC_LAST_UPDATED = '23 Jun 2026 · 2314Z';
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {

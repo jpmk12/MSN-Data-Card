@@ -79,7 +79,7 @@ eq('Student 1 default DEAD',     await page.$eval('#hdr-student1', e => e.value)
 eq('Student 2 default DUFF',     await page.$eval('#hdr-student2', e => e.value), 'DUFF');
 
 // ── 3. SOE defaults / calc ──────────────────────────────────────────
-eq('Takeoff default 1514',         await page.$eval('#soe-takeoff', e => e.value), '1514');
+eq('Takeoff default 1415',         await page.$eval('#soe-takeoff', e => e.value), '1415');
 eq('Low Level Entry default 1855', await page.$eval('#soe-llentry', e => e.value), '1855');
 eq('GDLZ TOT default 1914 (IR-155)', await page.$eval('#soe-lztime',  e => e.value), '1914');
 eq('LL Exit default 1939',         await page.$eval('#soe-llexit',  e => e.value), '1939');
@@ -88,18 +88,18 @@ eq('ARCT default 1700',            await page.$eval('#soe-arct',    e => e.value
 eq('AREX default 1835',            await page.$eval('#soe-arex',    e => e.value), '1835');
 const cells = await page.$$eval('#tab-main table tr', rows =>
   rows.map(r => [...r.querySelectorAll('td')].map(t => t.textContent.trim())));
-// 1514 takeoff (Z, CDT −5): Alert default −3:45 = 1129/0629,
-// Show default −3:30 = 1144/0644, Land +5:00 = 2014/1514.
-ok('SOE Alert back-calcs from 1514 (−3:45 = 1129)', cells.some(r => r.includes('1129') && r.includes('0629')));
-ok('SOE Show back-calcs from 1514 (−3:30 = 1144)', cells.some(r => r.includes('1144') && r.includes('0644')));
-eq('Land offset default +5:00', await page.$eval('#soe-land-offset', e => e.value), '300');
-ok('SOE Land row +5:00 from 1514 (2014)', cells.some(r => r.includes('2014') && r.includes('1514')));
-// Land offset is configurable: switch to +6:00 → 2114/1614.
-await page.selectOption('#soe-land-offset', '360');
-await page.waitForTimeout(100);
-eq('Land recomputes at +6:00 (2114)', await page.$eval('#soe-land', e => e.textContent), '2114');
-eq('Land local recomputes at +6:00 (1614)', await page.$eval('#soe-land-l', e => e.textContent), '1614');
+// 1415 takeoff (Z, CDT −5): Alert default −3:45 = 1030/0530,
+// Show default −3:30 = 1045/0545, Land +6:00 = 2015/1515.
+ok('SOE Alert back-calcs from 1415 (−3:45 = 1030)', cells.some(r => r.includes('1030') && r.includes('0530')));
+ok('SOE Show back-calcs from 1415 (−3:30 = 1045)', cells.some(r => r.includes('1045') && r.includes('0545')));
+eq('Land offset default +6:00', await page.$eval('#soe-land-offset', e => e.value), '360');
+ok('SOE Land row +6:00 from 1415 (2015)', cells.some(r => r.includes('2015') && r.includes('1515')));
+// Land offset is configurable: switch to +5:00 → 1915/1415.
 await page.selectOption('#soe-land-offset', '300');
+await page.waitForTimeout(100);
+eq('Land recomputes at +5:00 (1915)', await page.$eval('#soe-land', e => e.textContent), '1915');
+eq('Land local recomputes at +5:00 (1415)', await page.$eval('#soe-land-l', e => e.textContent), '1415');
+await page.selectOption('#soe-land-offset', '360');
 await page.waitForTimeout(100);
 // Alert and Show are independently selectable offsets prior to takeoff.
 // Defaults: Show 3+30 (−210), Alert 3+45 (−225).
@@ -107,11 +107,11 @@ eq('Show offset default 3+30', await page.$eval('#soe-show-offset', e => e.value
 eq('Alert offset default 3+45', await page.$eval('#soe-alert-offset', e => e.value), '-225');
 await page.selectOption('#soe-show-offset', '-240'); // 4+00 before takeoff
 await page.waitForTimeout(100);
-eq('Show recomputes at −4:00 (1114)', await page.$eval('#soe-show', e => e.textContent), '1114');
-eq('Alert unchanged by Show (still 1129)', await page.$eval('#soe-alert', e => e.textContent), '1129');
+eq('Show recomputes at −4:00 (1015)', await page.$eval('#soe-show', e => e.textContent), '1015');
+eq('Alert unchanged by Show (still 1030)', await page.$eval('#soe-alert', e => e.textContent), '1030');
 await page.selectOption('#soe-alert-offset', '-240'); // 4+00 before takeoff
 await page.waitForTimeout(100);
-eq('Alert recomputes at −4:00 (1114)', await page.$eval('#soe-alert', e => e.textContent), '1114');
+eq('Alert recomputes at −4:00 (1015)', await page.$eval('#soe-alert', e => e.textContent), '1015');
 await page.selectOption('#soe-show-offset', '-210');
 await page.selectOption('#soe-alert-offset', '-225');
 await page.waitForTimeout(100);
@@ -545,7 +545,7 @@ eq('Reset: LL Entry back to 1855',     await page.$eval('#soe-llentry', e => e.v
 eq('Reset: GDLZ TOT back to 1914',     await page.$eval('#soe-lztime',  e => e.value), '1914');
 eq('Reset: LL Exit back to 1939',      await page.$eval('#soe-llexit',  e => e.value), '1939');
 eq('Reset: SMLZ TOT back to 1931',     await page.$eval('#soe-lz2tot',  e => e.value), '1931');
-eq('Reset: Takeoff back to 1514',      await page.$eval('#soe-takeoff', e => e.value), '1514');
+eq('Reset: Takeoff back to 1415',      await page.$eval('#soe-takeoff', e => e.value), '1415');
 const patReset = await page.$$eval('#pattern-list [data-preset]', els => els.map(e => e.getAttribute('data-preset')));
 eq('Reset: Pattern 4 defaults', patReset, ['DUKE TAC 6500', 'DUKE BEAM', 'DUKE ACCEL 6500', 'STR IN']);
 eq('Reset: Slow 1 offset default', await page.$eval('#ll-slow-offset',  e => e.value), '120');
