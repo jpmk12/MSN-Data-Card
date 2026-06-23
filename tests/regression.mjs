@@ -755,6 +755,15 @@ await page.reload({ waitUntil: 'networkidle' });
 await page.waitForTimeout(500);
 ok('Active tab (GK) restored after reload',
    await page.evaluate(() => document.getElementById('tab-lifesupport').classList.contains('active')));
+// Memory items (QRC listed) render as emergency callouts with a warning icon.
+eq('Memory items: 3 emergency callouts',
+   await page.$$eval('#tab-lifesupport .mem-item', els => els.length), 3);
+eq('Memory items: each callout has a warning icon',
+   await page.$$eval('#tab-lifesupport .mem-item .mem-icon', els => els.length), 3);
+eq('Memory items: 2 indented sub-items',
+   await page.$$eval('#tab-lifesupport .mem-sub', els => els.length), 2);
+ok('Memory items: first callout is Loss of Pressurization',
+   await page.$eval('#tab-lifesupport .mem-item', el => el.textContent.includes('Loss of Pressurization')));
 
 // ── 26e. Undo restores the card after Reset ────────────────────────
 await clickTab('Brief');

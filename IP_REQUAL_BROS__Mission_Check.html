@@ -306,6 +306,23 @@
   }
   .sub-item::before { content: '·'; position: absolute; left: 16px; }
 
+  /* Memory items (QRC listed) — critical emergency procedures, flown from memory */
+  .mem-item {
+    display: flex; align-items: flex-start; gap: 8px;
+    background: #FCEBEA; border: 1px solid #E0B4B0; border-left: 3px solid #C0392B;
+    border-radius: 6px; padding: 6px 10px; margin: 5px 0;
+    font-size: 12.5px; font-weight: 700; color: #1a1a19; line-height: 1.45;
+  }
+  .mem-icon {
+    flex-shrink: 0; width: 15px; height: 15px; margin-top: 1px;
+    stroke: #C0392B; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  }
+  .mem-sub {
+    margin: 2px 0 2px 30px; padding: 3px 10px;
+    border-left: 2px solid rgba(192,57,43,0.4);
+    font-size: 11.5px; font-weight: 600; color: #8A2A20; line-height: 1.5;
+  }
+
   /* ── Editable Low level X Check rows ── */
   .ll-item-row {
     display: flex; align-items: flex-start; gap: 6px;
@@ -1047,11 +1064,11 @@
       <svg class="icon" viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
       Memory items (QRC listed)
     </div>
-    <div class="item" style="font-size:12px;">▸ Loss of Pressurization — Oxygen: "On, 100%" (All)</div>
-    <div class="item" style="font-size:12px;">▸ Smoke, Fire, or Fumes — Oxygen: "On, 100%" (All)</div>
-    <div class="item" style="font-size:12px;">▸ Pitch Runaway Recovery — "Pitch Authority" and/or "Stabilizer Motion"</div>
-    <div class="sub-item" style="font-size:11.5px; padding-left:32px;">• Stab Trim Handles — Split Beyond Detent and Hold</div>
-    <div class="sub-item" style="font-size:11.5px; padding-left:32px;">• Aircraft Control — Maintain</div>
+    <div class="mem-item"><svg class="mem-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Loss of Pressurization — Oxygen: "On, 100%" (All)</div>
+    <div class="mem-item"><svg class="mem-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Smoke, Fire, or Fumes — Oxygen: "On, 100%" (All)</div>
+    <div class="mem-item"><svg class="mem-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Pitch Runaway Recovery — "Pitch Authority" and/or "Stabilizer Motion"</div>
+    <div class="mem-sub">Stab Trim Handles — Split Beyond Detent and Hold</div>
+    <div class="mem-sub">Aircraft Control — Maintain</div>
   </div>
 
   <!-- Memory Maneuver Items -->
@@ -4683,7 +4700,7 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 var MDC_DEFAULTS_VERSION = 12;
 // Master-file build stamp — bump this to the current date/time (Zulu) on every
 // push so the footer tells viewers when the master file was last updated.
-var MDC_LAST_UPDATED = '23 Jun 2026 · 1618Z';
+var MDC_LAST_UPDATED = '23 Jun 2026 · 1624Z';
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {
