@@ -267,6 +267,10 @@ ok('IR-154 entry fix line hidden on IR-155',
 eq('IR-155 A = LL Entry (1900)', await page.$eval('#ll-fix-a155', e => e.textContent), '1900');
 eq('IR-155 Entry to K = LL Entry + 39 (1939)', await page.$eval('#ll-fix-k', e => e.textContent), '1939');
 eq('IR-155 Entry to N = LL Entry + 44 (1944)', await page.$eval('#ll-fix-n', e => e.textContent), '1944');
+// JUNVA run-in (IR-155): LL Entry 1900 − 9:30 = 18:50:30, shown at the top.
+ok('IR-155 JUNVA line visible',
+   await page.evaluate(() => getComputedStyle(document.getElementById('ll-junva-155')).display !== 'none'));
+eq('IR-155 JUNVA = LL Entry − 9:30 (18:50:30)', await page.$eval('#ll-junva-time', e => e.textContent), '18:50:30');
 // Slow 1/Slow 2 compute from the derived LZ TOT minus the adjacent offset.
 // (§7 left the offsets at −3:00 / −1:40; reset both to the −2:00 default.)
 await page.selectOption('#ll-slow-offset', '120');
@@ -336,6 +340,8 @@ eq('LL Entry IR-154 default list',
 ]);
 ok('LL Entry fix line visible for IR-154',
    await page.evaluate(() => getComputedStyle(document.getElementById('ll-entry-fixes')).display !== 'none'));
+ok('IR-155 JUNVA line hidden for IR-154',
+   await page.evaluate(() => getComputedStyle(document.getElementById('ll-junva-155')).display === 'none'));
 // Switch to IR-155 → IR-155 route items + common, fix line hidden
 await page.selectOption('#ll-route-select', 'IR-155');
 await page.waitForTimeout(120);

@@ -177,8 +177,10 @@ PDF/schedule import is ever wanted again, recover it from git history
     above the editable list, route-toggled in `renderLLEntry`, computed in
     `syncLowLevel`): `#ll-entry-fixes` for IR-154 (A / F = +19 / J = +34);
     `#ll-entry-fixes-155` for IR-155 (Entry to K = LL Entry + 39, Entry to N =
-    + 44). The editable list (whose first item is the IR-154 FLOYD Run-In line)
-    follows below it.
+    + 44). For IR-155 a calculated **JUNVA run-in** line (`#ll-junva-155` /
+    `#ll-junva-time`) sits at the very top: LL Entry − 9 min 30 sec, shown
+    HH:MM:SS (computed in `syncLowLevel`). The editable list (whose first item
+    is the IR-154 FLOYD Run-In line) follows below it.
 - **Air Refueling** card (titled "Air Refueling"; was "AR Info"): track
   `AR197H`, Tanker `DASH 85`, TNKR Type `KC-46`, RZ Type `G (Enroute)`,
   AR SPD `275 (KC-46)`. The track dropdown also has an **`NA`** option —

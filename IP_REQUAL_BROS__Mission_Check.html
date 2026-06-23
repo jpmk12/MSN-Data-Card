@@ -1230,6 +1230,7 @@
     <div class="ll-list" data-ll-key="approach"></div>
     <button type="button" class="ll-add-btn" onclick="addLLItem('approach')" aria-label="Add Approach Check item">+ item</button>
     <label class="section-title teal banded chk-title" style="margin-top:8px"><span class="chk-text">Low Level Entry</span><input type="checkbox" class="chk-input"></label>
+    <div class="item" id="ll-junva-155" style="font-weight:600;color:#0C447C;">JUNVA Run In Time (9+30): <span id="ll-junva-time">—</span></div>
     <div class="item" id="ll-entry-fixes" style="font-weight:600;color:#0C447C;">IR-154 &rarr; A: <span id="ll-fix-a">—</span> &#124; F: <span id="ll-fix-f">—</span> &#124; J: <span id="ll-fix-j">—</span></div>
     <div class="item" id="ll-entry-fixes-155" style="font-weight:600;color:#0C447C;">A: <span id="ll-fix-a155">—</span> &#124;&#124; Entry to K: <span id="ll-fix-k">—</span> &#124;&#124; Entry to N: <span id="ll-fix-n">—</span></div>
     <div class="ll-list" id="ll-entry-list"></div>
@@ -3647,6 +3648,8 @@ function renderLLEntry() {
   if (fixes) fixes.style.display = (route === 'IR-154') ? '' : 'none';
   var fixes155 = document.getElementById('ll-entry-fixes-155');
   if (fixes155) fixes155.style.display = (route === 'IR-155') ? '' : 'none';
+  var junva155 = document.getElementById('ll-junva-155');
+  if (junva155) junva155.style.display = (route === 'IR-155') ? '' : 'none';
   var lz154 = document.getElementById('lz-checkin-154');
   if (lz154) lz154.style.display = (route === 'IR-154') ? '' : 'none';
   resizeLLInputs();
@@ -3756,6 +3759,17 @@ function syncLowLevel() {
   if (fk && fn) {
     fk.textContent = (base !== null) ? pad4(base + 39) : '—';
     fn.textContent = (base !== null) ? pad4(base + 44) : '—';
+  }
+  // IR-155 JUNVA run-in: LL Entry − 9 min 30 sec (shown HH:MM:SS).
+  var junva = document.getElementById('ll-junva-time');
+  if (junva) {
+    if (base !== null) {
+      var js = ((base * 60 - 570) % 86400 + 86400) % 86400;
+      var p2 = function(n) { return (n < 10 ? '0' : '') + n; };
+      junva.textContent = p2(Math.floor(js / 3600)) + ':' + p2(Math.floor((js % 3600) / 60)) + ':' + p2(js % 60);
+    } else {
+      junva.textContent = '—';
+    }
   }
 }
 var ROUTE_PRESETS = {
@@ -4700,7 +4714,7 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 var MDC_DEFAULTS_VERSION = 13;
 // Master-file build stamp — bump this to the current date/time (Zulu) on every
 // push so the footer tells viewers when the master file was last updated.
-var MDC_LAST_UPDATED = '23 Jun 2026 · 2314Z';
+var MDC_LAST_UPDATED = '23 Jun 2026 · 2332Z';
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {
