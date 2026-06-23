@@ -314,7 +314,7 @@ ok('LZ Check-In Escape callout visible for IR-154',
    await page.evaluate(() => getComputedStyle(document.getElementById('lz-checkin-154')).display !== 'none'));
 eq('LZ Check-In Escape callout values',
    await page.$$eval('#lz-checkin-154 .ll-imp-callout', els => els.map(e => e.textContent.trim())),
-   ['SCLZ Escape: 2759 MSA', 'STLZ Escape: 5000 Top of Block']);
+   ['SCLZ R35 -> Escape: 2759 MSA', 'STLZ R35 -> Escape: 5000 Top of Block']);
 // Indent toggle flips a row's level (then restore it). Use evaluate-click
 // since the LL tab is hidden while the Brief tab is active.
 await page.evaluate(() => document.querySelector('.ll-list[data-ll-key="combatEntry"] .ll-item-row .ll-indent').click());

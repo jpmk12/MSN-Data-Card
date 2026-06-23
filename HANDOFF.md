@@ -173,12 +173,12 @@ PDF/schedule import is ever wanted again, recover it from git history
       (persisted as `state.llLz`); `_llLzRoute` tracks which route owns the
       inputs so a capture-phase save mid-switch can't pollute another route's
       memory. (No route currently uses `value` mode, but the path remains.)
-  - **Entry fix lines** (below the LL-tab Low Level Entry list + its add
-    button, route-toggled in `renderLLEntry`, computed in `syncLowLevel`):
-    `#ll-entry-fixes` for IR-154 (A / F = +19 / J = +34); `#ll-entry-fixes-155`
-    for IR-155 (Entry to K = LL Entry + 39, Entry to N = + 44). The editable
-    list comes first so its top item (e.g. the IR-154 FLOYD Run-In line) is the
-    first line under the section header.
+  - **Entry fix lines** (the top line of the LL-tab Low Level Entry section,
+    above the editable list, route-toggled in `renderLLEntry`, computed in
+    `syncLowLevel`): `#ll-entry-fixes` for IR-154 (A / F = +19 / J = +34);
+    `#ll-entry-fixes-155` for IR-155 (Entry to K = LL Entry + 39, Entry to N =
+    + 44). The editable list (whose first item is the IR-154 FLOYD Run-In line)
+    follows below it.
 - **Air Refueling** card (titled "Air Refueling"; was "AR Info"): track
   `AR312L`, Tanker `NITRO 73`, TNKR Type `KC-135`, RZ Type `G (Enroute)`,
   AR SPD `265 (KC-135)`. The track dropdown also has an **`NA`** option —
