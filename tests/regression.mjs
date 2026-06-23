@@ -352,7 +352,7 @@ eq('LL Entry IR-155 route + common items',
   'Reporting Point G -> Amarillo: 319.15',
   'Overfly G to avoid T25 town of Goodnight',
   'Remain east of center @ I -> Avoid Claude wind farm',
-  'SMLZ (R36) -> Escape to 5K',
+  'SMLZ (R18) -> Escape to 5K',
   'Hack / Squawk / Talk',
   'Speed Limits',
   'Set Escape freq',
@@ -364,7 +364,7 @@ ok('LZ Check-In Escape callout hidden for IR-155',
 // The three critical IR-155 rows are flagged important (highlight + star icon).
 eq('LL Entry important rows (IR-155)',
    await page.$$eval('#ll-entry-list .ll-item-row[data-important="1"] .ll-input', els => els.map(e => e.value)),
-   ['GDLZ (R35) -> Escape to 3700', 'Reporting Point G -> Amarillo: 319.15', 'SMLZ (R36) -> Escape to 5K']);
+   ['GDLZ (R35) -> Escape to 3700', 'Reporting Point G -> Amarillo: 319.15', 'SMLZ (R18) -> Escape to 5K']);
 eq('LL Entry important rows show a star icon',
    await page.$$eval('#ll-entry-list .ll-item-row[data-important="1"] .ll-imp-icon', els => els.length), 3);
 // Edit an IR-155 item → per-route memory
