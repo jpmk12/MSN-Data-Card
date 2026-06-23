@@ -137,8 +137,8 @@ PDF/schedule import is ever wanted again, recover it from git history
 
 ## Current defaults (Check)
 
-- Header badge `Check` (editable `#hdr-flt`), callsign `NOGS 34`, students `DEAD` / `DUFF`
-- SOE: Takeoff `0135`, LL Entry `0410`, LL Exit `0454`, ARCT `0205`, AREX `0340`.
+- Header badge `Check` (editable `#hdr-flt`), callsign `CADDO 96`, students `DEAD` / `DUFF`
+- SOE: Takeoff `1514`, LL Entry `1855`, LL Exit `1939`, ARCT `1700`, AREX `1835`.
   Land time is `Takeoff + N` where N is the `#soe-land-offset` dropdown
   (1–6 h, default **+5:00**); `soeCalc()` reads it for the Land row.
   **Alert** (`#soe-alert-offset`) and **Show** (`#soe-show-offset`) are each
@@ -158,8 +158,8 @@ PDF/schedule import is ever wanted again, recover it from git history
   the `.tc-row` / `.tc-cat` / `.tc-arrow` / `.tc-pill` classes with `.c-spd`
   (blue), `.c-alt` (green), `.c-wnd` (amber) modifiers. No state/persistence.
 - **Low Level** card (titled "Low Level"; was "Low Level Info"): route
-  **defaults to `IR-154`** (both synced route dropdowns) — so `#ll-info-table`
-  is shown on a fresh card (Entry Pt `A`, Exit Pt `J`). Selecting `NA` hides
+  **defaults to `IR-155`** (both synced route dropdowns) — so `#ll-info-table`
+  is shown on a fresh card (Entry Pt `A`, Exit Pt `N`). Selecting `NA` hides
   the table and empties the LL-tab Low Level Entry list. Slow 1/Slow 2 default
   offset `−2:00` (value 120).
   - **Per-route LZ TOT rows** (`LL_LZ_CONFIG`): each route names its two LZ
@@ -180,8 +180,8 @@ PDF/schedule import is ever wanted again, recover it from git history
     + 44). The editable list (whose first item is the IR-154 FLOYD Run-In line)
     follows below it.
 - **Air Refueling** card (titled "Air Refueling"; was "AR Info"): track
-  `AR312L`, Tanker `NITRO 73`, TNKR Type `KC-135`, RZ Type `G (Enroute)`,
-  AR SPD `265 (KC-135)`. The track dropdown also has an **`NA`** option —
+  `AR197H`, Tanker `DASH 85`, TNKR Type `KC-46`, RZ Type `G (Enroute)`,
+  AR SPD `275 (KC-46)`. The track dropdown also has an **`NA`** option —
   when selected `#ar-info-table` is hidden (handled in `setARTrack`).
   **AR SPD is derived from TNKR Type** (`syncARSpeed()`): KC-135 → `265`,
   KC-46 → `275`. `#ar-spd-select` is display-only (`pointer-events:none`);
@@ -198,7 +198,7 @@ PDF/schedule import is ever wanted again, recover it from git history
 - EFB: Baseline `26-04 (23 Apr 26)`, iOS `26.5 CAO 27 May 26`,
   Pub Sync `26 May 2026`, FLIP `06-11-2026 thru 07-08-2026`
 - Route of Flight:
-  `KLTS ROCKN3.BFV MMB213050 AR312L PUB183022 AR312L MMB213050 JUNVA LBB098038 IR155 LBB043027 CINAV CDS ZOCKS KLTS`
+  `OKKIE3.CDS LBB360030 AR197 LBB322047 JUNVA LBB098038 IR155 LBB043027 CINAV CDS ZOCKS`
 
 ## Low level X Check (LL tab) — editable + route-aware
 
