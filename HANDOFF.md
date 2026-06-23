@@ -221,9 +221,15 @@ values (GDLZ Escape 3700, Reporting Point G / Amarillo 319.15, SMLZ Escape 5K).
 The flag round-trips through `_llNormalize` / `_makeLLRow` / `_llRowValue`,
 so important rows stay editable and persist. Old saved state (plain strings)
 restores un-highlighted — reset to pick up the flagged defaults. Defaults that ship nested: Route Activation
-auth codes, Scenario Objectives lines, LZ Check-In "Clb left turn"/
-"4500'". Old saved state (all strings) restores as flat — reset to pick
-up the nested defaults.
+auth codes, Scenario Objectives lines. Old saved state (all strings) restores
+as flat — reset to pick up the nested defaults.
+
+**Fixed important callouts.** The same amber/star look is also available as a
+non-editable, route-toggled block via `.ll-imp-callout` (mirrors the IP entry
+fixes pattern). Used for the IR-154 LZ Check-In escape values
+(`#lz-checkin-154`: "SCLZ Escape: 2759 MSA", "STLZ Escape: 5000 Top of Block"),
+shown only for IR-154 (toggled in `renderLLEntry`). LZ Check-In's editable
+default is now just "Request Rancher R out" (Slow Down + its sub-items removed).
 
 **Low Level Entry is special — route-dependent.** It follows the
 **Brief tab** `#ll-route-select` ("Low Level Info"). The two low-level
