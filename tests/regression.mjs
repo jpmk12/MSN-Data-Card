@@ -467,12 +467,12 @@ ok('DUFF default note present', noteDefaults.some(v => v.startsWith('DUFF:')));
 eq('MIN FLAP Emphasis default note',
    noteDefaults.find(v => v.startsWith('MIN FLAP')),
    'MIN FLAP Emphasis: selected OFF when: EOCS REQUIRED YES // CG < 28% or > 39% // Crosswind > 25 kts');
-eq('DEAD note covers back half AR / front half LL / 2nd patterns',
+eq('DEAD note covers 2nd patterns / back half AR / shutdown',
    noteDefaults.find(v => v.startsWith('DEAD:')),
-   'DEAD: back half AR, front half LL ⇄ 2nd patterns');
-eq('DUFF note covers engine start / AR entry / back half LL',
+   'DEAD: 2nd patterns/ground ops ⇄ back half AR, front half LL ⇄ shutdown');
+eq('DUFF note covers engine start / patterns / AR entry / back half LL',
    noteDefaults.find(v => v.startsWith('DUFF:')),
-   'DUFF: engine start, AR entry ⇄ back half LL, arrival ⇄ patterns');
+   'DUFF: engine start, patterns/ground ops ⇄ AR entry ⇄ back half LL');
 await page.click('button[onclick="addNote()"]');
 const lastNote = await page.$('#notes-list [data-note-row]:last-of-type .note-input');
 await lastNote.fill('Weather check\nLine 2');
