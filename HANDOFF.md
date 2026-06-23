@@ -135,16 +135,16 @@ was removed — it only served one base's workflow. The legacy
 PDF/schedule import is ever wanted again, recover it from git history
 (pre-removal tip).
 
-## Current defaults (Rec Ride)
+## Current defaults (Check)
 
-- Header badge `Rec Ride` (editable `#hdr-flt`), callsign `NOGS 34`, students `DEAD` / `DUFF`
+- Header badge `Check` (editable `#hdr-flt`), callsign `NOGS 34`, students `DEAD` / `DUFF`
 - SOE: Takeoff `0135`, LL Entry `0410`, LL Exit `0454`, ARCT `0205`, AREX `0340`.
   Land time is `Takeoff + N` where N is the `#soe-land-offset` dropdown
   (1–6 h, default **+5:00**); `soeCalc()` reads it for the Land row.
   **Alert** (`#soe-alert-offset`) and **Show** (`#soe-show-offset`) are each
   independent dropdowns of offsets prior to takeoff — `3+30`/`3+45`/`4+00` =
-  −210/−225/−240 min — **both defaulting to `4+00`**. `soeCalc()` reads each
-  separately; they no longer track one another.
+  −210/−225/−240 min — defaults **Show `3+30`**, **Alert `3+45`**. `soeCalc()`
+  reads each separately; they no longer track one another.
   The four manual rows (LL Entry/Exit, ARCT, AREX) are entered in Zulu and show
   a calculated local time beside each (`#soe-<id>-l`, green `.soe-local`) via
   `soeManualLocal()` = `Zulu + DST offset` (`#soe-dst`). Recomputes on input and
@@ -158,8 +158,8 @@ PDF/schedule import is ever wanted again, recover it from git history
   the `.tc-row` / `.tc-cat` / `.tc-arrow` / `.tc-pill` classes with `.c-spd`
   (blue), `.c-alt` (green), `.c-wnd` (amber) modifiers. No state/persistence.
 - **Low Level** card (titled "Low Level"; was "Low Level Info"): route
-  **defaults to `IR-155`** (both synced route dropdowns) — so `#ll-info-table`
-  is shown on a fresh card (Entry Pt `A`, Exit Pt `N`). Selecting `NA` hides
+  **defaults to `IR-154`** (both synced route dropdowns) — so `#ll-info-table`
+  is shown on a fresh card (Entry Pt `A`, Exit Pt `J`). Selecting `NA` hides
   the table and empties the LL-tab Low Level Entry list. Slow 1/Slow 2 default
   offset `−2:00` (value 120).
   - **Per-route LZ TOT rows** (`LL_LZ_CONFIG`): each route names its two LZ
@@ -185,8 +185,9 @@ PDF/schedule import is ever wanted again, recover it from git history
   KC-46 → `275`. `#ar-spd-select` is display-only (`pointer-events:none`);
   it re-derives on TNKR change, init, restore, and Apply.
 - Pattern Work: DUKE TAC 6500, DUKE BEAM, DUKE ACCEL 6500, STR IN
-- Ground Ops: Backing, Star Turn
-- Briefings / Notes: 3 pre-loaded (DEAD / DUFF seat-swap plan, MIN FLAP Emphasis)
+- Ground Ops: none preloaded (list starts empty)
+- Briefings / Notes: 3 pre-loaded — DUFF seat-swap plan, DEAD seat-swap plan,
+  MIN FLAP Emphasis
 - Box Setup Sequence: Step 1 (3), Step 2 (3), Step 3 (1: "Set LL overfly
   points"), Box Notes (2)
 - Safety Supplements Active: `1SS-326 -> MGPS & P-RAIM Induce Date Reversion`
@@ -233,8 +234,9 @@ updates both, runs `setLLRoute()` (entry/exit pts, SCLZ/STLZ,
 `renderLLEntry()`) and `renderRouteData()`.
 Per-route item lists live in `LL_ENTRY_STATE[route]` (persisted as
 `state.llEntry`). Defaults: `llEntryDefaultFor(route)` =
-`LL_ENTRY_ROUTE_TOP[route]` (IR-154 gets the "Maintain 4500-10,000…"
-line) + `LL_ENTRY_COMMON` (the freq line + Hack/Squawk/Talk + Speed
+`LL_ENTRY_ROUTE_TOP[route]` (IR-154 gets a "FLOYD Run-In: …" top line then
+the "Maintain 4500-10,000…" line) + `LL_ENTRY_COMMON` (the freq line +
+Hack/Squawk/Talk + Speed
 Limits + Set Escape freq — shared default for every route). Edits are
 remembered per route. The `#ll-entry-fixes` line (auto-calculated
 A/F/J from SOE LL Entry) is **locked / not editable** and shown only for
