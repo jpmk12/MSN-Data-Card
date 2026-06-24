@@ -138,7 +138,7 @@ PDF/schedule import is ever wanted again, recover it from git history
 ## Current defaults (Check)
 
 - Header badge `Check` (editable `#hdr-flt`), callsign `CADDO 96`, students `DEAD` / `DUFF`
-- SOE: Takeoff `1415`, LL Entry `1855`, LL Exit `1939`, ARCT `1700`, AREX `1835`.
+- SOE: Takeoff `1415`, LL Entry `1900`, LL Exit `1934`, ARCT `1700`, AREX `1835`.
   Land time is `Takeoff + N` where N is the `#soe-land-offset` dropdown
   (1–6 h, default **+6:00**); `soeCalc()` reads it for the Land row.
   **Alert** (`#soe-alert-offset`) and **Show** (`#soe-show-offset`) are each
@@ -158,8 +158,8 @@ PDF/schedule import is ever wanted again, recover it from git history
   the `.tc-row` / `.tc-cat` / `.tc-arrow` / `.tc-pill` classes with `.c-spd`
   (blue), `.c-alt` (green), `.c-wnd` (amber) modifiers. No state/persistence.
 - **Low Level** card (titled "Low Level"; was "Low Level Info"): route
-  **defaults to `IR-155`** (both synced route dropdowns) — so `#ll-info-table`
-  is shown on a fresh card (Entry Pt `A`, Exit Pt `N`). Selecting `NA` hides
+  **defaults to `IR-154`** (both synced route dropdowns) — so `#ll-info-table`
+  is shown on a fresh card (Entry Pt `A`, Exit Pt `J`). Selecting `NA` hides
   the table and empties the LL-tab Low Level Entry list. Slow 1/Slow 2 default
   offset `−2:00` (value 120).
   - **Per-route LZ TOT rows** (`LL_LZ_CONFIG`): each route names its two LZ
@@ -200,7 +200,7 @@ PDF/schedule import is ever wanted again, recover it from git history
 - EFB: Baseline `26-04 (23 Apr 26)`, iOS `26.5 CAO 27 May 26`,
   Pub Sync `26 May 2026`, FLIP `06-11-2026 thru 07-08-2026`
 - Route of Flight:
-  `OKKIE3.CDS LBB360030 AR197 LBB322047 JUNVA LBB098038 IR155 LBB043027 CINAV CDS ZOCKS`
+  `KTLS OKKIE3.CDS LBB360030 AR197 LBB322047 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS`
 
 ## Low level X Check (LL tab) — editable + route-aware
 

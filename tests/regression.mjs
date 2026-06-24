@@ -80,10 +80,10 @@ eq('Student 2 default DUFF',     await page.$eval('#hdr-student2', e => e.value)
 
 // ── 3. SOE defaults / calc ──────────────────────────────────────────
 eq('Takeoff default 1415',         await page.$eval('#soe-takeoff', e => e.value), '1415');
-eq('Low Level Entry default 1855', await page.$eval('#soe-llentry', e => e.value), '1855');
-eq('GDLZ TOT default 1914 (IR-155)', await page.$eval('#soe-lztime',  e => e.value), '1914');
-eq('LL Exit default 1939',         await page.$eval('#soe-llexit',  e => e.value), '1939');
-eq('SMLZ TOT default 1931 (IR-155)', await page.$eval('#soe-lz2tot',  e => e.value), '1931');
+eq('Low Level Entry default 1900', await page.$eval('#soe-llentry', e => e.value), '1900');
+eq('SCLZ TOT default 1914 (IR-154)', await page.$eval('#soe-lztime',  e => e.value), '1914');
+eq('LL Exit default 1934',         await page.$eval('#soe-llexit',  e => e.value), '1934');
+eq('STLZ TOT default 1931 (IR-154)', await page.$eval('#soe-lz2tot',  e => e.value), '1931');
 eq('ARCT default 1700',            await page.$eval('#soe-arct',    e => e.value), '1700');
 eq('AREX default 1835',            await page.$eval('#soe-arex',    e => e.value), '1835');
 const cells = await page.$$eval('#tab-main table tr', rows =>
@@ -117,19 +117,19 @@ await page.selectOption('#soe-alert-offset', '-225');
 await page.waitForTimeout(100);
 // Manual SOE rows show a calculated local time (Zulu + DST). CDT −5 default:
 // 1855→1355L, 1939→1439L, 1700→1200L, 1835→1335L.
-eq('LL Entry local (CDT) 1355L', await page.$eval('#soe-llentry-l', e => e.textContent), '1355L');
-eq('LL Exit local (CDT) 1439L',  await page.$eval('#soe-llexit-l',  e => e.textContent), '1439L');
+eq('LL Entry local (CDT) 1400L', await page.$eval('#soe-llentry-l', e => e.textContent), '1400L');
+eq('LL Exit local (CDT) 1434L',  await page.$eval('#soe-llexit-l',  e => e.textContent), '1434L');
 eq('ARCT local (CDT) 1200L',     await page.$eval('#soe-arct-l',    e => e.textContent), '1200L');
 eq('AREX local (CDT) 1335L',     await page.$eval('#soe-arex-l',    e => e.textContent), '1335L');
 // DST toggle to CST (−6) shifts the locals back one hour.
 await page.selectOption('#soe-dst', '-6');
 await page.waitForTimeout(100);
-eq('LL Entry local recomputes at CST (1255L)', await page.$eval('#soe-llentry-l', e => e.textContent), '1255L');
+eq('LL Entry local recomputes at CST (1300L)', await page.$eval('#soe-llentry-l', e => e.textContent), '1300L');
 await page.selectOption('#soe-dst', '-5');
 await page.waitForTimeout(100);
 
 // ── 4. Route of Flight defaults + MOTA picker ───────────────────────
-const rofDefault = 'OKKIE3.CDS LBB360030 AR197 LBB322047 JUNVA LBB098038 IR155 LBB043027 CINAV CDS ZOCKS';
+const rofDefault = 'KTLS OKKIE3.CDS LBB360030 AR197 LBB322047 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS';
 eq('Route of Flight default', await page.$eval('#rof-input', e => e.value), rofDefault);
 await page.selectOption('#rof-preset', 'MOTA4');
 await page.click('button[onclick="applyRoutePreset(\'insert\')"]');
@@ -201,10 +201,10 @@ ok('AR312L shows the Air Refueling table again',
 // ── 7. IR-154 SCLZ/STLZ TOT auto-derive + Slow 1 / Slow 2 offsets ────
 // On IR-154 the two LZ TOTs auto-derive (read-only): SCLZ = LL Entry + 14,
 // STLZ = LL Entry + 31. (IR-155 GDLZ/SMLZ derive +19 / +36 — see §8.)
-// LL route defaults to IR-155 (Low Level Info shown). NA still hides the
-// table; switch to IR-154 for the IR-154-specific checks below.
-eq('LL route default IR-155', await page.$eval('#ll-route-select', e => e.value), 'IR-155');
-ok('IR-155 shows Low Level Info table by default',
+// LL route defaults to IR-154 (Low Level Info shown). NA still hides the
+// table; switch back to IR-154 for the IR-154-specific checks below.
+eq('LL route default IR-154', await page.$eval('#ll-route-select', e => e.value), 'IR-154');
+ok('IR-154 shows Low Level Info table by default',
    await page.evaluate(() => getComputedStyle(document.getElementById('ll-info-table')).display !== 'none'));
 await page.selectOption('#ll-route-select', 'NA');
 await page.waitForTimeout(120);
@@ -547,10 +547,10 @@ await page.waitForTimeout(700);
 eq('Reset: Callsign default', await page.$eval('#hdr-callsign', e => e.value), 'CADDO 96');
 eq('Reset: ARCT back to default 1700', await page.$eval('#soe-arct',    e => e.value), '1700');
 eq('Reset: AREX back to default 1835', await page.$eval('#soe-arex',    e => e.value), '1835');
-eq('Reset: LL Entry back to 1855',     await page.$eval('#soe-llentry', e => e.value), '1855');
-eq('Reset: GDLZ TOT back to 1914',     await page.$eval('#soe-lztime',  e => e.value), '1914');
-eq('Reset: LL Exit back to 1939',      await page.$eval('#soe-llexit',  e => e.value), '1939');
-eq('Reset: SMLZ TOT back to 1931',     await page.$eval('#soe-lz2tot',  e => e.value), '1931');
+eq('Reset: LL Entry back to 1900',     await page.$eval('#soe-llentry', e => e.value), '1900');
+eq('Reset: SCLZ TOT back to 1914',     await page.$eval('#soe-lztime',  e => e.value), '1914');
+eq('Reset: LL Exit back to 1934',      await page.$eval('#soe-llexit',  e => e.value), '1934');
+eq('Reset: STLZ TOT back to 1931',     await page.$eval('#soe-lz2tot',  e => e.value), '1931');
 eq('Reset: Takeoff back to 1415',      await page.$eval('#soe-takeoff', e => e.value), '1415');
 const patReset = await page.$$eval('#pattern-list [data-preset]', els => els.map(e => e.getAttribute('data-preset')));
 eq('Reset: Pattern 4 defaults', patReset, ['DUKE TAC 6500', 'DUKE BEAM', 'DUKE ACCEL 6500', 'STR IN']);
@@ -559,10 +559,10 @@ eq('Reset: Slow 2 offset default', await page.$eval('#ll-slow2-offset', e => e.v
 
 // ── 17. Route Data SVGs + dynamic titles ────────────────────────────
 await clickTab('Low Level');
-// After Reset the route defaults to IR-155 (route data shown). NA shows no
+// After Reset the route defaults to IR-154 (route data shown). NA shows no
 // route SVG; then walk through the other routes.
-eq('Route Data default IR-155', await page.$eval('#route-select', e => e.value), 'IR-155');
-ok('IR-155 shows a route SVG by default', await page.evaluate(() => document.querySelector('#route-svg svg') !== null));
+eq('Route Data default IR-154', await page.$eval('#route-select', e => e.value), 'IR-154');
+ok('IR-154 shows a route SVG by default', await page.evaluate(() => document.querySelector('#route-svg svg') !== null));
 await page.selectOption('#route-select', 'NA');
 await page.waitForTimeout(150);
 ok('NA shows no route SVG', await page.evaluate(() => document.querySelector('#route-svg svg') === null));
