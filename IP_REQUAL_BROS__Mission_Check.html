@@ -4785,7 +4785,7 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 var MDC_DEFAULTS_VERSION = 14;
 // Master-file build stamp — bump this to the current date/time (Zulu) on every
 // push so the footer tells viewers when the master file was last updated.
-var MDC_LAST_UPDATED = '24 Jun 2026 · 1709Z';
+var MDC_LAST_UPDATED = '24 Jun 2026 · 1712Z';
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {
@@ -4935,11 +4935,9 @@ function mdcRestore() {
       var validGops = Array.prototype.slice.call(gsel.querySelectorAll('option'))
         .map(function(o) { return o.value; })
         .filter(function(v) { return v; });
-      var seenGop = {};
       state.groundOps.forEach(function(v) {
-        // Drop empties, unknown options, and duplicates.
-        if (!v || validGops.indexOf(v) === -1 || seenGop[v]) return;
-        seenGop[v] = true;
+        // Drop empties and unknown options; duplicates are allowed (sequence).
+        if (!v || validGops.indexOf(v) === -1) return;
         gsel.value = v;
         addGroundOp();
       });
@@ -5093,7 +5091,11 @@ document.addEventListener('DOMContentLoaded', function() {
     { id: 'box-step3-list',     items: ['Set LL overfly points'] },
     { id: 'box-keypoints-list', items: ["1 min per 10,000' or 6 sec per 1,000' when TOC or BOD is prior to a waypoint", 'Be 1 min late every 10K of climb / Be 1 min early every 10K of descent'] }
   ].forEach(function(g) { g.items.forEach(function(v) { addBoxStep(g.id, v); }); });
-  // Ground Ops: no preloaded defaults
+  // Pre-load default Ground Ops entries (duplicates intentional — a sequence)
+  ['Backing', 'Combat Offload', 'Backing', 'Combat Offload'].forEach(function(v) {
+    var sel = document.getElementById('ground-ops-select');
+    if (sel) { sel.value = v; addGroundOp(); }
+  });
   // Pre-load default Briefings / Notes
   [
     'DUFF: engine start, patterns/ground ops ⇄ AR entry ⇄ back half LL',
@@ -5177,8 +5179,8 @@ document.addEventListener('DOMContentLoaded', function() {
       seen[k] = true;
     });
   })();
-  // Defensive cleanup: dedupe Ground Ops — keep first occurrence of each
-  // preset and drop any rows whose label is unknown.
+  // Defensive cleanup: drop any Ground Ops rows whose label is unknown
+  // (empty / not a current option). Duplicates are allowed (sequence of ops).
   (function() {
     var glist = document.getElementById('ground-ops-list');
     var gsel = document.getElementById('ground-ops-select');
@@ -5187,12 +5189,10 @@ document.addEventListener('DOMContentLoaded', function() {
     Array.prototype.slice.call(gsel.querySelectorAll('option')).forEach(function(o) {
       if (o.value) valid[o.value] = true;
     });
-    var seen = {};
     Array.prototype.slice.call(glist.children).forEach(function(row) {
       var s = row.querySelector('span');
       var v = s ? s.textContent.trim() : '';
-      if (!v || !valid[v] || seen[v]) { row.remove(); return; }
-      seen[v] = true;
+      if (!v || !valid[v]) { row.remove(); return; }
     });
   })();
   // Size the flight-designation badge to its (possibly restored) value.

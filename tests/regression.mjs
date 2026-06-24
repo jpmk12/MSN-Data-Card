@@ -489,7 +489,8 @@ await page.waitForTimeout(150);
 // ── 11b. Ground Ops defaults (none — list starts empty) ─────────────
 const groundOpsDefaults = await page.$$eval('#ground-ops-list > div', els =>
   els.map(r => r.querySelector('span')?.textContent.trim()).filter(Boolean));
-eq('Ground Ops has no preloaded defaults', groundOpsDefaults, []);
+eq('Ground Ops defaults (Backing/Combat Offload x2)', groundOpsDefaults,
+   ['Backing', 'Combat Offload', 'Backing', 'Combat Offload']);
 
 // ── 12. Box Setup defaults ──────────────────────────────────────────
 const box = await page.evaluate(() => ({
@@ -732,7 +733,7 @@ eq('IR-155 TH3 row', threat155[3],
 eq('IR-155 TH5 row', threat155[5],
    ['TH5', 'LBB/R018089', 'N 35 00 36.5', 'W 101 03 02.0']);
 
-// ── 26. Ground Ops stale-state self-heal ───────────────────────────
+// ── 26. Ground Ops stale-state self-heal (drops unknown, keeps duplicates) ──
 await page.evaluate(() => {
   localStorage.setItem('iprq-bros-mdc-v1', JSON.stringify({
     groundOps: ['Backing', 'Backing', 'Star Turn', 'NOPE', 'Star Turn', 'Backing']
@@ -742,8 +743,8 @@ await page.reload({ waitUntil: 'networkidle' });
 await page.waitForTimeout(400);
 const healedGops = await page.$$eval('#ground-ops-list > div', els =>
   els.map(r => r.querySelector('span')?.textContent.trim()).filter(Boolean));
-eq('Stale Ground Ops state dedupes + drops unknown on load',
-   healedGops, ['Backing', 'Star Turn']);
+eq('Stale Ground Ops drops unknown but keeps duplicates on load',
+   healedGops, ['Backing', 'Backing', 'Star Turn', 'Star Turn', 'Backing']);
 
 // ── 26b. Save Card exports the full state as a JSON file ────────────
 const [cardDownload] = await Promise.all([

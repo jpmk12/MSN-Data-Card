@@ -189,7 +189,9 @@ PDF/schedule import is ever wanted again, recover it from git history
   KC-46 → `275`. `#ar-spd-select` is display-only (`pointer-events:none`);
   it re-derives on TNKR change, init, restore, and Apply.
 - Pattern Work: DUKE TAC 6500, DUKE BEAM, DUKE ACCEL 6500, STR IN
-- Ground Ops: none preloaded (list starts empty)
+- Ground Ops: Backing, Combat Offload, Backing, Combat Offload (duplicates are
+  intentional — a sequence; restore + init cleanup drop unknown labels only,
+  no longer dedupe)
 - Briefings / Notes: 3 pre-loaded — DUFF seat-swap plan, DEAD seat-swap plan,
   MIN FLAP Emphasis
 - Box Setup Sequence: Step 1 (3), Step 2 (3), Step 3 (1: "Set LL overfly
