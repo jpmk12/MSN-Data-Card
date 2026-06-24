@@ -332,7 +332,6 @@ eq('Indent toggle restores top-level',
 // LL Entry default for IR-154 (route currently IR-154): IR-154 top item + common
 eq('LL Entry IR-154 default list',
    await page.$$eval('#ll-entry-list .ll-input', els => els.map(e => e.value)), [
-  'FLOYD Run-In: xx miles | x Minutes | x time',
   'Maintain 4500-10,000 between A and B to deconflict with VR-1116',
   'Hack / Squawk / Talk',
   'Speed Limits',
@@ -383,7 +382,7 @@ await page.selectOption('#ll-route-select', 'IR-154');
 await page.waitForTimeout(100);
 eq('IR-154 list unaffected by IR-155 edit',
    (await page.$$eval('#ll-entry-list .ll-input', els => els.map(e => e.value)))[0],
-   'FLOYD Run-In: xx miles | x Minutes | x time');
+   'Maintain 4500-10,000 between A and B to deconflict with VR-1116');
 await page.selectOption('#ll-route-select', 'IR-155');
 await page.waitForTimeout(100);
 eq('IR-155 edit remembered per route',
@@ -428,7 +427,7 @@ await page.waitForTimeout(100);
 eq('Low Level Info follows Route Data dropdown',
    await page.$eval('#ll-route-select', e => e.value), 'IR-154');
 eq('LL Entry re-renders to IR-154 after Route Data switch',
-   (await page.$$eval('#ll-entry-list .ll-input', els => els.length)), 5);
+   (await page.$$eval('#ll-entry-list .ll-input', els => els.length)), 4);
 // NA route: Low Level Info data hidden, dropdowns synced, LL Entry empty.
 await page.selectOption('#ll-route-select', 'NA');
 await page.waitForTimeout(100);

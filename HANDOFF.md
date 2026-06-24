@@ -177,10 +177,10 @@ PDF/schedule import is ever wanted again, recover it from git history
     above the editable list, route-toggled in `renderLLEntry`, computed in
     `syncLowLevel`): `#ll-entry-fixes` for IR-154 (A / F = +19 / J = +34);
     `#ll-entry-fixes-155` for IR-155 (Entry to K = LL Entry + 39, Entry to N =
-    + 44). For IR-155 a calculated **JUNVA run-in** line (`#ll-junva-155` /
-    `#ll-junva-time`) sits at the very top: LL Entry − 9 min 30 sec, shown
-    HH:MM:SS (computed in `syncLowLevel`). The editable list (whose first item
-    is the IR-154 FLOYD Run-In line) follows below it.
+    + 44). Calculated run-in lines sit at the very top (computed in
+    `syncLowLevel`, HH:MM:SS = LL Entry − offset): IR-155 **JUNVA**
+    (`#ll-junva-155`, −9:30); IR-154 **FLOYD/O1/O2/O3** (`#ll-floyd-154`,
+    −8:40 / −13:40 / −18:40 / −23:40). The editable list follows below.
 - **Air Refueling** card (titled "Air Refueling"; was "AR Info"): track
   `AR197H`, Tanker `DASH 85`, TNKR Type `KC-46`, RZ Type `G (Enroute)`,
   AR SPD `275 (KC-46)`. The track dropdown also has an **`NA`** option —
@@ -244,9 +244,8 @@ updates both, runs `setLLRoute()` (entry/exit pts, SCLZ/STLZ,
 `renderLLEntry()`) and `renderRouteData()`.
 Per-route item lists live in `LL_ENTRY_STATE[route]` (persisted as
 `state.llEntry`). Defaults: `llEntryDefaultFor(route)` =
-`LL_ENTRY_ROUTE_TOP[route]` (IR-154 gets a "FLOYD Run-In: …" top line then
-the "Maintain 4500-10,000…" line) + `LL_ENTRY_COMMON` (the freq line +
-Hack/Squawk/Talk + Speed
+`LL_ENTRY_ROUTE_TOP[route]` (IR-154 gets the "Maintain 4500-10,000…" line)
++ `LL_ENTRY_COMMON` (the freq line + Hack/Squawk/Talk + Speed
 Limits + Set Escape freq — shared default for every route). Edits are
 remembered per route. The `#ll-entry-fixes` line (auto-calculated
 A/F/J from SOE LL Entry) is **locked / not editable** and shown only for
