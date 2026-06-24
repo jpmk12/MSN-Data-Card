@@ -310,15 +310,18 @@ const raRows = await page.$$eval('.ll-list[data-ll-key="routeActivation"] .ll-it
 eq('Route Activation: Authentication is a top item', raRows[0], { text: 'Authentication', sub: false });
 eq('Route Activation: A-14-F is a sub-item', raRows[1], { text: 'A-14-F = Y', sub: true });
 eq('Route Activation: Verify contracts is a top item', raRows[4], { text: 'Verify contracts active', sub: false });
-eq('LZ Check-In default is just Request Rancher R out',
+eq('LZ Check-In editable list is empty by default',
    (await page.$$eval('.ll-list[data-ll-key="lzCheckin"] .ll-input', els => els.map(e => e.value))),
-   ['Request Rancher R out']);
+   []);
 // IR-154 SCLZ/STLZ Escape callout (route-toggled, important styling).
 ok('LZ Check-In Escape callout visible for IR-154',
    await page.evaluate(() => getComputedStyle(document.getElementById('lz-checkin-154')).display !== 'none'));
 eq('LZ Check-In Escape callout values',
    await page.$$eval('#lz-checkin-154 .ll-imp-callout', els => els.map(e => e.textContent.trim())),
    ['SCLZ R35 -> Escape: 2759 MSA', 'STLZ R35 -> Escape: 5000 Top of Block']);
+eq('LZ Check-In Request rancher lines (IR-154)',
+   await page.$$eval('#lz-checkin-154 .item', els => els.map(e => e.textContent.trim())),
+   ['Request rancher -> SCLZ by C1', 'Request rancher -> STLZ by I1']);
 // Indent toggle flips a row's level (then restore it). Use evaluate-click
 // since the LL tab is hidden while the Brief tab is active.
 await page.evaluate(() => document.querySelector('.ll-list[data-ll-key="combatEntry"] .ll-item-row .ll-indent').click());
