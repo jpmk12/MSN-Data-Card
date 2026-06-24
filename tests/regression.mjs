@@ -724,8 +724,8 @@ eq('Threat 4 row', threatRows[3],
 // ── 25d. IR-155 Threat Plot card (Scenario tab, under Notional Weather) ──
 ok('IR-155 Threat Plot card title present',
    /IR-155 Threat Plot/.test(await page.$eval('#ir155-threat-plot-card .card-header', e => e.textContent.replace(/\s+/g, ' ').trim())));
-ok('IR-155 Threat Plot sits right after Notional LZ Weather',
-   await page.evaluate(() => document.getElementById('notion-weather-card').nextElementSibling.id === 'ir155-threat-plot-card'));
+ok('IR-154 Threat Plot sits right after Notional LZ Weather',
+   await page.evaluate(() => document.getElementById('notion-weather-card').nextElementSibling.id === 'ir154-threat-plot-card'));
 const threat155 = await page.$$eval('#ir155-threat-plot-card tbody .threat-row',
   els => els.map(r => [...r.querySelectorAll('td')].map(t => t.textContent.trim())));
 eq('IR-155 Threat Plot has 6 rows', threat155.length, 6);

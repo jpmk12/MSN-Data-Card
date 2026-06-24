@@ -2873,6 +2873,123 @@
     </ul>
   </div>
 
+  <!-- IR-154 Threat Plot -->
+  <div class="card full-row" id="ir154-threat-plot-card">
+    <div class="card-header">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M12 2 3 6v6c0 5 3.8 8.5 9 10 5.2-1.5 9-5 9-10V6z"/></svg>
+      IR-154 Threat Plot
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:11.5px;">
+      <thead><tr>
+        <th style="padding:4px 6px;font-size:9.5px;font-weight:700;color:#fff;background:#185FA5;border-bottom:1.5px solid #d3d1c7;text-align:left;">Threat</th>
+        <th style="padding:4px 6px;font-size:9.5px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1.5px solid #d3d1c7;text-align:left;">LBB Radial</th>
+        <th style="padding:4px 6px;font-size:9.5px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1.5px solid #d3d1c7;text-align:left;">Latitude</th>
+        <th style="padding:4px 6px;font-size:9.5px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1.5px solid #d3d1c7;text-align:left;">Longitude</th>
+      </tr></thead>
+      <tbody style="font-family:ui-monospace,Menlo,monospace;">
+        <tr class="threat-row">
+          <td style="padding:5px 6px;font-family:inherit;font-weight:700;color:#0C447C;border-bottom:0.5px solid #d3d1c7;">Threat 1</td>
+          <td style="padding:5px 6px;color:#5f5e5a;border-bottom:0.5px solid #d3d1c7;">LBB/R106065</td>
+          <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">N 33 12 23.5</td>
+          <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">W 100 45 16.8</td>
+        </tr>
+        <tr class="threat-row">
+          <td style="padding:5px 6px;font-family:inherit;font-weight:700;color:#0C447C;border-bottom:0.5px solid #d3d1c7;">Threat 2</td>
+          <td style="padding:5px 6px;color:#5f5e5a;border-bottom:0.5px solid #d3d1c7;">LBB/R114088</td>
+          <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">N 32 51 30.8</td>
+          <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">W 100 28 46.6</td>
+        </tr>
+        <tr class="threat-row">
+          <td style="padding:5px 6px;font-family:inherit;font-weight:700;color:#0C447C;border-bottom:0.5px solid #d3d1c7;">Threat 3</td>
+          <td style="padding:5px 6px;color:#5f5e5a;border-bottom:0.5px solid #d3d1c7;">LBB/R083059</td>
+          <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">N 33 37 45.5</td>
+          <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">W 100 44 41.8</td>
+        </tr>
+        <tr class="threat-row">
+          <td style="padding:5px 6px;font-family:inherit;font-weight:700;color:#0C447C;">Threat 4</td>
+          <td style="padding:5px 6px;color:#5f5e5a;">LBB/R066076</td>
+          <td style="padding:5px 6px;color:#1a1a19;">N 33 59 24.6</td>
+          <td style="padding:5px 6px;color:#1a1a19;">W 100 26 06.4</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 6.5.4 SHULTE Route -->
+  <div class="card full-row">
+    <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+      <span style="display:inline-flex;align-items:center;gap:6px;">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        6.5.4 Threat Script
+      </span>
+      <span style="font-size:10px;font-weight:700;color:#fff;background:#185FA5;border-radius:999px;padding:3px 10px;letter-spacing:0.04em;">SHULTE Route</span>
+    </div>
+
+    <div class="section-title green banded">Check-in for activation of Route</div>
+    <div style="background:#FFF4E5;border-left:3px solid #E0A14A;border-radius:4px;padding:6px 10px;margin:6px 0;font-size:11.5px;color:#5f5e5a;">
+      <strong>Note:</strong> If HQ is loaded, no need for RAMROD, code words, or AKAL authentication.
+    </div>
+    <div class="item"><strong>Crew:</strong> "AGENT, CADDO/NOGS XX checking in as fragged. Activate SHULTE Route, ROZ"</div>
+    <div class="item"><strong>AGENT:</strong> "NOGS/CADDO XX authenticate Alpha, 3, Bravo" — response: <span style="color:#185FA5;font-weight:600;">"Victor"</span></div>
+    <div class="sub-item">Expect Authentication per Altus IFG AKAL, in the format listed above.</div>
+    <div class="sub-item">A-14-F = Y</div>
+    <div class="sub-item">B-21-W = V</div>
+    <div class="sub-item">C-9-Q = T</div>
+    <div class="item"><strong>AGENT:</strong> "NOGS/CADDO XX, Words Alpha current, you are cleared flight plan route, then SHULTE/STEEL Route and ROZ, elevator surface, standby for LOWDOWN."</div>
+    <div class="sub-item">Words Alpha is commensurate w/the AOD. Angels is altitude in thousands of feet.</div>
+
+    <div class="section-title amber banded" style="margin-top:10px">Inbound to MRR entry point, AGENT will call</div>
+    <div class="item"><strong>AGENT:</strong> "All Players TACREP Juliet 2 current, MOVERS 3+MTI, VIRUS 219/89 Tracking N. MOVERS 3+ MTI, VIRUS 204/98, Tracking NW."</div>
+
+    <div class="section-title red banded" style="margin-top:10px">Off board asset calls following an engagement</div>
+    <div class="item">"AGENT, CADDO/NOGS XX defensive (Bullseye), (threat)"</div>
+    <div class="sub-item">Utilize Bullseye to relay position and type of threat encountered.</div>
+
+    <div class="section-title blue banded" style="margin-top:10px">Advise five minutes out from OA, request RANCHER using RAMROD</div>
+    <div class="item">"HELTON, CADDO/NOGS Romeo minutes. Request Rancher"</div>
+    <div class="sub-item">CCT will grant clearance upon successful authentication — Expect Authentication per Altus IFG AKAL.</div>
+    <div class="item"><strong>After check-in:</strong> "CADDO/NOGS XX, Authenticate Bravo, 13, Delta." — response: <span style="color:#185FA5;font-weight:600;">"Romeo"</span></div>
+    <div class="sub-item">If response is incorrect, attempt authentication again. A second incorrect response should be taken as a learning point and debriefed.</div>
+    <div class="item"><strong>Upon success / 2 failed attempts:</strong> "Winds are 350/15, RFF is 11, temperature 25, cleared Rancher"</div>
+    <div style="background:#E6F1FB;border-left:3px solid #185FA5;border-radius:4px;padding:6px 10px;margin:6px 0 2px;font-size:11.5px;color:#1a1a19;line-height:1.55;">
+      Once over the FAF, have CCT call <strong>"CACTUS"</strong>. This drives a tactical egress from the OA.<br>
+      Climb profile should be appropriate for briefed threat at OA (i.e. Small Arms).
+    </div>
+  </div>
+
+  <!-- 6.6.4 IR154 continuation -->
+  <div class="card full-row">
+    <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+      <span style="display:inline-flex;align-items:center;gap:6px;">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        6.6.4 Threat Script
+      </span>
+      <span style="font-size:10px;font-weight:700;color:#fff;background:#185FA5;border-radius:999px;padding:3px 10px;letter-spacing:0.04em;">IR-154 → STLZ</span>
+    </div>
+
+    <div style="background:#FFF4E5;border-left:3px solid #E0A14A;border-radius:4px;padding:6px 10px;margin:6px 0 8px;font-size:11.5px;color:#5f5e5a;">
+      <strong>IR154 route still active from original check-in</strong> — continue with below enroute to STLZ.
+    </div>
+
+    <div class="section-title amber banded">Inbound to Point F1 (after seat swap), AGENT will call</div>
+    <div class="item"><strong>AGENT:</strong> "All Players TACREP Juliet 2 current, MOVERS 3+MTI, VIRUS 243/48 Tracking W. MOVERS 3+ MTI, VIRUS 232/72, Tracking E."</div>
+
+    <div class="section-title red banded" style="margin-top:10px">Off board asset calls following an engagement</div>
+    <div class="item">"AGENT, CADDO/NOGS XX defensive (Bullseye), (threat)"</div>
+    <div class="sub-item">Utilize Bullseye to relay position and type of threat encountered.</div>
+
+    <div class="section-title blue banded" style="margin-top:10px">Advise five minutes out from OA, request RANCHER using RAMROD</div>
+    <div class="item">"STEEL, CADDO/NOGS Romeo minutes. Request Rancher"</div>
+    <div class="sub-item">CCT will grant clearance upon successful authentication — Expect Authentication per Altus IFG AKAL.</div>
+    <div class="item"><strong>After check-in:</strong> "CADDO/NOGS XX, Authenticate Charlie, 5, Foxtrot." — response: <span style="color:#185FA5;font-weight:600;">"Golf"</span></div>
+    <div class="sub-item">Reattempt authentication if incorrect.</div>
+    <div class="item"><strong>Upon success / 2 failed attempts:</strong> "Winds are 340/11, RFF is 10, temperature 32, cleared Rancher"</div>
+    <div style="background:#E6F1FB;border-left:3px solid #185FA5;border-radius:4px;padding:6px 10px;margin:6px 0 2px;font-size:11.5px;color:#1a1a19;line-height:1.55;">
+      Once over the FAF, have CCT call <strong>"CACTUS"</strong>. This drives a tactical egress from the OA.<br>
+      Climb profile should be appropriate for briefed threat at OA (i.e. Small Arms).
+    </div>
+  </div>
+
   <!-- IR-155 Threat Plot -->
   <div class="card full-row" id="ir155-threat-plot-card">
     <div class="card-header">
@@ -3015,48 +3132,6 @@
     </div>
   </div>
 
-  <!-- IR-154 Threat Plot -->
-  <div class="card full-row" id="ir154-threat-plot-card">
-    <div class="card-header">
-      <svg class="icon" viewBox="0 0 24 24"><path d="M12 2 3 6v6c0 5 3.8 8.5 9 10 5.2-1.5 9-5 9-10V6z"/></svg>
-      IR-154 Threat Plot
-    </div>
-    <table style="width:100%;border-collapse:collapse;font-size:11.5px;">
-      <thead><tr>
-        <th style="padding:4px 6px;font-size:9.5px;font-weight:700;color:#fff;background:#185FA5;border-bottom:1.5px solid #d3d1c7;text-align:left;">Threat</th>
-        <th style="padding:4px 6px;font-size:9.5px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1.5px solid #d3d1c7;text-align:left;">LBB Radial</th>
-        <th style="padding:4px 6px;font-size:9.5px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1.5px solid #d3d1c7;text-align:left;">Latitude</th>
-        <th style="padding:4px 6px;font-size:9.5px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1.5px solid #d3d1c7;text-align:left;">Longitude</th>
-      </tr></thead>
-      <tbody style="font-family:ui-monospace,Menlo,monospace;">
-        <tr class="threat-row">
-          <td style="padding:5px 6px;font-family:inherit;font-weight:700;color:#0C447C;border-bottom:0.5px solid #d3d1c7;">Threat 1</td>
-          <td style="padding:5px 6px;color:#5f5e5a;border-bottom:0.5px solid #d3d1c7;">LBB/R106065</td>
-          <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">N 33 12 23.5</td>
-          <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">W 100 45 16.8</td>
-        </tr>
-        <tr class="threat-row">
-          <td style="padding:5px 6px;font-family:inherit;font-weight:700;color:#0C447C;border-bottom:0.5px solid #d3d1c7;">Threat 2</td>
-          <td style="padding:5px 6px;color:#5f5e5a;border-bottom:0.5px solid #d3d1c7;">LBB/R114088</td>
-          <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">N 32 51 30.8</td>
-          <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">W 100 28 46.6</td>
-        </tr>
-        <tr class="threat-row">
-          <td style="padding:5px 6px;font-family:inherit;font-weight:700;color:#0C447C;border-bottom:0.5px solid #d3d1c7;">Threat 3</td>
-          <td style="padding:5px 6px;color:#5f5e5a;border-bottom:0.5px solid #d3d1c7;">LBB/R083059</td>
-          <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">N 33 37 45.5</td>
-          <td style="padding:5px 6px;color:#1a1a19;border-bottom:0.5px solid #d3d1c7;">W 100 44 41.8</td>
-        </tr>
-        <tr class="threat-row">
-          <td style="padding:5px 6px;font-family:inherit;font-weight:700;color:#0C447C;">Threat 4</td>
-          <td style="padding:5px 6px;color:#5f5e5a;">LBB/R066076</td>
-          <td style="padding:5px 6px;color:#1a1a19;">N 33 59 24.6</td>
-          <td style="padding:5px 6px;color:#1a1a19;">W 100 26 06.4</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
   <!-- 6.4.4 HELTON Route -->
   <div class="card full-row">
     <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
@@ -3093,81 +3168,6 @@
     <div class="item"><strong>After check-in:</strong> "CADDO/NOGS XX, Authenticate Bravo, 13, Delta." — response: <span style="color:#185FA5;font-weight:600;">"Romeo"</span></div>
     <div class="sub-item">If response is incorrect, attempt authentication again. A second incorrect response should be taken as a learning point and debriefed.</div>
     <div class="item"><strong>Upon success / 2 failed attempts:</strong> "Winds are 100/10G12, RFF is 10, temperature 26, cleared Rancher"</div>
-    <div style="background:#E6F1FB;border-left:3px solid #185FA5;border-radius:4px;padding:6px 10px;margin:6px 0 2px;font-size:11.5px;color:#1a1a19;line-height:1.55;">
-      Once over the FAF, have CCT call <strong>"CACTUS"</strong>. This drives a tactical egress from the OA.<br>
-      Climb profile should be appropriate for briefed threat at OA (i.e. Small Arms).
-    </div>
-  </div>
-
-  <!-- 6.5.4 SHULTE Route -->
-  <div class="card full-row">
-    <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
-      <span style="display:inline-flex;align-items:center;gap:6px;">
-        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        6.5.4 Threat Script
-      </span>
-      <span style="font-size:10px;font-weight:700;color:#fff;background:#185FA5;border-radius:999px;padding:3px 10px;letter-spacing:0.04em;">SHULTE Route</span>
-    </div>
-
-    <div class="section-title green banded">Check-in for activation of Route</div>
-    <div style="background:#FFF4E5;border-left:3px solid #E0A14A;border-radius:4px;padding:6px 10px;margin:6px 0;font-size:11.5px;color:#5f5e5a;">
-      <strong>Note:</strong> If HQ is loaded, no need for RAMROD, code words, or AKAL authentication.
-    </div>
-    <div class="item"><strong>Crew:</strong> "AGENT, CADDO/NOGS XX checking in as fragged. Activate SHULTE Route, ROZ"</div>
-    <div class="item"><strong>AGENT:</strong> "NOGS/CADDO XX authenticate Alpha, 3, Bravo" — response: <span style="color:#185FA5;font-weight:600;">"Victor"</span></div>
-    <div class="sub-item">Expect Authentication per Altus IFG AKAL, in the format listed above.</div>
-    <div class="sub-item">A-14-F = Y</div>
-    <div class="sub-item">B-21-W = V</div>
-    <div class="sub-item">C-9-Q = T</div>
-    <div class="item"><strong>AGENT:</strong> "NOGS/CADDO XX, Words Alpha current, you are cleared flight plan route, then SHULTE/STEEL Route and ROZ, elevator surface, standby for LOWDOWN."</div>
-    <div class="sub-item">Words Alpha is commensurate w/the AOD. Angels is altitude in thousands of feet.</div>
-
-    <div class="section-title amber banded" style="margin-top:10px">Inbound to MRR entry point, AGENT will call</div>
-    <div class="item"><strong>AGENT:</strong> "All Players TACREP Juliet 2 current, MOVERS 3+MTI, VIRUS 219/89 Tracking N. MOVERS 3+ MTI, VIRUS 204/98, Tracking NW."</div>
-
-    <div class="section-title red banded" style="margin-top:10px">Off board asset calls following an engagement</div>
-    <div class="item">"AGENT, CADDO/NOGS XX defensive (Bullseye), (threat)"</div>
-    <div class="sub-item">Utilize Bullseye to relay position and type of threat encountered.</div>
-
-    <div class="section-title blue banded" style="margin-top:10px">Advise five minutes out from OA, request RANCHER using RAMROD</div>
-    <div class="item">"HELTON, CADDO/NOGS Romeo minutes. Request Rancher"</div>
-    <div class="sub-item">CCT will grant clearance upon successful authentication — Expect Authentication per Altus IFG AKAL.</div>
-    <div class="item"><strong>After check-in:</strong> "CADDO/NOGS XX, Authenticate Bravo, 13, Delta." — response: <span style="color:#185FA5;font-weight:600;">"Romeo"</span></div>
-    <div class="sub-item">If response is incorrect, attempt authentication again. A second incorrect response should be taken as a learning point and debriefed.</div>
-    <div class="item"><strong>Upon success / 2 failed attempts:</strong> "Winds are 350/15, RFF is 11, temperature 25, cleared Rancher"</div>
-    <div style="background:#E6F1FB;border-left:3px solid #185FA5;border-radius:4px;padding:6px 10px;margin:6px 0 2px;font-size:11.5px;color:#1a1a19;line-height:1.55;">
-      Once over the FAF, have CCT call <strong>"CACTUS"</strong>. This drives a tactical egress from the OA.<br>
-      Climb profile should be appropriate for briefed threat at OA (i.e. Small Arms).
-    </div>
-  </div>
-
-  <!-- 6.6.4 IR154 continuation -->
-  <div class="card full-row">
-    <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
-      <span style="display:inline-flex;align-items:center;gap:6px;">
-        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        6.6.4 Threat Script
-      </span>
-      <span style="font-size:10px;font-weight:700;color:#fff;background:#185FA5;border-radius:999px;padding:3px 10px;letter-spacing:0.04em;">IR-154 → STLZ</span>
-    </div>
-
-    <div style="background:#FFF4E5;border-left:3px solid #E0A14A;border-radius:4px;padding:6px 10px;margin:6px 0 8px;font-size:11.5px;color:#5f5e5a;">
-      <strong>IR154 route still active from original check-in</strong> — continue with below enroute to STLZ.
-    </div>
-
-    <div class="section-title amber banded">Inbound to Point F1 (after seat swap), AGENT will call</div>
-    <div class="item"><strong>AGENT:</strong> "All Players TACREP Juliet 2 current, MOVERS 3+MTI, VIRUS 243/48 Tracking W. MOVERS 3+ MTI, VIRUS 232/72, Tracking E."</div>
-
-    <div class="section-title red banded" style="margin-top:10px">Off board asset calls following an engagement</div>
-    <div class="item">"AGENT, CADDO/NOGS XX defensive (Bullseye), (threat)"</div>
-    <div class="sub-item">Utilize Bullseye to relay position and type of threat encountered.</div>
-
-    <div class="section-title blue banded" style="margin-top:10px">Advise five minutes out from OA, request RANCHER using RAMROD</div>
-    <div class="item">"STEEL, CADDO/NOGS Romeo minutes. Request Rancher"</div>
-    <div class="sub-item">CCT will grant clearance upon successful authentication — Expect Authentication per Altus IFG AKAL.</div>
-    <div class="item"><strong>After check-in:</strong> "CADDO/NOGS XX, Authenticate Charlie, 5, Foxtrot." — response: <span style="color:#185FA5;font-weight:600;">"Golf"</span></div>
-    <div class="sub-item">Reattempt authentication if incorrect.</div>
-    <div class="item"><strong>Upon success / 2 failed attempts:</strong> "Winds are 340/11, RFF is 10, temperature 32, cleared Rancher"</div>
     <div style="background:#E6F1FB;border-left:3px solid #185FA5;border-radius:4px;padding:6px 10px;margin:6px 0 2px;font-size:11.5px;color:#1a1a19;line-height:1.55;">
       Once over the FAF, have CCT call <strong>"CACTUS"</strong>. This drives a tactical egress from the OA.<br>
       Climb profile should be appropriate for briefed threat at OA (i.e. Small Arms).
@@ -4787,7 +4787,7 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 var MDC_DEFAULTS_VERSION = 14;
 // Master-file build stamp — bump this to the current date/time (Zulu) on every
 // push so the footer tells viewers when the master file was last updated.
-var MDC_LAST_UPDATED = '24 Jun 2026 · 1723Z';
+var MDC_LAST_UPDATED = '24 Jun 2026 · 1727Z';
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {
