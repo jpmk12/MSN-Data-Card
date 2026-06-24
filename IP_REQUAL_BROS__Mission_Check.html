@@ -729,7 +729,7 @@
 
     <!-- EDIT THE DEFAULT ROUTE HERE: change the value="..." below (comma-separated waypoints) -->
     <input id="rof-input" type="text"
-      value="KTLS OKKIE3.CDS LBB360030 AR197 LBB322047 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS"
+      value="KLTS OKKIE3.CDS LBB360030 AR197 LBB322047 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS"
       oninput="renderRoute()"
       aria-label="Flight plan waypoints, comma separated"
       style="width:100%;box-sizing:border-box;font-family:inherit;font-size:12px;color:#1a1a19;border:1px solid #d3d1c7;border-radius:8px;background:#fff;padding:8px 10px;outline:none;margin-bottom:4px;" />
@@ -1230,6 +1230,7 @@
     <div class="ll-list" data-ll-key="approach"></div>
     <button type="button" class="ll-add-btn" onclick="addLLItem('approach')" aria-label="Add Approach Check item">+ item</button>
     <label class="section-title teal banded chk-title" style="margin-top:8px"><span class="chk-text">Low Level Entry</span><input type="checkbox" class="chk-input"></label>
+    <div class="item" id="ll-floyd-154" style="font-weight:600;color:#0C447C;">FLOYD (8+40): <span id="ll-floyd-t">—</span> &#124; O1 (13+40): <span id="ll-o1-t">—</span> &#124; O2 (18+40): <span id="ll-o2-t">—</span> &#124; O3 (23+40): <span id="ll-o3-t">—</span></div>
     <div class="item" id="ll-junva-155" style="font-weight:600;color:#0C447C;">JUNVA Run In Time (9+30): <span id="ll-junva-time">—</span></div>
     <div class="item" id="ll-entry-fixes" style="font-weight:600;color:#0C447C;">IR-154 &rarr; A: <span id="ll-fix-a">—</span> &#124; F: <span id="ll-fix-f">—</span> &#124; J: <span id="ll-fix-j">—</span></div>
     <div class="item" id="ll-entry-fixes-155" style="font-weight:600;color:#0C447C;">A: <span id="ll-fix-a155">—</span> &#124;&#124; Entry to K: <span id="ll-fix-k">—</span> &#124;&#124; Entry to N: <span id="ll-fix-n">—</span></div>
@@ -3704,6 +3705,8 @@ function renderLLEntry() {
   if (fixes155) fixes155.style.display = (route === 'IR-155') ? '' : 'none';
   var junva155 = document.getElementById('ll-junva-155');
   if (junva155) junva155.style.display = (route === 'IR-155') ? '' : 'none';
+  var floyd154 = document.getElementById('ll-floyd-154');
+  if (floyd154) floyd154.style.display = (route === 'IR-154') ? '' : 'none';
   var lz154 = document.getElementById('lz-checkin-154');
   if (lz154) lz154.style.display = (route === 'IR-154') ? '' : 'none';
   resizeLLInputs();
@@ -3814,17 +3817,22 @@ function syncLowLevel() {
     fk.textContent = (base !== null) ? pad4(base + 39) : '—';
     fn.textContent = (base !== null) ? pad4(base + 44) : '—';
   }
-  // IR-155 JUNVA run-in: LL Entry − 9 min 30 sec (shown HH:MM:SS).
+  // Run-in times = LL Entry minus an offset (seconds), shown HH:MM:SS.
+  var _hms = function(offSec) {
+    if (base === null) return '—';
+    var t = ((base * 60 - offSec) % 86400 + 86400) % 86400;
+    var p2 = function(n) { return (n < 10 ? '0' : '') + n; };
+    return p2(Math.floor(t / 3600)) + ':' + p2(Math.floor((t % 3600) / 60)) + ':' + p2(t % 60);
+  };
+  // IR-155 JUNVA run-in: LL Entry − 9 min 30 sec.
   var junva = document.getElementById('ll-junva-time');
-  if (junva) {
-    if (base !== null) {
-      var js = ((base * 60 - 570) % 86400 + 86400) % 86400;
-      var p2 = function(n) { return (n < 10 ? '0' : '') + n; };
-      junva.textContent = p2(Math.floor(js / 3600)) + ':' + p2(Math.floor((js % 3600) / 60)) + ':' + p2(js % 60);
-    } else {
-      junva.textContent = '—';
-    }
-  }
+  if (junva) junva.textContent = _hms(570);
+  // IR-154 run-in points: FLOYD −8:40, O1 −13:40, O2 −18:40, O3 −23:40.
+  var _set = function(id, off) { var el = document.getElementById(id); if (el) el.textContent = _hms(off); };
+  _set('ll-floyd-t', 520);
+  _set('ll-o1-t', 820);
+  _set('ll-o2-t', 1120);
+  _set('ll-o3-t', 1420);
 }
 var ROUTE_PRESETS = {
   'MOTA1':    'MRTHA',
@@ -4768,7 +4776,7 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 var MDC_DEFAULTS_VERSION = 14;
 // Master-file build stamp — bump this to the current date/time (Zulu) on every
 // push so the footer tells viewers when the master file was last updated.
-var MDC_LAST_UPDATED = '24 Jun 2026 · 1641Z';
+var MDC_LAST_UPDATED = '24 Jun 2026 · 1648Z';
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {

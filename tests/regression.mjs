@@ -129,7 +129,7 @@ await page.selectOption('#soe-dst', '-5');
 await page.waitForTimeout(100);
 
 // ── 4. Route of Flight defaults + MOTA picker ───────────────────────
-const rofDefault = 'KTLS OKKIE3.CDS LBB360030 AR197 LBB322047 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS';
+const rofDefault = 'KLTS OKKIE3.CDS LBB360030 AR197 LBB322047 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS';
 eq('Route of Flight default', await page.$eval('#rof-input', e => e.value), rofDefault);
 await page.selectOption('#rof-preset', 'MOTA4');
 await page.click('button[onclick="applyRoutePreset(\'insert\')"]');
@@ -342,6 +342,13 @@ ok('LL Entry fix line visible for IR-154',
    await page.evaluate(() => getComputedStyle(document.getElementById('ll-entry-fixes')).display !== 'none'));
 ok('IR-155 JUNVA line hidden for IR-154',
    await page.evaluate(() => getComputedStyle(document.getElementById('ll-junva-155')).display === 'none'));
+// IR-154 FLOYD/O run-in line (LL Entry 1900): −8:40/−13:40/−18:40/−23:40.
+ok('IR-154 FLOYD run-in line visible',
+   await page.evaluate(() => getComputedStyle(document.getElementById('ll-floyd-154')).display !== 'none'));
+eq('IR-154 FLOYD = LL Entry − 8:40 (18:51:20)', await page.$eval('#ll-floyd-t', e => e.textContent), '18:51:20');
+eq('IR-154 O1 = LL Entry − 13:40 (18:46:20)', await page.$eval('#ll-o1-t', e => e.textContent), '18:46:20');
+eq('IR-154 O2 = LL Entry − 18:40 (18:41:20)', await page.$eval('#ll-o2-t', e => e.textContent), '18:41:20');
+eq('IR-154 O3 = LL Entry − 23:40 (18:36:20)', await page.$eval('#ll-o3-t', e => e.textContent), '18:36:20');
 // Switch to IR-155 → IR-155 route items + common, fix line hidden
 await page.selectOption('#ll-route-select', 'IR-155');
 await page.waitForTimeout(120);
@@ -361,6 +368,8 @@ ok('LL Entry fix line hidden for IR-155',
    await page.evaluate(() => getComputedStyle(document.getElementById('ll-entry-fixes')).display === 'none'));
 ok('LZ Check-In Escape callout hidden for IR-155',
    await page.evaluate(() => getComputedStyle(document.getElementById('lz-checkin-154')).display === 'none'));
+ok('IR-154 FLOYD run-in line hidden for IR-155',
+   await page.evaluate(() => getComputedStyle(document.getElementById('ll-floyd-154')).display === 'none'));
 // The three critical IR-155 rows are flagged important (highlight + star icon).
 eq('LL Entry important rows (IR-155)',
    await page.$$eval('#ll-entry-list .ll-item-row[data-important="1"] .ll-input', els => els.map(e => e.value)),
