@@ -354,6 +354,13 @@
     border-radius: 6px; padding: 4px 8px; margin: 4px 0 4px 16px;
     font-weight: 700; color: #1a1a19; font-size: 13px; line-height: 1.5;
   }
+  /* Highlighted calculated run-in time (FLOYD/O/JUNVA) */
+  .ll-calc {
+    display: inline-block; background: #FFF4D6; border: 1px solid #ECCB7E;
+    border-radius: 4px; padding: 0 6px; margin: 1px 0;
+    font-family: ui-monospace, Menlo, monospace; font-weight: 700;
+    color: #8A560F; letter-spacing: 0.02em;
+  }
   .ll-input {
     flex: 1; min-width: 0; font-family: inherit; font-size: 12.5px;
     color: #5f5e5a; line-height: 1.65; background: transparent;
@@ -1230,8 +1237,11 @@
     <div class="ll-list" data-ll-key="approach"></div>
     <button type="button" class="ll-add-btn" onclick="addLLItem('approach')" aria-label="Add Approach Check item">+ item</button>
     <label class="section-title teal banded chk-title" style="margin-top:8px"><span class="chk-text">Low Level Entry</span><input type="checkbox" class="chk-input"></label>
-    <div class="item" id="ll-floyd-154" style="font-weight:600;color:#0C447C;">FLOYD (8+40): <span id="ll-floyd-t">—</span> &#124; O1 (13+40): <span id="ll-o1-t">—</span> &#124; O2 (18+40): <span id="ll-o2-t">—</span> &#124; O3 (23+40): <span id="ll-o3-t">—</span></div>
-    <div class="item" id="ll-junva-155" style="font-weight:600;color:#0C447C;">JUNVA Run In Time (9+30): <span id="ll-junva-time">—</span></div>
+    <div id="ll-floyd-154">
+      <div class="item" style="font-weight:600;color:#0C447C;">FLOYD (8+40): <span class="ll-calc" id="ll-floyd-t">—</span></div>
+      <div class="item" style="font-weight:600;color:#0C447C;">O1 (13+40): <span class="ll-calc" id="ll-o1-t">—</span> &#124; O2 (18+40): <span class="ll-calc" id="ll-o2-t">—</span> &#124; O3 (23+40): <span class="ll-calc" id="ll-o3-t">—</span></div>
+    </div>
+    <div class="item" id="ll-junva-155" style="font-weight:600;color:#0C447C;">JUNVA Run In Time (9+30): <span class="ll-calc" id="ll-junva-time">—</span></div>
     <div class="item" id="ll-entry-fixes" style="font-weight:600;color:#0C447C;">IR-154 &rarr; A: <span id="ll-fix-a">—</span> &#124; F: <span id="ll-fix-f">—</span> &#124; J: <span id="ll-fix-j">—</span></div>
     <div class="item" id="ll-entry-fixes-155" style="font-weight:600;color:#0C447C;">A: <span id="ll-fix-a155">—</span> &#124;&#124; Entry to K: <span id="ll-fix-k">—</span> &#124;&#124; Entry to N: <span id="ll-fix-n">—</span></div>
     <div class="ll-list" id="ll-entry-list"></div>
@@ -4775,7 +4785,7 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 var MDC_DEFAULTS_VERSION = 14;
 // Master-file build stamp — bump this to the current date/time (Zulu) on every
 // push so the footer tells viewers when the master file was last updated.
-var MDC_LAST_UPDATED = '24 Jun 2026 · 1703Z';
+var MDC_LAST_UPDATED = '24 Jun 2026 · 1709Z';
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {
