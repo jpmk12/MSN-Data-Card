@@ -393,9 +393,9 @@ eq('Scenario Objectives IR-155 default',
    ['VIRUS 295/100', 'VIRUS 276/95', 'VIRUS 295/86', 'VIRUS 289/11', 'VIRUS 272/72']);
 await page.selectOption('#ll-route-select', 'IR-154');
 await page.waitForTimeout(100);
-eq('Scenario Objectives IR-154 default',
+eq('Scenario Objectives IR-154 default (empty)',
    await page.$$eval('.ll-list[data-ll-key="scenarioObjectives"] .ll-input', els => els.map(e => e.value)),
-   ['HTLZ: VIRUS 299/65 | VIRUS 326/68', 'STLZ: VIRUS 243/48 | VIRUS 232/72']);
+   []);
 await page.selectOption('#ll-route-select', 'IR-155');
 await page.waitForTimeout(100);
 // Add then remove on a generic section (evaluate-click; LL tab hidden).

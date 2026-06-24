@@ -150,7 +150,7 @@ PDF/schedule import is ever wanted again, recover it from git history
   `soeManualLocal()` = `Zulu + DST offset` (`#soe-dst`). Recomputes on input and
   on DST change (called from `soeCalc()` + both init paths).
 - **Scenario Objectives** (LL tab) is route-dependent (`SCENARIO_OBJ_DEFAULTS`):
-  IR-154 → HTLZ/STLZ VIRUS lines; IR-155 → five VIRUS lines (295/100, 276/95,
+  IR-154 → none (empty); IR-155 → five VIRUS lines (295/100, 276/95,
   295/86, 289/11, 272/72). Edits remembered per route, persisted via `state.scenarioObj`.
 - **Time Control** card (static reference at the bottom of the LL tab's GK
   reference section): an "Atmospheric Model" bullet list plus Speeds / Altitude
