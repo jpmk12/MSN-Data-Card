@@ -1,5 +1,7 @@
 # IPRQ-BROS Mission Data Card (MDC)
 
+![IPRQ-BROS Mission Data Card — offline, auto-saving, auto-calculating pre-flight mission card for C-17 crews](docs/hero.png)
+
 A single-file, offline mission data card for C-17 pilots. Open it on an iPad
 or in a browser, fill in the pre-flight card, and everything you type is saved
 locally on the device — no network, no accounts, no servers.

@@ -1,0 +1,81 @@
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:1280px;height:760px;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+    background:
+      radial-gradient(1200px 500px at 78% -10%, rgba(24,95,165,0.28), transparent 60%),
+      radial-gradient(900px 500px at 8% 120%, rgba(192,57,43,0.18), transparent 60%),
+      linear-gradient(160deg,#0c1116 0%,#0a0e13 55%,#070a0e 100%);
+    color:#e9edf2; overflow:hidden; position:relative;
+  }
+  /* faint grid */
+  body::before{content:"";position:absolute;inset:0;
+    background-image:linear-gradient(rgba(255,255,255,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.035) 1px,transparent 1px);
+    background-size:38px 38px; mask-image:radial-gradient(1000px 600px at 60% 30%,#000,transparent 80%);}
+  .wrap{position:relative;z-index:2;padding:52px 60px;height:100%;display:flex;flex-direction:column;}
+  .top{display:flex;align-items:center;gap:18px;}
+  .logo{width:62px;height:62px;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,0.5);flex-shrink:0;}
+  .brandtxt .kicker{font-size:12px;letter-spacing:0.32em;text-transform:uppercase;color:#7fa9d6;font-weight:700;}
+  .brandtxt h1{font-size:40px;font-weight:800;letter-spacing:-0.01em;line-height:1.03;margin-top:3px;
+    background:linear-gradient(92deg,#ffffff,#bcd6f2);-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .tagline{margin-top:18px;max-width:540px;font-size:18px;line-height:1.5;color:#aeb9c6;}
+  .tagline b{color:#e9edf2;font-weight:700;}
+  .chips{margin-top:20px;display:flex;flex-wrap:wrap;gap:10px;max-width:540px;}
+  .chip{display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:#dbe6f2;
+    background:rgba(24,95,165,0.16);border:1px solid rgba(96,160,224,0.35);border-radius:999px;padding:7px 14px;}
+  .chip .d{width:7px;height:7px;border-radius:50%;background:#3ddc84;box-shadow:0 0 10px #3ddc84;}
+  .chip.r .d{background:#ff6b5e;box-shadow:0 0 10px #ff6b5e;}
+  .chip.b .d{background:#54a0ff;box-shadow:0 0 10px #54a0ff;}
+  .chip.a .d{background:#ffc658;box-shadow:0 0 10px #ffc658;}
+  /* screenshot fan */
+  .stage{position:absolute;right:-46px;top:120px;width:700px;height:640px;z-index:1;}
+  .frame{position:absolute;border-radius:14px;overflow:hidden;background:#fff;
+    box-shadow:0 26px 60px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.06);}
+  .frame img{display:block;width:100%;}
+  .frame .cap{position:absolute;left:0;right:0;bottom:0;padding:7px 12px;font-size:12px;font-weight:700;
+    color:#fff;letter-spacing:0.03em;background:linear-gradient(0deg,rgba(8,12,17,0.92),transparent);}
+  /* positions */
+  .f-route{width:520px;left:120px;top:8px;transform:rotate(-3deg);height:150px;}
+  .f-route img{margin-top:0;}
+  .f-soe{width:300px;left:20px;top:150px;transform:rotate(-2deg);height:430px;}
+  .f-soe img{margin-top:0;}
+  .f-threat{width:460px;left:250px;top:430px;transform:rotate(2.5deg);height:210px;}
+  .f-threat img{margin-top:0;}
+  .footline{margin-top:auto;display:flex;align-items:center;gap:14px;color:#7e8a98;font-size:13px;}
+  .footline .pill{color:#9fb4ca;border:1px solid rgba(159,180,202,0.3);border-radius:6px;padding:3px 9px;font-weight:600;font-family:ui-monospace,Menlo,monospace;font-size:12px;}
+</style></head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <img class="logo" src="http://localhost:8155/icon.svg" alt="DEAD DC">
+      <div class="brandtxt">
+        <div class="kicker">DEAD · Data Card</div>
+        <h1>IPRQ-BROS Mission Data Card</h1>
+      </div>
+    </div>
+
+    <div class="tagline">The paper pre-flight mission card, reimagined as <b>one self-contained HTML file</b> C-17 crews fill out before stepping. <b>Offline. Auto-saving. Auto-calculating.</b></div>
+
+    <div class="chips">
+      <span class="chip"><span class="d"></span>Fully offline · strict CSP</span>
+      <span class="chip b"><span class="d"></span>Auto-saves every edit</span>
+      <span class="chip a"><span class="d"></span>Live time math · Zulu ⇄ Local</span>
+      <span class="chip b"><span class="d"></span>Route-aware (IR-154 / IR-155)</span>
+      <span class="chip r"><span class="d"></span>Emergency memory items</span>
+      <span class="chip a"><span class="d"></span>Print-ready · iPad &amp; browser</span>
+    </div>
+
+    <div class="footline">
+      <span class="pill">240+ automated tests</span>
+      <span>Single file · no build · no server · no accounts</span>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="frame f-route"><img src="http://localhost:8155/docs/shots/rof.png"><div class="cap">Route of Flight — live waypoint pills</div></div>
+    <div class="frame f-soe"><img src="http://localhost:8155/docs/shots/soe.png"><div class="cap">SOE timing — Zulu &amp; Local</div></div>
+    <div class="frame f-threat"><img src="http://localhost:8155/docs/shots/threat.png"><div class="cap">Threat plot</div></div>
+  </div>
+</body></html>
