@@ -63,7 +63,7 @@ eq('Title is IPRQ-BROS-MDC', await page.title(), 'IPRQ-BROS-MDC');
 
 // ── 2. Header default values ────────────────────────────────────────
 eq('Callsign default CADDO 96',  await page.$eval('#hdr-callsign', e => e.value), 'CADDO 96');
-eq('Header badge Check', await page.$eval('#hdr-flt', e => e.value), 'Check');
+eq('Header badge Local', await page.$eval('#hdr-flt', e => e.value), 'Local');
 eq('Header badge is an editable input',
    await page.$eval('#hdr-flt', e => e.tagName + (e.readOnly ? ':ro' : '')), 'INPUT');
 // Badge auto-grows with its text (size attribute tracks content length).
@@ -74,7 +74,7 @@ const fltGrow = await page.$eval('#hdr-flt', e => {
   return { grew: e.getBoundingClientRect().width > before, size: e.size };
 });
 ok('Header badge auto-grows with content', fltGrow.grew && fltGrow.size > 12);
-await page.$eval('#hdr-flt', e => { e.value = 'Check'; e.dispatchEvent(new Event('input', { bubbles: true })); });
+await page.$eval('#hdr-flt', e => { e.value = 'Local'; e.dispatchEvent(new Event('input', { bubbles: true })); });
 eq('Student 1 default DEAD',     await page.$eval('#hdr-student1', e => e.value), 'DEAD');
 eq('Student 2 default DUFF',     await page.$eval('#hdr-student2', e => e.value), 'DUFF');
 
