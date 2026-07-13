@@ -4787,7 +4787,7 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 var MDC_DEFAULTS_VERSION = 14;
 // Master-file build stamp — bump this to the current date/time (Zulu) on every
 // push so the footer tells viewers when the master file was last updated.
-var MDC_LAST_UPDATED = '13 Jul 2026 · 0102Z';
+var MDC_LAST_UPDATED = '13 Jul 2026 · 0113Z';
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {
@@ -5070,11 +5070,7 @@ document.addEventListener('DOMContentLoaded', function() {
   setARTrack();
   syncARSpeed();
   setLLRoute();
-  // Pre-load default Pattern Work entries
-  ['DUKE TAC 6500', 'DUKE BEAM', 'DUKE ACCEL 6500', 'STR IN'].forEach(function(v) {
-    var sel = document.getElementById('pattern-select');
-    if (sel) { sel.value = v; addPatternItem(); }
-  });
+  // Pattern Work: no preloaded defaults (crews add their own)
   // Pre-load default Active safety supplements
   [
     '1SS-326 -> MGPS & P-RAIM Induce Date Reversion'
@@ -5093,11 +5089,7 @@ document.addEventListener('DOMContentLoaded', function() {
     { id: 'box-step3-list',     items: ['Set LL overfly points'] },
     { id: 'box-keypoints-list', items: ["1 min per 10,000' or 6 sec per 1,000' when TOC or BOD is prior to a waypoint", 'Be 1 min late every 10K of climb / Be 1 min early every 10K of descent'] }
   ].forEach(function(g) { g.items.forEach(function(v) { addBoxStep(g.id, v); }); });
-  // Pre-load default Ground Ops entries (duplicates intentional — a sequence)
-  ['Backing', 'Combat Offload', 'Backing', 'Combat Offload'].forEach(function(v) {
-    var sel = document.getElementById('ground-ops-select');
-    if (sel) { sel.value = v; addGroundOp(); }
-  });
+  // Ground Ops: no preloaded defaults (crews add their own)
   // Pre-load default Briefings / Notes
   [
     'DUFF: engine start, patterns/ground ops ⇄ AR entry ⇄ back half LL',

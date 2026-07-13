@@ -149,10 +149,14 @@ await page.waitForTimeout(150);
 const customOpts = await page.$$eval('#rof-preset optgroup[label="Custom"] option', els => els.map(e => e.value));
 eq('Custom save auto-names Custom 1', customOpts, ['Custom 1']);
 
-// ── 5. Pattern Work defaults + Custom + remove ──────────────────────
+// ── 5. Pattern Work: empty by default, add presets + Custom + remove ─
 let pat = await page.$$eval('#pattern-list [data-preset]', els => els.map(e => e.getAttribute('data-preset')));
-eq('Pattern defaults are 4 in order', pat,
-  ['DUKE TAC 6500', 'DUKE BEAM', 'DUKE ACCEL 6500', 'STR IN']);
+eq('Pattern Work empty by default', pat, []);
+// Add three presets, a Custom row, then remove one.
+for (const v of ['DUKE TAC 6500', 'DUKE BEAM', 'DUKE ACCEL 6500', 'STR IN']) {
+  await page.selectOption('#pattern-select', v);
+  await page.click('button[onclick="addPatternItem()"]');
+}
 await page.selectOption('#pattern-select', 'Custom');
 await page.click('button[onclick="addPatternItem()"]');
 await page.fill('#pattern-list [data-preset="Custom"] input.pattern-custom-input', 'Touch and go RWY 36');
@@ -489,11 +493,10 @@ const lastNote = await page.$('#notes-list [data-note-row]:last-of-type .note-in
 await lastNote.fill('Weather check\nLine 2');
 await page.waitForTimeout(150);
 
-// ── 11b. Ground Ops defaults (none — list starts empty) ─────────────
+// ── 11b. Ground Ops: empty by default (crews add their own) ─────────
 const groundOpsDefaults = await page.$$eval('#ground-ops-list > div', els =>
   els.map(r => r.querySelector('span')?.textContent.trim()).filter(Boolean));
-eq('Ground Ops defaults (Backing/Combat Offload x2)', groundOpsDefaults,
-   ['Backing', 'Combat Offload', 'Backing', 'Combat Offload']);
+eq('Ground Ops empty by default', groundOpsDefaults, []);
 
 // ── 12. Box Setup defaults ──────────────────────────────────────────
 const box = await page.evaluate(() => ({
@@ -565,7 +568,7 @@ eq('Reset: LL Exit back to 1934',      await page.$eval('#soe-llexit',  e => e.v
 eq('Reset: STLZ TOT back to 1931',     await page.$eval('#soe-lz2tot',  e => e.value), '1931');
 eq('Reset: Takeoff back to 1415',      await page.$eval('#soe-takeoff', e => e.value), '1415');
 const patReset = await page.$$eval('#pattern-list [data-preset]', els => els.map(e => e.getAttribute('data-preset')));
-eq('Reset: Pattern 4 defaults', patReset, ['DUKE TAC 6500', 'DUKE BEAM', 'DUKE ACCEL 6500', 'STR IN']);
+eq('Reset: Pattern Work empty', patReset, []);
 eq('Reset: Slow 1 offset default', await page.$eval('#ll-slow-offset',  e => e.value), '120');
 eq('Reset: Slow 2 offset default', await page.$eval('#ll-slow2-offset', e => e.value), '120');
 
@@ -668,6 +671,12 @@ fs.unlinkSync(downloadOut);
 
 // ── 24. Defensive: removing per-button onclick still allows × ───────
 await clickTab('Brief');
+// Seed a couple of pattern rows (list is empty after the earlier Reset).
+for (const v of ['DUKE TAC 6500', 'DUKE BEAM']) {
+  await page.selectOption('#pattern-select', v);
+  await page.click('button[onclick="addPatternItem()"]');
+}
+await page.waitForTimeout(120);
 await page.evaluate(() =>
   document.querySelectorAll('#pattern-list [data-preset] button').forEach(b => b.onclick = null));
 const beforeDel = await page.$$eval('#pattern-list [data-preset]', els => els.length);
