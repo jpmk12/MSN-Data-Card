@@ -142,7 +142,8 @@ PDF/schedule import is ever wanted again, recover it from git history
 - **Crew seat icons** (`#crew-icon-student1/2`): default is an **auto monogram**
   (initials + hashed color from the callsign, updates as you type); click to
   open a picker (`toggleCrewPicker`/`pickCrewIcon`) of glyphs — `auto`, the
-  DEAD `skull`, DUFF `clover`, `helmet`, `wings`, `star`, `shield`, `bull`
+  DEAD `skull`, DUFF `clover`, and an aviation set `wings` (USAF pilot badge),
+  `c17` (front silhouette), `roundel`, `prop`, `altimeter`
   (`CREW_GLYPHS`/`CREW_GLYPH_KEYS`). Choice per seat in `CREW_ICON_STATE`,
   persisted as `state.crewIcons`; rendered by `renderCrewIcon()` at init +
   restore. Default `auto`/`auto`.

@@ -84,6 +84,7 @@ await page.click('#crew-icon-student1'); await page.waitForTimeout(80);
 eq('Crew picker has 8 options', await page.$$eval('#crew-picker-student1 .crew-opt', els => els.length), 8);
 const crewOpts = await page.$$eval('#crew-picker-student1 .crew-opt', els => els.map(e => e.getAttribute('title')));
 ok('Crew picker keeps DEAD skull + DUFF clover', crewOpts.includes('skull') && crewOpts.includes('clover'));
+ok('Crew picker has aviation glyphs (c17 + wings)', crewOpts.includes('c17') && crewOpts.includes('wings'));
 await page.click('#crew-picker-student1 .crew-opt[title="skull"]'); await page.waitForTimeout(80);
 ok('Picking skull renders an SVG glyph', await page.evaluate(() => !!document.querySelector('#crew-icon-student1 svg')));
 await page.fill('#hdr-student2', 'VIPER'); await page.waitForTimeout(80);
