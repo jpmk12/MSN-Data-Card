@@ -129,8 +129,7 @@ await page.selectOption('#soe-dst', '-5');
 await page.waitForTimeout(100);
 
 // ── 4. Route of Flight defaults + MOTA picker ───────────────────────
-const rofDefault = 'KLTS OKKIE3.CDS LBB360030 AR197 LBB322047 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS';
-eq('Route of Flight default', await page.$eval('#rof-input', e => e.value), rofDefault);
+eq('Route of Flight blank by default', await page.$eval('#rof-input', e => e.value), '');
 await page.selectOption('#rof-preset', 'MOTA4');
 await page.click('button[onclick="applyRoutePreset(\'insert\')"]');
 await page.waitForTimeout(150);
@@ -476,18 +475,11 @@ eq('EFB FLIP',     await page.$eval('#efb-flip', e => e.value), '06-11-2026 thru
 
 // ── 11. Briefings / Notes ───────────────────────────────────────────
 const noteDefaults = await page.$$eval('#notes-list .note-input', els => els.map(e => e.value));
-eq('Briefings / Notes has 3 default notes', noteDefaults.length, 3);
-ok('DEAD default note present', noteDefaults.some(v => v.startsWith('DEAD:')));
-ok('DUFF default note present', noteDefaults.some(v => v.startsWith('DUFF:')));
+eq('Briefings / Notes has 1 default note', noteDefaults.length, 1);
+ok('DUFF/DEAD default notes removed', !noteDefaults.some(v => v.startsWith('DUFF:') || v.startsWith('DEAD:')));
 eq('MIN FLAP Emphasis default note',
    noteDefaults.find(v => v.startsWith('MIN FLAP')),
    'MIN FLAP Emphasis: selected OFF when: EOCS REQUIRED YES // CG < 28% or > 39% // Crosswind > 25 kts');
-eq('DEAD note covers 2nd patterns / back half AR / shutdown',
-   noteDefaults.find(v => v.startsWith('DEAD:')),
-   'DEAD: 2nd patterns/ground ops ⇄ back half AR, front half LL ⇄ shutdown');
-eq('DUFF note covers engine start / patterns / AR entry / back half LL',
-   noteDefaults.find(v => v.startsWith('DUFF:')),
-   'DUFF: engine start, patterns/ground ops ⇄ AR entry ⇄ back half LL');
 await page.click('button[onclick="addNote()"]');
 const lastNote = await page.$('#notes-list [data-note-row]:last-of-type .note-input');
 await lastNote.fill('Weather check\nLine 2');
@@ -535,7 +527,7 @@ eq('Persist: Custom row text',
 const ssAfter = await page.$$eval('#ss-incorporated-list input.ss-input', els => els.map(e => e.value));
 ok('Persist: empty SS row dropped', ssAfter.length === 4 && ssAfter.every(v => v.trim()));
 const notesAfter = await page.$$eval('#notes-list .note-input', els => els.map(e => e.value));
-ok('Persist: 3 defaults + the typed note', notesAfter.length === 4 && notesAfter[notesAfter.length - 1] === 'Weather check\nLine 2');
+ok('Persist: MIN FLAP default + the typed note', notesAfter.length === 2 && notesAfter[notesAfter.length - 1] === 'Weather check\nLine 2');
 ok('Persist: After Takeoff checkbox stays checked',
   await page.evaluate(() => {
     const t = [...document.querySelectorAll('.chk-title')].find(x => x.textContent.includes('After Takeoff'));

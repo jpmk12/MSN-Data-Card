@@ -191,8 +191,8 @@ PDF/schedule import is ever wanted again, recover it from git history
 - Pattern Work: none preloaded (crews add their own; presets still in `#pattern-select`)
 - Ground Ops: none preloaded (crews add their own). Restore + init cleanup drop
   unknown labels only, no longer dedupe (duplicates allowed).
-- Briefings / Notes: 3 pre-loaded — DUFF seat-swap plan, DEAD seat-swap plan,
-  MIN FLAP Emphasis
+- Briefings / Notes: 1 pre-loaded — MIN FLAP Emphasis (DUFF/DEAD seat-swap
+  lines removed)
 - Box Setup Sequence: Step 1 (3), Step 2 (3), Step 3 (1: "Set LL overfly
   points"), Box Notes (2)
 - Safety Supplements Active: `1SS-326 -> MGPS & P-RAIM Induce Date Reversion`
@@ -200,8 +200,8 @@ PDF/schedule import is ever wanted again, recover it from git history
 - FCIF: `26-22B - C-17 Pubs Release`; SII: `none active`
 - EFB: Baseline `26-04 (23 Apr 26)`, iOS `26.5 CAO 27 May 26`,
   Pub Sync `26 May 2026`, FLIP `06-11-2026 thru 07-08-2026`
-- Route of Flight:
-  `KLTS OKKIE3.CDS LBB360030 AR197 LBB322047 FLOYD LBB106039 IR154 PNH123051 DOGIN ZOCKS KLTS`
+- Route of Flight: blank by default (crews type their own; `#rof-input` empty,
+  the display shows a "No waypoints entered" empty state)
 
 ## Low level X Check (LL tab) — editable + route-aware
 
