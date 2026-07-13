@@ -75,8 +75,8 @@ const fltGrow = await page.$eval('#hdr-flt', e => {
 });
 ok('Header badge auto-grows with content', fltGrow.grew && fltGrow.size > 12);
 await page.$eval('#hdr-flt', e => { e.value = 'Local'; e.dispatchEvent(new Event('input', { bubbles: true })); });
-eq('Student 1 default DEAD',     await page.$eval('#hdr-student1', e => e.value), 'DEAD');
-eq('Student 2 default DUFF',     await page.$eval('#hdr-student2', e => e.value), 'DUFF');
+eq('Left Seat default DEAD',     await page.$eval('#hdr-student1', e => e.value), 'DEAD');
+eq('Right Seat default DUFF',    await page.$eval('#hdr-student2', e => e.value), 'DUFF');
 
 // ── 3. SOE defaults / calc ──────────────────────────────────────────
 eq('Takeoff default 1415',         await page.$eval('#soe-takeoff', e => e.value), '1415');
