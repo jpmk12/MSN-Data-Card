@@ -88,17 +88,17 @@ eq('ARCT default 1700',            await page.$eval('#soe-arct',    e => e.value
 eq('AREX default 1835',            await page.$eval('#soe-arex',    e => e.value), '1835');
 const cells = await page.$$eval('#tab-main table tr', rows =>
   rows.map(r => [...r.querySelectorAll('td')].map(t => t.textContent.trim())));
-// 1415 takeoff (Z, CDT −5): Alert default −3:45 = 1030/0530,
-// Show default −3:30 = 1045/0545, Land +6:00 = 2015/1515.
-ok('SOE Alert back-calcs from 1415 (−3:45 = 1030)', cells.some(r => r.includes('1030') && r.includes('0530')));
-ok('SOE Show back-calcs from 1415 (−3:30 = 1045)', cells.some(r => r.includes('1045') && r.includes('0545')));
+// 1415 takeoff (Z, EDT −4 default): Alert −3:45 = 1030/0630,
+// Show −3:30 = 1045/0645, Land +6:00 = 2015/1615.
+ok('SOE Alert back-calcs from 1415 (−3:45 = 1030)', cells.some(r => r.includes('1030') && r.includes('0630')));
+ok('SOE Show back-calcs from 1415 (−3:30 = 1045)', cells.some(r => r.includes('1045') && r.includes('0645')));
 eq('Land offset default +6:00', await page.$eval('#soe-land-offset', e => e.value), '360');
-ok('SOE Land row +6:00 from 1415 (2015)', cells.some(r => r.includes('2015') && r.includes('1515')));
-// Land offset is configurable: switch to +5:00 → 1915/1415.
+ok('SOE Land row +6:00 from 1415 (2015)', cells.some(r => r.includes('2015') && r.includes('1615')));
+// Land offset is configurable: switch to +5:00 → 1915/1515.
 await page.selectOption('#soe-land-offset', '300');
 await page.waitForTimeout(100);
 eq('Land recomputes at +5:00 (1915)', await page.$eval('#soe-land', e => e.textContent), '1915');
-eq('Land local recomputes at +5:00 (1415)', await page.$eval('#soe-land-l', e => e.textContent), '1415');
+eq('Land local recomputes at +5:00 (1515)', await page.$eval('#soe-land-l', e => e.textContent), '1515');
 await page.selectOption('#soe-land-offset', '360');
 await page.waitForTimeout(100);
 // Alert and Show are independently selectable offsets prior to takeoff.
@@ -115,17 +115,17 @@ eq('Alert recomputes at −4:00 (1015)', await page.$eval('#soe-alert', e => e.t
 await page.selectOption('#soe-show-offset', '-210');
 await page.selectOption('#soe-alert-offset', '-225');
 await page.waitForTimeout(100);
-// Manual SOE rows show a calculated local time (Zulu + DST). CDT −5 default:
-// 1855→1355L, 1939→1439L, 1700→1200L, 1835→1335L.
-eq('LL Entry local (CDT) 1400L', await page.$eval('#soe-llentry-l', e => e.textContent), '1400L');
-eq('LL Exit local (CDT) 1434L',  await page.$eval('#soe-llexit-l',  e => e.textContent), '1434L');
-eq('ARCT local (CDT) 1200L',     await page.$eval('#soe-arct-l',    e => e.textContent), '1200L');
-eq('AREX local (CDT) 1335L',     await page.$eval('#soe-arex-l',    e => e.textContent), '1335L');
-// DST toggle to CST (−6) shifts the locals back one hour.
+// Manual SOE rows show a calculated local time (Zulu + DST). EDT −4 default:
+// LL Entry 1900→1500L, LL Exit 1934→1534L, ARCT 1700→1300L, AREX 1835→1435L.
+eq('LL Entry local (EDT) 1500L', await page.$eval('#soe-llentry-l', e => e.textContent), '1500L');
+eq('LL Exit local (EDT) 1534L',  await page.$eval('#soe-llexit-l',  e => e.textContent), '1534L');
+eq('ARCT local (EDT) 1300L',     await page.$eval('#soe-arct-l',    e => e.textContent), '1300L');
+eq('AREX local (EDT) 1435L',     await page.$eval('#soe-arex-l',    e => e.textContent), '1435L');
+// DST toggle to CST (−6) shifts the locals back two hours from EDT.
 await page.selectOption('#soe-dst', '-6');
 await page.waitForTimeout(100);
 eq('LL Entry local recomputes at CST (1300L)', await page.$eval('#soe-llentry-l', e => e.textContent), '1300L');
-await page.selectOption('#soe-dst', '-5');
+await page.selectOption('#soe-dst', '-4');
 await page.waitForTimeout(100);
 
 // ── 4. Route of Flight defaults + MOTA picker ───────────────────────

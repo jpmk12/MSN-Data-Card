@@ -149,6 +149,9 @@ PDF/schedule import is ever wanted again, recover it from git history
   a calculated local time beside each (`#soe-<id>-l`, green `.soe-local`) via
   `soeManualLocal()` = `Zulu + DST offset` (`#soe-dst`). Recomputes on input and
   on DST change (called from `soeCalc()` + both init paths).
+  **Local time zone** (`#soe-dst`): `EDT (−4)` **default**, `EST / CDT (−5)`,
+  `CST (−6)`. The `#soe-zone` selector (`Zulu` / `Local`) controls whether the
+  Takeoff time is entered in Zulu or local (uses the `#soe-dst` offset).
 - **Scenario Objectives** (LL tab) is route-dependent (`SCENARIO_OBJ_DEFAULTS`):
   IR-154 → none (empty); IR-155 → five VIRUS lines (295/100, 276/95,
   295/86, 289/11, 272/72). Edits remembered per route, persisted via `state.scenarioObj`.

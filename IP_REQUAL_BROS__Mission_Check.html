@@ -762,11 +762,12 @@
       <select id="soe-zone" onchange="soeCalc()" aria-label="Time zone reference"
         style="font-family:inherit;font-size:11px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;outline:none;padding:2px 0;">
         <option value="Z">Zulu</option>
-        <option value="CT">Central</option>
+        <option value="CT">Local</option>
       </select>
-      <select id="soe-dst" onchange="soeCalc()" aria-label="Daylight saving offset"
+      <select id="soe-dst" onchange="soeCalc()" aria-label="Local time zone offset"
         style="font-family:inherit;font-size:11px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;outline:none;padding:2px 0;">
-        <option value="-5">CDT (−5)</option>
+        <option value="-4" selected>EDT (−4)</option>
+        <option value="-5">EST / CDT (−5)</option>
         <option value="-6">CST (−6)</option>
       </select>
     </div>
@@ -3199,7 +3200,7 @@ function autoSizeFlt(el){ if(el) el.size = Math.max(6, (el.value || '').length +
 function soeCalc() {
   var v = (document.getElementById('soe-takeoff').value || '').trim();
   var zone = document.getElementById('soe-zone').value;       // 'Z' or 'CT'
-  var ct = parseInt(document.getElementById('soe-dst').value,10); // -5 (CDT) or -6 (CST)
+  var ct = parseInt(document.getElementById('soe-dst').value,10); // -4 EDT / -5 EST/CDT / -6 CST
   var ids = ['soe-alert','soe-show','soe-stations','soe-land','soe-to-display'];
   var lids = ['soe-alert-l','soe-show-l','soe-stations-l','soe-land-l','soe-to-l'];
   function blank(){ ids.concat(lids).forEach(function(id){ document.getElementById(id).textContent='—'; }); }
@@ -4784,10 +4785,10 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 // Bump whenever the baked-in defaults change. A saved card built on an
 // older version is offered an "Apply latest brief data" banner that
 // refreshes the canonical fields while keeping the pilot's edits.
-var MDC_DEFAULTS_VERSION = 15;
+var MDC_DEFAULTS_VERSION = 16;
 // Master-file build stamp — bump this to the current date/time (Zulu) on every
 // push so the footer tells viewers when the master file was last updated.
-var MDC_LAST_UPDATED = '13 Jul 2026 · 0119Z';
+var MDC_LAST_UPDATED = '13 Jul 2026 · 0128Z';
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {
