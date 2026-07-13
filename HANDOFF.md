@@ -137,7 +137,15 @@ PDF/schedule import is ever wanted again, recover it from git history
 
 ## Current defaults (Check)
 
-- Header badge `Local` (editable `#hdr-flt`), callsign `CADDO 96`, students `DEAD` / `DUFF`
+- Header badge `Local` (editable `#hdr-flt`), callsign `CADDO 96`, crew
+  `DEAD` (Left Seat) / `DUFF` (Right Seat)
+- **Crew seat icons** (`#crew-icon-student1/2`): default is an **auto monogram**
+  (initials + hashed color from the callsign, updates as you type); click to
+  open a picker (`toggleCrewPicker`/`pickCrewIcon`) of glyphs — `auto`, the
+  DEAD `skull`, DUFF `clover`, `helmet`, `wings`, `star`, `shield`, `bull`
+  (`CREW_GLYPHS`/`CREW_GLYPH_KEYS`). Choice per seat in `CREW_ICON_STATE`,
+  persisted as `state.crewIcons`; rendered by `renderCrewIcon()` at init +
+  restore. Default `auto`/`auto`.
 - SOE: Takeoff `1415`, LL Entry `1900`, LL Exit `1934`, ARCT `1700`, AREX `1835`.
   Land time is `Takeoff + N` where N is the `#soe-land-offset` dropdown
   (1–6 h, default **+6:00**); `soeCalc()` reads it for the Land row.

@@ -77,6 +77,21 @@ ok('Header badge auto-grows with content', fltGrow.grew && fltGrow.size > 12);
 await page.$eval('#hdr-flt', e => { e.value = 'Local'; e.dispatchEvent(new Event('input', { bubbles: true })); });
 eq('Left Seat default DEAD',     await page.$eval('#hdr-student1', e => e.value), 'DEAD');
 eq('Right Seat default DUFF',    await page.$eval('#hdr-student2', e => e.value), 'DUFF');
+// Crew seat icons: auto monogram by default (A); tap to pick a glyph (B).
+eq('Left seat auto monogram (DE)',  await page.$eval('#crew-icon-student1', e => e.textContent), 'DE');
+eq('Right seat auto monogram (DU)', await page.$eval('#crew-icon-student2', e => e.textContent), 'DU');
+await page.click('#crew-icon-student1'); await page.waitForTimeout(80);
+eq('Crew picker has 8 options', await page.$$eval('#crew-picker-student1 .crew-opt', els => els.length), 8);
+const crewOpts = await page.$$eval('#crew-picker-student1 .crew-opt', els => els.map(e => e.getAttribute('title')));
+ok('Crew picker keeps DEAD skull + DUFF clover', crewOpts.includes('skull') && crewOpts.includes('clover'));
+await page.click('#crew-picker-student1 .crew-opt[title="skull"]'); await page.waitForTimeout(80);
+ok('Picking skull renders an SVG glyph', await page.evaluate(() => !!document.querySelector('#crew-icon-student1 svg')));
+await page.fill('#hdr-student2', 'VIPER'); await page.waitForTimeout(80);
+eq('Auto monogram tracks the callsign (VI)', await page.$eval('#crew-icon-student2', e => e.textContent), 'VI');
+// Restore defaults for downstream tests.
+await page.click('#crew-icon-student1'); await page.waitForTimeout(60);
+await page.click('#crew-picker-student1 .crew-opt[title="auto"]'); await page.waitForTimeout(60);
+await page.fill('#hdr-student2', 'DUFF'); await page.waitForTimeout(60);
 
 // ── 3. SOE defaults / calc ──────────────────────────────────────────
 eq('Takeoff default 1415',         await page.$eval('#soe-takeoff', e => e.value), '1415');
