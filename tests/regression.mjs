@@ -189,6 +189,10 @@ eq('Three Cs ARCT-15 suffix', await page.$eval('#three-cs-suffix', e => e.textCo
 
 // ── 6b. AR Info default track ───────────────────────────────────────
 eq('AR Track default AR197H', await page.$eval('#ar-track-select', e => e.value), 'AR197H');
+ok('AR dropdown offers AR777 + AR212',
+   await page.$$eval('#ar-track-select option', o => o.map(e => e.value)).then(v => v.includes('AR777') && v.includes('AR212')));
+ok('LL route dropdown offers VR-1709 + SR-800',
+   await page.$$eval('#ll-route-select option', o => o.map(e => e.value)).then(v => v.includes('VR-1709') && v.includes('SR-800')));
 eq('AR197H freqs populate',   await page.$eval('#ar-freqs', e => e.textContent), '302.250 | 320.525');
 eq('AR197H TACAN populate',   await page.$eval('#ar-tacan', e => e.textContent), '58 / 121');
 eq('AR197H BLOCK populate',   await page.$eval('#ar-block', e => e.textContent), 'FL240-260');

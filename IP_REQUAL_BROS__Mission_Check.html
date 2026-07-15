@@ -936,6 +936,8 @@
           style="font-family:inherit;font-size:11px;font-weight:700;color:#fff;background:#185FA5;border:none;border-radius:999px;padding:3px 24px 3px 11px;letter-spacing:0.04em;cursor:pointer;outline:none;-webkit-appearance:none;-moz-appearance:none;appearance:none;">
           <option value="IR-193">IR-193</option>
           <option value="VR-106">VR-106</option>
+          <option value="VR-1709">VR-1709</option>
+          <option value="SR-800">SR-800</option>
           <option value="IR-155">IR-155</option>
           <option value="IR-154" selected>IR-154</option>
           <option value="NA">NA</option>
@@ -965,6 +967,8 @@
           <option value="AR197L">AR197L</option>
           <option value="AR312H">AR312H</option>
           <option value="AR312L">AR312L</option>
+          <option value="AR777">AR777</option>
+          <option value="AR212">AR212</option>
           <option value="NA">NA</option>
         </select>
         <svg style="position:absolute;right:8px;width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1286,6 +1290,8 @@
           style="font-family:inherit;font-size:11px;font-weight:700;color:#fff;background:#185FA5;border:none;border-radius:999px;padding:4px 26px 4px 12px;letter-spacing:0.04em;cursor:pointer;outline:none;-webkit-appearance:none;-moz-appearance:none;appearance:none;">
           <option value="IR-193">IR-193</option>
           <option value="VR-106">VR-106</option>
+          <option value="VR-1709">VR-1709</option>
+          <option value="SR-800">SR-800</option>
           <option value="IR-155">IR-155</option>
           <option value="IR-154" selected>IR-154</option>
           <option value="NA">NA</option>
@@ -3537,6 +3543,8 @@ function addCustomPatternItem(value) {
 var LL_PRESETS = {
   'IR-193': { entry: '—', exit: '—' },
   'VR-106': { entry: '—', exit: '—' },
+  'VR-1709': { entry: '—', exit: '—' },
+  'SR-800': { entry: '—', exit: '—' },
   'IR-155': { entry: 'A', exit: 'N' },
   'IR-154': { entry: 'A', exit: 'J' }
 };
@@ -4070,7 +4078,10 @@ var AR_TRACKS = {
   'AR197H': { freqs: '302.250 | 320.525', tacan: '58 / 121', block: 'FL240-260' },
   'AR197L': { freqs: '264.900 | 236.650', tacan: '62 / 125', block: 'FL190-220' },
   'AR312H': { freqs: '284.075 | 312.225', tacan: '53 / 116', block: 'FL240-260' },
-  'AR312L': { freqs: '291.900 | 260.200', tacan: '51 / 114', block: 'FL200-220' }
+  'AR312L': { freqs: '291.900 | 260.200', tacan: '51 / 114', block: 'FL200-220' },
+  // New tracks — selectable; fill in freqs/TACAN/block when known.
+  'AR777':  { freqs: '—', tacan: '—', block: '—' },
+  'AR212':  { freqs: '—', tacan: '—', block: '—' }
 };
 function setARTrack() {
   var sel = document.getElementById('ar-track-select');
@@ -4867,7 +4878,7 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 var MDC_DEFAULTS_VERSION = 16;
 // Master-file build stamp — bump this to the current date/time (Zulu) on every
 // push so the footer tells viewers when the master file was last updated.
-var MDC_LAST_UPDATED = '13 Jul 2026 · 1251Z';
+var MDC_LAST_UPDATED = '15 Jul 2026 · 1022Z';
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {

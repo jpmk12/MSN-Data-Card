@@ -118,8 +118,12 @@ into `CUSTOM_ROUTES` and re-renders a `<optgroup label="Custom">` in
 ## Routes / SVGs / Schedule data
 
 - `ROUTE_PRESETS` — MOTA + procedure preset routes used by `applyRoutePreset(mode)`.
-- `AR_TRACKS` — freqs/TACAN/block for AR197H, AR197L, AR312H, AR312L.
-- `LL_PRESETS` — Entry/Exit Pt letters for IR-154, IR-155, etc.
+- `AR_TRACKS` — freqs/TACAN/block for AR197H/L, AR312H/L, plus AR777 & AR212
+  (added selectable, data placeholders `—` until filled in). Also in the
+  `#ar-track-select` dropdown.
+- `LL_PRESETS` — Entry/Exit Pt letters for IR-154, IR-155, etc.; VR-1709 &
+  SR-800 added selectable (placeholders). Both route dropdowns
+  (`#ll-route-select` / `#route-select`) carry the same option list.
 - `IR154_SVG`, `IR155_SVG`, `IR193_VR106_SVG` — string-literal SVGs
   rendered via `ROUTE_SVGS[selected]()` in `renderRouteData()`.
   `IR-193` and `VR-106` share the same SVG with a title swap.
