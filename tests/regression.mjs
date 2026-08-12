@@ -891,7 +891,48 @@ await page.waitForTimeout(400);
 ok('No banner after Apply stamps the version',
    await page.evaluate(() => !document.getElementById('mdc-defaults-banner')));
 
-// ── 27. No JS errors throughout ─────────────────────────────────────
+// ── 27. Bullseye calculator (Tactical tab) ──────────────────────────
+await freshLoad();
+await clickTab('Tactical');
+await page.waitForTimeout(150);
+// Default seed: 180°M / 20 NM, 8°W (South Korea).
+ok('Bullseye card present', await page.evaluate(() => !!document.getElementById('bull-result')));
+eq('Bullseye default bearing', await page.$eval('#bull-bearing', e => e.value), '180');
+eq('Bullseye default range', await page.$eval('#bull-range', e => e.value), '20');
+eq('Bullseye default variation', await page.$eval('#bull-var', e => e.value), '8');
+eq('Bullseye default direction West', await page.$eval('#bull-vardir', e => e.value), 'W');
+// 180°M reciprocal = 360°M; 8°W → true = 360 − 8 = 352°T.
+ok('Bullseye inverse true 352 (180/8W)',
+   (await page.$eval('#bull-result', e => e.textContent)).includes('352°'));
+ok('Bullseye inverse mag 360 (180)',
+   (await page.$eval('#bull-result', e => e.textContent)).includes('360°'));
+ok('Bullseye range carried through',
+   (await page.$eval('#bull-result', e => e.textContent)).includes('20 NM'));
+// Change to 090°M, East 10 → reciprocal 270°M; true = 270 + 10 = 280°T.
+await page.fill('#bull-bearing', '90');
+await page.fill('#bull-var', '10');
+await page.selectOption('#bull-vardir', 'E');
+await page.waitForTimeout(120);
+ok('Bullseye 090/10E → 270°M',
+   (await page.$eval('#bull-result', e => e.textContent)).includes('270°'));
+ok('Bullseye 090/10E → 280°T',
+   (await page.$eval('#bull-result', e => e.textContent)).includes('280°'));
+// Persists across reload.
+await page.reload({ waitUntil: 'networkidle' });
+await page.waitForTimeout(350);
+await clickTab('Tactical');
+await page.waitForTimeout(120);
+eq('Bullseye bearing persists', await page.$eval('#bull-bearing', e => e.value), '90');
+eq('Bullseye direction persists', await page.$eval('#bull-vardir', e => e.value), 'E');
+ok('Bullseye recomputes after reload',
+   (await page.$eval('#bull-result', e => e.textContent)).includes('280°'));
+// Invalid bearing is rejected gracefully.
+await page.fill('#bull-bearing', '400');
+await page.waitForTimeout(120);
+ok('Bullseye rejects out-of-range bearing',
+   (await page.$eval('#bull-result', e => e.textContent)).includes('0–360'));
+
+// ── 28. No JS errors throughout ─────────────────────────────────────
 ok('No page errors during the run', consoleErrors.length === 0,
   'errors: ' + consoleErrors.slice(0, 5).join(' | '));
 

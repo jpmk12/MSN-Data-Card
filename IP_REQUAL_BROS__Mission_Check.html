@@ -2164,6 +2164,67 @@
     </table>
   </div>
 
+  <!-- Card: BULLSEYE (reciprocal bearing + mag variation) -->
+  <div class="card full-row">
+    <div class="card-header">
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="1.5" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22.5"/><line x1="1.5" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22.5" y2="12"/></svg>
+      Bullseye
+    </div>
+    <div style="font-size:11px;color:#888780;margin:-2px 0 10px;line-height:1.5;">
+      Reciprocal (inverse) of a bullseye bearing, with magnetic&nbsp;&rarr;&nbsp;true variation correction. Range carries through unchanged.
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start;">
+
+      <!-- Inputs panel -->
+      <div style="background:#f1efe8;border-radius:8px;padding:12px 14px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin-bottom:10px;">
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <label for="bull-bearing" style="font-size:10px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.06em;">Bearing (&deg;M, 0&ndash;360)</label>
+            <input id="bull-bearing" type="text" inputmode="numeric" maxlength="3" placeholder="180" value="180"
+              aria-label="Bullseye bearing in degrees magnetic"
+              style="font-family:inherit;font-size:15px;font-weight:600;color:#185FA5;border:none;border-bottom:2px solid #185FA5;background:transparent;outline:none;text-align:center;padding:2px 0;width:100%;"
+              oninput="bullseyeCalc()" />
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <label for="bull-range" style="font-size:10px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.06em;">Range (NM)</label>
+            <input id="bull-range" type="text" inputmode="decimal" maxlength="4" placeholder="20" value="20"
+              aria-label="Range in nautical miles"
+              style="font-family:inherit;font-size:15px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;outline:none;text-align:center;padding:2px 0;width:100%;"
+              oninput="bullseyeCalc()" />
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;">
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <label for="bull-var" style="font-size:10px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.06em;">Mag Variation (&deg;)</label>
+            <input id="bull-var" type="text" inputmode="decimal" maxlength="4" placeholder="8" value="8"
+              aria-label="Magnetic variation in degrees"
+              style="font-family:inherit;font-size:14px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;outline:none;text-align:center;padding:2px 0;width:100%;"
+              oninput="bullseyeCalc()" />
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <label for="bull-vardir" style="font-size:10px;font-weight:600;color:#888780;text-transform:uppercase;letter-spacing:0.06em;">Direction</label>
+            <select id="bull-vardir" onchange="bullseyeCalc()" aria-label="Variation direction east or west"
+              style="font-family:inherit;font-size:13px;font-weight:600;color:#1a1a19;border:none;border-bottom:1.5px solid #b4b2a9;background:transparent;outline:none;padding:3px 0;width:100%;">
+              <option value="W" selected>West</option>
+              <option value="E">East</option>
+            </select>
+          </div>
+        </div>
+        <div style="font-size:10px;color:#888780;margin-top:8px;line-height:1.5;font-style:italic;">
+          Enter the bullseye bearing as magnetic. Default 8&deg;W (South Korea). &ldquo;West is best, East is least&rdquo;: True&nbsp;=&nbsp;Mag&nbsp;&minus;&nbsp;W&nbsp;(or&nbsp;+&nbsp;E).
+        </div>
+      </div>
+
+      <!-- Result panel -->
+      <div id="bull-result" style="min-height:100%;">
+        <div style="font-size:12px;color:#888780;font-style:italic;padding:8px 0;">Enter a bearing to calculate</div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Card: TAC POINTS -->
   <div class="card full-row">
     <div class="card-header">
@@ -4870,6 +4931,78 @@ function calcTR() {
     document.getElementById('tr-' + b + '-h').textContent = (t360 / 2).toFixed(1) + ' min';
   });
 }
+// Bullseye: reciprocal (inverse) of a bearing, plus a magnetic→true
+// variation correction. Input bearing is magnetic; True = Mag − W var
+// (or + E var). Range, if given, is carried through unchanged.
+function bullseyeCalc() {
+  var out = document.getElementById('bull-result');
+  if (!out) return;
+  var msg = function(text, color) {
+    out.innerHTML = '<div style="font-size:12px;color:' + (color || '#888780') + ';font-style:italic;padding:8px 0;">' + text + '</div>';
+  };
+  // Format a bearing to 3-digit degrees; show due-north as 360, not 000.
+  var bfmt = function(deg) {
+    var d = ((Math.round(deg) % 360) + 360) % 360;
+    if (d === 0) d = 360;
+    return (d < 10 ? '00' : d < 100 ? '0' : '') + d;
+  };
+  var braw = (document.getElementById('bull-bearing').value || '').trim();
+  if (braw === '') { msg('Enter a bearing 0–360'); return; }
+  if (!/^\d{1,3}(\.\d+)?$/.test(braw)) { msg('Invalid bearing', '#E24B4A'); return; }
+  var bearing = parseFloat(braw);
+  if (isNaN(bearing) || bearing > 360) { msg('Bearing must be 0–360', '#E24B4A'); return; }
+  bearing = bearing % 360;
+
+  // Range is optional; carried through to the inverse unchanged.
+  var rraw = (document.getElementById('bull-range').value || '').trim();
+  var rangeTxt = '';
+  if (rraw !== '') {
+    if (!/^\d{1,3}(\.\d+)?$/.test(rraw)) { msg('Invalid range', '#E24B4A'); return; }
+    rangeTxt = rraw.replace(/\.0+$/, '');
+  }
+
+  // Magnetic variation (magnitude + E/W direction).
+  var vraw = (document.getElementById('bull-var').value || '').trim();
+  var variation = 0;
+  if (vraw !== '') {
+    if (!/^\d{1,2}(\.\d+)?$/.test(vraw)) { msg('Invalid variation', '#E24B4A'); return; }
+    variation = parseFloat(vraw);
+    if (variation > 90) { msg('Variation must be 0–90', '#E24B4A'); return; }
+  }
+  var dir = document.getElementById('bull-vardir').value; // 'W' or 'E'
+
+  var recipMag = (bearing + 180) % 360;
+  // Magnetic → True: subtract westerly variation, add easterly.
+  var signed = (dir === 'W') ? -variation : variation;
+  var recipTrue = ((recipMag + signed) % 360 + 360) % 360;
+
+  var varLabel = variation > 0
+    ? (variation % 1 === 0 ? variation : variation.toFixed(1)) + '°' + dir
+    : '0°';
+  var opSym = variation === 0 ? '' : (dir === 'W' ? ' − ' : ' + ');
+  var rangeChip = rangeTxt !== ''
+    ? '<span style="font-size:12px;font-weight:600;color:#5f5e5a;">/ ' + rangeTxt + ' NM</span>'
+    : '';
+
+  out.innerHTML = ''
+    + '<div style="background:#f1efe8;border-radius:8px;padding:12px 14px;">'
+    + '  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">'
+    + '    <div>'
+    + '      <div style="font-size:10px;color:#888780;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;font-weight:600;">Inverse (True)</div>'
+    + '      <div style="font-size:24px;font-weight:700;color:#185FA5;line-height:1.1;">' + bfmt(recipTrue) + '°<span style="font-size:13px;font-weight:600;">T</span> ' + rangeChip + '</div>'
+    + '    </div>'
+    + '    <div>'
+    + '      <div style="font-size:10px;color:#888780;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:2px;font-weight:600;">Inverse (Mag)</div>'
+    + '      <div style="font-size:24px;font-weight:700;color:#5f5e5a;line-height:1.1;">' + bfmt(recipMag) + '°<span style="font-size:13px;font-weight:600;">M</span></div>'
+    + '    </div>'
+    + '  </div>'
+    + '  <div style="font-size:11px;color:#5f5e5a;margin-top:10px;line-height:1.6;">'
+    + '    Reference <strong>' + bfmt(bearing) + '°M' + (rangeTxt !== '' ? ' / ' + rangeTxt + ' NM' : '') + '</strong>'
+    + '    &nbsp;·&nbsp; reciprocal <strong>' + bfmt(recipMag) + '°M</strong>'
+    + (variation > 0 ? '<br>' + bfmt(recipMag) + '°' + opSym + varLabel + ' &rarr; <strong style="color:#185FA5;">' + bfmt(recipTrue) + '°T</strong>' : '')
+    + '  </div>'
+    + '</div>';
+}
 // ─── Persistence (localStorage) ───
 var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 // Bump whenever the baked-in defaults change. A saved card built on an
@@ -4878,7 +5011,7 @@ var MDC_STORAGE_KEY = 'iprq-bros-mdc-v1';
 var MDC_DEFAULTS_VERSION = 16;
 // Master-file build stamp — bump this to the current date/time (Zulu) on every
 // push so the footer tells viewers when the master file was last updated.
-var MDC_LAST_UPDATED = '15 Jul 2026 · 1022Z';
+var MDC_LAST_UPDATED = '12 Aug 2026 · 1254Z';
 var _mdcDefaultsOutdated = false;
 var _mdcReady = false;
 function mdcCheckboxKey(input) {
@@ -5142,6 +5275,7 @@ function mdcRestore() {
   if (typeof syncARSpeed === 'function') syncARSpeed();
   if (typeof renderRouteData === 'function') renderRouteData();
   if (typeof renderRoute === 'function') renderRoute();
+  if (typeof bullseyeCalc === 'function') bullseyeCalc();
   if (state.crewIcons && typeof state.crewIcons === 'object') {
     ['student1', 'student2'].forEach(function(seat) {
       var k = state.crewIcons[seat];
@@ -5169,6 +5303,7 @@ document.addEventListener('DOMContentLoaded', function() {
   slowDownCalc();
   calcTR();
   calcDec();
+  bullseyeCalc();
   setARTrack();
   syncARSpeed();
   setLLRoute();
@@ -5340,7 +5475,7 @@ function applyLatestDefaults() {
       el.value = el.defaultValue;
     }
   });
-  [soeCalc, syncARCT, syncLowLevel, setARTrack, syncARSpeed, renderRouteData, renderRoute, setLLRoute, renderLLEntry]
+  [soeCalc, syncARCT, syncLowLevel, setARTrack, syncARSpeed, renderRouteData, renderRoute, setLLRoute, renderLLEntry, bullseyeCalc]
     .forEach(function(fn) { if (typeof fn === 'function') { try { fn(); } catch (e) { /* ignore */ } } });
   if (typeof autoSizeFlt === 'function') { autoSizeFlt(document.getElementById('hdr-flt')); autoSizeFlt(document.getElementById('hdr-callsign')); }
   _mdcDefaultsOutdated = false;
